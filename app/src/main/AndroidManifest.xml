@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.skdev.ytlivevideo">
+          package="com.skdev.ytlivevideo">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- For authorization. -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <!-- For recording audio and video without going to lock. -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> <!-- For authorization. -->
+    <uses-permission
+            android:name="android.permission.GET_ACCOUNTS"/> <!-- For recording audio and video without going to lock. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <uses-feature
             android:name="android.hardware.camera"
-            android:required="false"></uses-feature>
+            android:required="false"/>
     <uses-feature
             android:name="android.hardware.camera.front"
-            android:required="false"></uses-feature>
+            android:required="false"/>
 
     <application
             android:allowBackup="true"
@@ -28,6 +27,7 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -36,6 +36,8 @@
                 android:label="@string/app_name"
                 android:screenOrientation="landscape">
         </activity>
-        <service android:name=".StreamerService" />
+
+        <service android:name=".StreamerService"/>
     </application>
+
 </manifest>

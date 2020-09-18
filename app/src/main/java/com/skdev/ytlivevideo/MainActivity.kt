@@ -16,7 +16,6 @@ package com.skdev.ytlivevideo
 import android.accounts.AccountManager
 import android.app.Activity
 import android.app.Dialog
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
@@ -28,10 +27,6 @@ import android.view.View
 import android.view.Window
 import android.widget.Button
 import com.android.volley.toolbox.ImageLoader
-import com.skdev.ytlivevideo.util.EventData
-import com.skdev.ytlivevideo.util.NetworkSingleton
-import com.skdev.ytlivevideo.util.Utils
-import com.skdev.ytlivevideo.util.YouTubeApi
 import com.skdev.ytlivevideo.EventsListFragment.Callbacks
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.api.client.extensions.android.http.AndroidHttp
@@ -42,9 +37,9 @@ import com.google.api.client.json.JsonFactory
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.youtube.YouTube
+import com.skdev.ytlivevideo.util.*
 import java.io.IOException
 import java.util.*
-
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
@@ -59,14 +54,11 @@ class MainActivity : Activity(), Callbacks {
     private var mChosenAccountName: String? = null
     private var mImageLoader: ImageLoader? = null
     private var mEventsListFragment: EventsListFragment? = null
-    private var progressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         ensureLoader()
         credential = GoogleAccountCredential.usingOAuth2(applicationContext, Utils.SCOPES.toList())
         if (credential != null) {
@@ -81,10 +73,8 @@ class MainActivity : Activity(), Callbacks {
             mEventsListFragment = fragmentManager
                 .findFragmentById(R.id.list_fragment) as EventsListFragment
         } else {
-            progressDialog = ProgressDialog.show(
-                this@MainActivity, null,
-                resources.getText(R.string.oauth2_credentials_are_empty), true
-            )
+            val message = resources.getText(R.string.oauth2_credentials_are_empty).toString()
+            Utils.showError(this@MainActivity, message)
         }
     }
 
@@ -169,7 +159,7 @@ class MainActivity : Activity(), Callbacks {
             REQUEST_AUTHORIZATION -> if (resultCode != RESULT_OK) {
                 chooseAccount()
             }
-            REQUEST_ACCOUNT_PICKER -> if (resultCode == RESULT_OK && data != null && data.extras != null) {
+            REQUEST_ACCOUNT_PICKER -> if (resultCode == RESULT_OK && data.extras != null) {
                 val accountName = data.extras!!.getString(
                     AccountManager.KEY_ACCOUNT_NAME
                 )
@@ -179,7 +169,7 @@ class MainActivity : Activity(), Callbacks {
                     saveAccount()
                 }
             }
-            REQUEST_STREAMER -> if (resultCode == RESULT_OK && data != null && data.extras != null) {
+            REQUEST_STREAMER -> if (resultCode == RESULT_OK && data.extras != null) {
                 val broadcastId = data.getStringExtra(YouTubeApi.BROADCAST_ID_KEY)
                 if (broadcastId != null) {
                     EndEventTask().execute(broadcastId)
@@ -237,7 +227,6 @@ class MainActivity : Activity(), Callbacks {
     }
 
     override fun onBackPressed() {
-
     }
 
     override fun onGetImageLoader(): ImageLoader? {
@@ -253,13 +242,12 @@ class MainActivity : Activity(), Callbacks {
 
     private inner class GetLiveEventsTask : AsyncTask<Void?, Void?, List<EventData>?>() {
 
-        private var progressDialog: ProgressDialog? = null
+        private var progressDialog: Dialog? = null
 
         override fun onPreExecute() {
-            progressDialog = ProgressDialog.show(
-                this@MainActivity, null,
-                resources.getText(R.string.loadingEvents), true
-            )
+            Log.d(APP_NAME, "GetLiveEventsTask")
+            progressDialog = ProgressDialog.create(this@MainActivity, R.string.loadingEvents)
+            progressDialog?.show()
         }
 
         override fun doInBackground(vararg params: Void?): List<EventData>? {
@@ -282,23 +270,22 @@ class MainActivity : Activity(), Callbacks {
             fetchedEvents: List<EventData>?
         ) {
             if (fetchedEvents == null) {
-                progressDialog!!.dismiss()
+                progressDialog?.dismiss()
                 return
             }
             mEventsListFragment?.setEvents(fetchedEvents)
-            progressDialog!!.dismiss()
+            progressDialog?.dismiss()
         }
     }
 
     private inner class CreateLiveEventTask : AsyncTask<Void?, Void?, List<EventData>?>() {
 
-        private var progressDialog: ProgressDialog? = null
+        private var progressDialog: Dialog? = null
 
         override fun onPreExecute() {
-            progressDialog = ProgressDialog.show(
-                this@MainActivity, null,
-                resources.getText(R.string.creatingEvent), true
-            )
+            Log.d(APP_NAME, "CreateLiveEventTask")
+            progressDialog = ProgressDialog.create(this@MainActivity, R.string.creatingEvent)
+            progressDialog?.show()
         }
 
         override fun doInBackground(vararg params: Void?): List<EventData>? {
@@ -327,19 +314,18 @@ class MainActivity : Activity(), Callbacks {
         ) {
             val buttonCreateEvent = findViewById<View>(R.id.create_button) as Button
             buttonCreateEvent.isEnabled = true
-            progressDialog!!.dismiss()
+            progressDialog?.dismiss()
         }
     }
 
     private inner class StartEventTask : AsyncTask<String?, Void?, Void?>() {
 
-        private var progressDialog: ProgressDialog? = null
+        private var progressDialog: Dialog? = null
 
         override fun onPreExecute() {
-            progressDialog = ProgressDialog.show(
-                this@MainActivity, null,
-                resources.getText(R.string.startingEvent), true
-            )
+            Log.d(APP_NAME, "StartEventTask")
+            progressDialog = ProgressDialog.create(this@MainActivity, R.string.startingEvent)
+            progressDialog?.show()
         }
 
         override fun doInBackground(vararg params: String?): Void? {
@@ -359,19 +345,18 @@ class MainActivity : Activity(), Callbacks {
         }
 
         override fun onPostExecute(param: Void?) {
-            progressDialog!!.dismiss()
+            progressDialog?.dismiss()
         }
     }
 
     private inner class EndEventTask : AsyncTask<String?, Void?, Void?>() {
 
-        private var progressDialog: ProgressDialog? = null
+        private var progressDialog: Dialog? = null
 
         override fun onPreExecute() {
-            progressDialog = ProgressDialog.show(
-                this@MainActivity, null,
-                resources.getText(R.string.endingEvent), true
-            )
+            Log.d(APP_NAME, "EndEventTask")
+            progressDialog = ProgressDialog.create(this@MainActivity, R.string.endingEvent)
+            progressDialog?.show()
         }
 
         override fun doInBackground(vararg params: String?): Void? {
@@ -393,7 +378,7 @@ class MainActivity : Activity(), Callbacks {
         }
 
         override fun onPostExecute(param: Void?) {
-            progressDialog!!.dismiss()
+            progressDialog?.dismiss()
         }
     }
 

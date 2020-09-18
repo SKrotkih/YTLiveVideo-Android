@@ -99,7 +99,7 @@ object Utils {
      * @param activity activity
      * @param message  message to show or `null` for none
      */
-    private fun showError(activity: Activity, message: String?) {
+    fun showError(activity: Activity, message: String?) {
         val errorMessage = getErrorMessage(activity, message)
         showErrorInternal(activity, errorMessage)
     }
