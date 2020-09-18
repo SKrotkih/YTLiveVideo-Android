@@ -61,7 +61,9 @@
             android:layout_marginStart="4dip"
             android:fontFamily="sans-serif-condensed"
             android:text="@string/pick_one_of_your_videos_to_submit"
-            android:textAppearance="?android:textAppearanceMedium"></TextView>
+            android:textAppearance="?android:textAppearanceMedium">
+        </TextView>
+
     </LinearLayout>
 
     <FrameLayout
