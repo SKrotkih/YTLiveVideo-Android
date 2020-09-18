@@ -43,6 +43,7 @@ class EventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.OnCo
     private var mImageLoader: ImageLoader? = null
     private var mGoogleApiClient: GoogleApiClient? = null
     private var mGridView: GridView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mGoogleApiClient = GoogleApiClient.Builder(activity)
@@ -53,10 +54,7 @@ class EventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.OnCo
             .build()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val listView: View = inflater.inflate(
             R.layout.list_fragment,
             container,

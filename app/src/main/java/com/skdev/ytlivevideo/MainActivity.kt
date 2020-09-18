@@ -59,22 +59,33 @@ class MainActivity : Activity(), Callbacks {
     private var mChosenAccountName: String? = null
     private var mImageLoader: ImageLoader? = null
     private var mEventsListFragment: EventsListFragment? = null
+    private var progressDialog: ProgressDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         window.requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         ensureLoader()
         credential = GoogleAccountCredential.usingOAuth2(applicationContext, Utils.SCOPES.toList())
-        // set exponential backoff policy
-        credential!!.backOff = ExponentialBackOff()
-        if (savedInstanceState != null) {
-            mChosenAccountName = savedInstanceState.getString(ACCOUNT_KEY)
+        if (credential != null) {
+            // set exponential backoff policy
+            credential!!.backOff = ExponentialBackOff()
+            if (savedInstanceState != null) {
+                mChosenAccountName = savedInstanceState.getString(ACCOUNT_KEY)
+            } else {
+                loadAccount()
+            }
+            credential!!.selectedAccountName = mChosenAccountName
+            mEventsListFragment = fragmentManager
+                .findFragmentById(R.id.list_fragment) as EventsListFragment
         } else {
-            loadAccount()
+            progressDialog = ProgressDialog.show(
+                this@MainActivity, null,
+                resources.getText(R.string.oauth2_credentials_are_empty), true
+            )
         }
-        credential!!.selectedAccountName = mChosenAccountName
-        mEventsListFragment = fragmentManager
-            .findFragmentById(R.id.list_fragment) as EventsListFragment
     }
 
     private fun startStreaming(event: EventData) {
