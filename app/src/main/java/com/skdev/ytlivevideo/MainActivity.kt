@@ -19,16 +19,15 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
 import android.widget.Button
+import androidx.preference.PreferenceManager
 import com.android.volley.toolbox.ImageLoader
-import com.skdev.ytlivevideo.EventsListFragment.Callbacks
-import com.google.android.gms.common.GooglePlayServicesUtil
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
@@ -37,6 +36,7 @@ import com.google.api.client.json.JsonFactory
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.youtube.YouTube
+import com.skdev.ytlivevideo.EventsListFragment.Callbacks
 import com.skdev.ytlivevideo.util.*
 import java.io.IOException
 import java.util.*
@@ -60,7 +60,7 @@ class MainActivity : Activity(), Callbacks {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ensureLoader()
-        credential = GoogleAccountCredential.usingOAuth2(applicationContext, Utils.SCOPES.toList())
+        credential = GoogleAccountCredential.usingOAuth2(applicationContext, Utils.SCOPES)
         if (credential != null) {
             // set exponential backoff policy
             credential!!.backOff = ExponentialBackOff()
@@ -82,8 +82,8 @@ class MainActivity : Activity(), Callbacks {
         val broadcastId: String = event.id
         StartEventTask().execute(broadcastId)
         val intent = Intent(
-            applicationContext,
-            StreamerActivity::class.java
+                applicationContext,
+                StreamerActivity::class.java
         )
         intent.putExtra(YouTubeApi.RTMP_URL_KEY, event.ingestionAddress)
         intent.putExtra(YouTubeApi.BROADCAST_ID_KEY, broadcastId)
@@ -161,7 +161,7 @@ class MainActivity : Activity(), Callbacks {
             }
             REQUEST_ACCOUNT_PICKER -> if (resultCode == RESULT_OK && data.extras != null) {
                 val accountName = data.extras!!.getString(
-                    AccountManager.KEY_ACCOUNT_NAME
+                        AccountManager.KEY_ACCOUNT_NAME
                 )
                 if (accountName != null) {
                     mChosenAccountName = accountName
@@ -190,9 +190,11 @@ class MainActivity : Activity(), Callbacks {
 
     private fun showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode: Int) {
         runOnUiThread {
-            val dialog: Dialog = GooglePlayServicesUtil.getErrorDialog(
-                connectionStatusCode, this@MainActivity,
-                REQUEST_GOOGLE_PLAY_SERVICES
+            val googleAPI = GoogleApiAvailability.getInstance()
+            val dialog: Dialog = googleAPI.getErrorDialog(
+                    this@MainActivity,
+                    connectionStatusCode,
+                    REQUEST_GOOGLE_PLAY_SERVICES
             )
             dialog.show()
         }
@@ -202,9 +204,9 @@ class MainActivity : Activity(), Callbacks {
      * Check that Google Play services APK is installed and up to date.
      */
     private fun checkGooglePlayServicesAvailable(): Boolean {
-        val connectionStatusCode: Int = GooglePlayServicesUtil
-            .isGooglePlayServicesAvailable(this)
-        if (GooglePlayServicesUtil.isUserRecoverableError(connectionStatusCode)) {
+        val googleAPI = GoogleApiAvailability.getInstance()
+        val connectionStatusCode: Int = googleAPI.isGooglePlayServicesAvailable(this@MainActivity)
+        if (googleAPI.isUserResolvableError(connectionStatusCode)) {
             showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode)
             return false
         }
@@ -221,8 +223,8 @@ class MainActivity : Activity(), Callbacks {
 
     private fun chooseAccount() {
         startActivityForResult(
-            credential!!.newChooseAccountIntent(),
-            REQUEST_ACCOUNT_PICKER
+                credential!!.newChooseAccountIntent(),
+                REQUEST_ACCOUNT_PICKER
         )
     }
 
@@ -252,8 +254,8 @@ class MainActivity : Activity(), Callbacks {
 
         override fun doInBackground(vararg params: Void?): List<EventData>? {
             val youtube = YouTube.Builder(
-                transport, jsonFactory,
-                credential
+                    transport, jsonFactory,
+                    credential
             ).setApplicationName(APP_NAME)
                 .build()
             try {
@@ -267,7 +269,7 @@ class MainActivity : Activity(), Callbacks {
         }
 
         override fun onPostExecute(
-            fetchedEvents: List<EventData>?
+                fetchedEvents: List<EventData>?
         ) {
             if (fetchedEvents == null) {
                 progressDialog?.dismiss()
@@ -290,15 +292,15 @@ class MainActivity : Activity(), Callbacks {
 
         override fun doInBackground(vararg params: Void?): List<EventData>? {
             val youtube = YouTube.Builder(
-                transport, jsonFactory,
-                credential
+                    transport, jsonFactory,
+                    credential
             ).setApplicationName(APP_NAME)
                 .build()
             try {
                 val date = Date().toString()
                 YouTubeApi.createLiveEvent(
-                    youtube, "Event - $date",
-                    "A live streaming event - $date"
+                        youtube, "Event - $date",
+                        "A live streaming event - $date"
                 )
                 return YouTubeApi.getLiveEvents(youtube)
             } catch (e: UserRecoverableAuthIOException) {
@@ -310,7 +312,7 @@ class MainActivity : Activity(), Callbacks {
         }
 
         protected override fun onPostExecute(
-            fetchedEvents: List<EventData>?
+                fetchedEvents: List<EventData>?
         ) {
             val buttonCreateEvent = findViewById<View>(R.id.create_button) as Button
             buttonCreateEvent.isEnabled = true
@@ -330,8 +332,8 @@ class MainActivity : Activity(), Callbacks {
 
         override fun doInBackground(vararg params: String?): Void? {
             val youtube = YouTube.Builder(
-                transport, jsonFactory,
-                credential
+                    transport, jsonFactory,
+                    credential
             ).setApplicationName(APP_NAME)
                 .build()
             try {
@@ -361,8 +363,8 @@ class MainActivity : Activity(), Callbacks {
 
         override fun doInBackground(vararg params: String?): Void? {
             val youtube = YouTube.Builder(
-                transport, jsonFactory,
-                credential
+                    transport, jsonFactory,
+                    credential
             ).setApplicationName(APP_NAME)
                 .build()
             try {

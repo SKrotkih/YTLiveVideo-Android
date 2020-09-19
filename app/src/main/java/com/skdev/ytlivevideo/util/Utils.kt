@@ -30,7 +30,7 @@ import com.google.api.services.youtube.YouTubeScopes
  * Class containing some static utility methods.
  */
 object Utils {
-    val SCOPES = arrayOf(Scopes.PROFILE, YouTubeScopes.YOUTUBE)
+    val SCOPES = listOf(Scopes.PROFILE, YouTubeScopes.YOUTUBE)
 
     private var camera: Camera? = null
 
