@@ -24,7 +24,7 @@ import android.view.ViewGroup
 import android.widget.*
 import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.NetworkImageView
-import com.skdev.ytlivevideo.model.youtubeApi.LiveEventsItem
+import com.skdev.ytlivevideo.model.youtubeApi.liveEvents.LiveEventsItem
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks

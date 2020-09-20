@@ -14,6 +14,13 @@ import com.google.android.gms.tasks.Task
  * Activity to demonstrate basic retrieval of the Google user's ID, email address, and basic
  * profile.
  */
+
+/**
+ * Source from there:
+ * https://developers.google.com/identity/sign-in/android/sign-in
+ * https://developers.google.com/identity/sign-in/android/start-integrating
+ */
+
 class GoogleSignIn(context: Activity) {
     private var mGoogleSignInClient: GoogleSignInClient? = null
     private var mContext: Activity

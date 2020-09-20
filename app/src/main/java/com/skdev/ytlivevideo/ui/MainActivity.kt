@@ -39,8 +39,8 @@ import com.google.api.services.youtube.YouTube
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
 import com.skdev.ytlivevideo.ui.LiveEventsListFragment.Callbacks
-import com.skdev.ytlivevideo.model.youtubeApi.LiveEventsItem
-import com.skdev.ytlivevideo.model.youtubeApi.LiveEventsController
+import com.skdev.ytlivevideo.model.youtubeApi.liveEvents.LiveEventsItem
+import com.skdev.ytlivevideo.model.youtubeApi.liveEvents.LiveEventsController
 import com.skdev.ytlivevideo.util.*
 import java.io.IOException
 import java.util.*
@@ -95,7 +95,7 @@ class MainActivity : Activity(), Callbacks {
     }
 
     private val liveEvents: Unit
-        private get() {
+        get() {
             if (mChosenAccountName == null) {
                 return
             }
@@ -251,7 +251,7 @@ class MainActivity : Activity(), Callbacks {
         private var progressDialog: Dialog? = null
 
         override fun onPreExecute() {
-            Log.d(APP_NAME, "GetLiveEventsTask")
+            Log.d(APP_NAME, "GetLiveEventTask")
             progressDialog = ProgressDialog.create(this@MainActivity, R.string.loadingEvents)
             progressDialog?.show()
         }

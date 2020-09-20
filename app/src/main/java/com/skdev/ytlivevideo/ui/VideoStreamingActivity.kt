@@ -32,7 +32,7 @@ import android.widget.ToggleButton
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.services.videoStreaming.VideoStreamingService
 import com.skdev.ytlivevideo.util.Utils
-import com.skdev.ytlivevideo.model.youtubeApi.LiveEventsController
+import com.skdev.ytlivevideo.model.youtubeApi.liveEvents.LiveEventsController
 import java.util.*
 import com.skdev.ytlivevideo.model.services.videoStreaming.VideoStreamingService.LocalBinder
 
