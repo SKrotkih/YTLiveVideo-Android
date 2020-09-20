@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.skdev.ytlivevideo.util
+package com.skdev.ytlivevideo.model.youtubeApi
 
 import android.util.Log
 import com.skdev.ytlivevideo.MainActivity
@@ -23,7 +23,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-object YouTubeApi {
+object LiveEventsController {
     const val RTMP_URL_KEY = "rtmpUrl"
     const val BROADCAST_ID_KEY = "broadcastId"
     private const val FUTURE_DATE_OFFSET_MILLIS = 5 * 1000
@@ -130,7 +130,7 @@ object YouTubeApi {
     @Throws(IOException::class)
     fun getLiveEvents(
         youtube: YouTube
-    ): List<EventData> {
+    ): List<LiveEvent> {
         Log.i(MainActivity.APP_NAME, "Requesting live events.")
         val liveBroadcastRequest = youtube
             .liveBroadcasts().list("id,snippet,contentDetails")
@@ -142,17 +142,17 @@ object YouTubeApi {
 
         // Get the list of broadcasts associated with the user.
         val returnedList = returnedListResponse.items
-        val resultList: MutableList<EventData> = ArrayList(returnedList.size)
-        var event: EventData
+        val resultList: MutableList<LiveEvent> = ArrayList(returnedList.size)
+        var liveEvent: LiveEvent
         for (broadcast in returnedList) {
-            event = EventData()
-            event.event = broadcast
+            liveEvent = LiveEvent()
+            liveEvent.event = broadcast
             val streamId = broadcast.contentDetails.boundStreamId
             if (streamId != null) {
                 val ingestionAddress = getIngestionAddress(youtube, streamId)
-                event.ingestionAddress = ingestionAddress
+                liveEvent.ingestionAddress = ingestionAddress
             }
-            resultList.add(event)
+            resultList.add(liveEvent)
         }
         return resultList
     }

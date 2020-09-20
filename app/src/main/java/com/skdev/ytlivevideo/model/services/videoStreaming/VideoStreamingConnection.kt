@@ -11,15 +11,18 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.skdev.ytlivevideo
+package com.skdev.ytlivevideo.model.services.videoStreaming
 
 import android.hardware.Camera
 import android.util.Log
 import android.view.Surface
-import com.skdev.ytlivevideo.Ffmpeg.encodeAudioFrame
-import com.skdev.ytlivevideo.Ffmpeg.encodeVideoFrame
-import com.skdev.ytlivevideo.Ffmpeg.init
-import com.skdev.ytlivevideo.Ffmpeg.shutdown
+import com.skdev.ytlivevideo.AudioFrameGrabber
+import com.skdev.ytlivevideo.model.services.videoStreaming.Ffmpeg.encodeAudioFrame
+import com.skdev.ytlivevideo.model.services.videoStreaming.Ffmpeg.encodeVideoFrame
+import com.skdev.ytlivevideo.model.services.videoStreaming.Ffmpeg.init
+import com.skdev.ytlivevideo.model.services.videoStreaming.Ffmpeg.shutdown
+import com.skdev.ytlivevideo.MainActivity
+import com.skdev.ytlivevideo.VideoFrameGrabber
 
 class VideoStreamingConnection : VideoStreamingInterface {
     // Member variables.

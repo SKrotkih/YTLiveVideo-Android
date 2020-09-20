@@ -24,7 +24,7 @@ import android.view.ViewGroup
 import android.widget.*
 import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.NetworkImageView
-import com.skdev.ytlivevideo.util.EventData
+import com.skdev.ytlivevideo.model.youtubeApi.LiveEvent
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks
@@ -38,7 +38,7 @@ import com.google.android.gms.plus.model.people.Person
  *
  * Left side fragment showing user's uploaded YouTube videos.
  */
-class EventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+class LiveEventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private var mCallbacks: Callbacks? = null
     private var mImageLoader: ImageLoader? = null
     private var mGoogleApiClient: GoogleApiClient? = null
@@ -72,11 +72,11 @@ class EventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.OnCo
         setProfileInfo()
     }
 
-    fun setEvents(events: List<EventData>) {
+    fun setEvents(liveEvents: List<LiveEvent>) {
         if (!isAdded) {
             return
         }
-        mGridView!!.adapter = LiveEventAdapter(events)
+        mGridView!!.adapter = LiveEventAdapter(liveEvents)
     }
 
     private fun setProfileInfo() {
@@ -164,21 +164,21 @@ class EventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.OnCo
 
     interface Callbacks {
         fun onGetImageLoader(): ImageLoader?
-        fun onEventSelected(event: EventData?)
+        fun onEventSelected(liveEvent: LiveEvent?)
         fun onConnected(connectedAccountName: String?)
     }
 
-    private inner class LiveEventAdapter(private val mEvents: List<EventData>) : BaseAdapter() {
+    private inner class LiveEventAdapter(private val mLiveEvents: List<LiveEvent>) : BaseAdapter() {
         override fun getCount(): Int {
-            return mEvents.size
+            return mLiveEvents.size
         }
 
         override fun getItem(i: Int): Any {
-            return mEvents[i]
+            return mLiveEvents[i]
         }
 
         override fun getItemId(i: Int): Long {
-            return mEvents[i].id.hashCode().toLong()
+            return mLiveEvents[i].id.hashCode().toLong()
         }
 
         override fun getView(
@@ -191,7 +191,7 @@ class EventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.OnCo
                     R.layout.list_item, container, false
                 )
             }
-            val event = mEvents[position]
+            val event = mLiveEvents[position]
             (convertView.findViewById<View>(R.id.text1) as TextView).text = event.title
             (convertView.findViewById<View>(R.id.thumbnail) as NetworkImageView).setImageUrl(
                 event.thumbUri,
@@ -203,13 +203,13 @@ class EventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.OnCo
             }
             convertView.findViewById<View>(R.id.main_target)
                 .setOnClickListener {
-                    mCallbacks!!.onEventSelected(mEvents[position])
+                    mCallbacks!!.onEventSelected(mLiveEvents[position])
                 }
             return convertView
         }
     }
 
     companion object {
-        private val TAG = EventsListFragment::class.java.name
+        private val TAG = LiveEventsListFragment::class.java.name
     }
 }

@@ -39,7 +39,7 @@ class VideoFrameGrabber {
     fun start(camera: Camera): Camera.Size {
         this.camera = camera
         val params = camera.parameters
-        params.setPreviewSize(StreamerActivity.CAMERA_WIDTH, StreamerActivity.CAMERA_HEIGHT)
+        params.setPreviewSize(VideoStreamingActivity.CAMERA_WIDTH, VideoStreamingActivity.CAMERA_HEIGHT)
         camera.parameters = params
         val previewSize = params.previewSize
         val bufferSize = previewSize.width * previewSize.height * ImageFormat.getBitsPerPixel(

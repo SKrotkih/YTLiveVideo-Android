@@ -3,6 +3,7 @@
 .idea
 .DS_Store
 config.info
+/app/build
 /build
 /captures
 .externalNativeBuild

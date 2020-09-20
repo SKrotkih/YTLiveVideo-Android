@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.skdev.ytlivevideo
+package com.skdev.ytlivevideo.model.services.videoStreaming
 
 import android.app.Notification
 import android.app.NotificationManager
@@ -23,15 +23,17 @@ import android.hardware.Camera.CameraInfo
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
+import com.skdev.ytlivevideo.MainActivity
+import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.util.Utils
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
  *
  *
- * StreamerService class which streams the video from camera.
+ * VideoStreamingService class which streams the video from camera.
  */
-class StreamerService : Service() {
+class VideoStreamingService : Service() {
     private val binder: IBinder = LocalBinder()
 
     // Member variables.
@@ -111,8 +113,8 @@ class StreamerService : Service() {
     }
 
     inner class LocalBinder : Binder() {
-        val service: StreamerService
-            get() = this@StreamerService
+        val service: VideoStreamingService
+            get() = this@VideoStreamingService
     }
 
     companion object {

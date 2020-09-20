@@ -27,9 +27,9 @@ import java.io.IOException
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
  *
  *
- * Preview class which previews the camera.
+ * PreviewVideo class which previews the camera.
  */
-internal class Preview(context: Context?, attributes: AttributeSet?) : ViewGroup(context, attributes),
+internal class PreviewVideo(context: Context?, attributes: AttributeSet?) : ViewGroup(context, attributes),
     SurfaceHolder.Callback {
 
     var surfaceView: SurfaceView = SurfaceView(context)
@@ -54,9 +54,9 @@ internal class Preview(context: Context?, attributes: AttributeSet?) : ViewGroup
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         // TODO: This shouldn't be hardcoded.
         val width: Int =
-            StreamerActivity.CAMERA_WIDTH // = resolveSize(getSuggestedMinimumWidth(), StreamerActivity.CAMERA_WIDTH);
+            VideoStreamingActivity.CAMERA_WIDTH // = resolveSize(getSuggestedMinimumWidth(), VideoStreamingActivity.CAMERA_WIDTH);
         val height: Int =
-            StreamerActivity.CAMERA_HEIGHT // = resolveSize(getSuggestedMinimumHeight(), StreamerActivity.CAMERA_HEIGHT);
+            VideoStreamingActivity.CAMERA_HEIGHT // = resolveSize(getSuggestedMinimumHeight(), VideoStreamingActivity.CAMERA_HEIGHT);
         setMeasuredDimension(width, height)
         if (supportedPreviewSizes != null) {
             previewSize = getOptimalPreviewSize(supportedPreviewSizes, width, height)
@@ -151,7 +151,7 @@ internal class Preview(context: Context?, attributes: AttributeSet?) : ViewGroup
             // Now that the size is known, set up the camera parameters and begin
             // the preview.
             val parameters = camera!!.parameters
-            parameters.setPreviewSize(StreamerActivity.CAMERA_WIDTH, StreamerActivity.CAMERA_HEIGHT)
+            parameters.setPreviewSize(VideoStreamingActivity.CAMERA_WIDTH, VideoStreamingActivity.CAMERA_HEIGHT)
             requestLayout()
             camera!!.parameters = parameters
             try {

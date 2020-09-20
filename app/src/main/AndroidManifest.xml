@@ -32,12 +32,12 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".StreamerActivity"
+                android:name=".VideoStreamingActivity"
                 android:label="@string/app_name"
                 android:screenOrientation="landscape">
         </activity>
 
-        <service android:name=".StreamerService"/>
+        <service android:name=".model.services.videoStreaming.VideoStreamingService"/>
     </application>
 
 </manifest>

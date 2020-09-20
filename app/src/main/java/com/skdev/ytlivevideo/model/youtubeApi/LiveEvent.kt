@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.skdev.ytlivevideo.util
+package com.skdev.ytlivevideo.model.youtubeApi
 
 import com.google.api.services.youtube.model.LiveBroadcast
 
@@ -21,7 +21,7 @@ import com.google.api.services.youtube.model.LiveBroadcast
  *
  * Helper class to handle YouTube videos.
  */
-class EventData {
+class LiveEvent {
     var event: LiveBroadcast? = null
 
     var ingestionAddress: String? = null

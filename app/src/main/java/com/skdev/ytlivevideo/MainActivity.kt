@@ -36,7 +36,9 @@ import com.google.api.client.json.JsonFactory
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.youtube.YouTube
-import com.skdev.ytlivevideo.EventsListFragment.Callbacks
+import com.skdev.ytlivevideo.LiveEventsListFragment.Callbacks
+import com.skdev.ytlivevideo.model.youtubeApi.LiveEvent
+import com.skdev.ytlivevideo.model.youtubeApi.LiveEventsController
 import com.skdev.ytlivevideo.util.*
 import java.io.IOException
 import java.util.*
@@ -53,7 +55,7 @@ class MainActivity : Activity(), Callbacks {
     var credential: GoogleAccountCredential? = null
     private var mChosenAccountName: String? = null
     private var mImageLoader: ImageLoader? = null
-    private var mEventsListFragment: EventsListFragment? = null
+    private var mLiveEventsListFragment: LiveEventsListFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
@@ -70,23 +72,23 @@ class MainActivity : Activity(), Callbacks {
                 loadAccount()
             }
             credential!!.selectedAccountName = mChosenAccountName
-            mEventsListFragment = fragmentManager
-                .findFragmentById(R.id.list_fragment) as EventsListFragment
+            mLiveEventsListFragment = fragmentManager
+                .findFragmentById(R.id.list_fragment) as LiveEventsListFragment
         } else {
             val message = resources.getText(R.string.oauth2_credentials_are_empty).toString()
             Utils.showError(this@MainActivity, message)
         }
     }
 
-    private fun startStreaming(event: EventData) {
-        val broadcastId: String = event.id
+    private fun startStreaming(liveEvent: LiveEvent) {
+        val broadcastId: String = liveEvent.id
         StartEventTask().execute(broadcastId)
         val intent = Intent(
                 applicationContext,
-                StreamerActivity::class.java
+                VideoStreamingActivity::class.java
         )
-        intent.putExtra(YouTubeApi.RTMP_URL_KEY, event.ingestionAddress)
-        intent.putExtra(YouTubeApi.BROADCAST_ID_KEY, broadcastId)
+        intent.putExtra(LiveEventsController.RTMP_URL_KEY, liveEvent.ingestionAddress)
+        intent.putExtra(LiveEventsController.BROADCAST_ID_KEY, broadcastId)
         startActivityForResult(intent, REQUEST_STREAMER)
     }
 
@@ -170,7 +172,7 @@ class MainActivity : Activity(), Callbacks {
                 }
             }
             REQUEST_STREAMER -> if (resultCode == RESULT_OK && data.extras != null) {
-                val broadcastId = data.getStringExtra(YouTubeApi.BROADCAST_ID_KEY)
+                val broadcastId = data.getStringExtra(LiveEventsController.BROADCAST_ID_KEY)
                 if (broadcastId != null) {
                     EndEventTask().execute(broadcastId)
                 }
@@ -236,13 +238,13 @@ class MainActivity : Activity(), Callbacks {
         return mImageLoader
     }
 
-    override fun onEventSelected(liveBroadcast: EventData?) {
+    override fun onEventSelected(liveBroadcast: LiveEvent?) {
         if (liveBroadcast != null) {
             startStreaming(liveBroadcast)
         }
     }
 
-    private inner class GetLiveEventsTask : AsyncTask<Void?, Void?, List<EventData>?>() {
+    private inner class GetLiveEventsTask : AsyncTask<Void?, Void?, List<LiveEvent>?>() {
 
         private var progressDialog: Dialog? = null
 
@@ -252,14 +254,14 @@ class MainActivity : Activity(), Callbacks {
             progressDialog?.show()
         }
 
-        override fun doInBackground(vararg params: Void?): List<EventData>? {
+        override fun doInBackground(vararg params: Void?): List<LiveEvent>? {
             val youtube = YouTube.Builder(
                     transport, jsonFactory,
                     credential
             ).setApplicationName(APP_NAME)
                 .build()
             try {
-                return YouTubeApi.getLiveEvents(youtube)
+                return LiveEventsController.getLiveEvents(youtube)
             } catch (e: UserRecoverableAuthIOException) {
                 startActivityForResult(e.intent, REQUEST_AUTHORIZATION)
             } catch (e: IOException) {
@@ -269,18 +271,18 @@ class MainActivity : Activity(), Callbacks {
         }
 
         override fun onPostExecute(
-                fetchedEvents: List<EventData>?
+                fetchedLiveEvents: List<LiveEvent>?
         ) {
-            if (fetchedEvents == null) {
+            if (fetchedLiveEvents == null) {
                 progressDialog?.dismiss()
                 return
             }
-            mEventsListFragment?.setEvents(fetchedEvents)
+            mLiveEventsListFragment?.setEvents(fetchedLiveEvents)
             progressDialog?.dismiss()
         }
     }
 
-    private inner class CreateLiveEventTask : AsyncTask<Void?, Void?, List<EventData>?>() {
+    private inner class CreateLiveEventTask : AsyncTask<Void?, Void?, List<LiveEvent>?>() {
 
         private var progressDialog: Dialog? = null
 
@@ -290,7 +292,7 @@ class MainActivity : Activity(), Callbacks {
             progressDialog?.show()
         }
 
-        override fun doInBackground(vararg params: Void?): List<EventData>? {
+        override fun doInBackground(vararg params: Void?): List<LiveEvent>? {
             val youtube = YouTube.Builder(
                     transport, jsonFactory,
                     credential
@@ -298,11 +300,11 @@ class MainActivity : Activity(), Callbacks {
                 .build()
             try {
                 val date = Date().toString()
-                YouTubeApi.createLiveEvent(
+                LiveEventsController.createLiveEvent(
                         youtube, "Event - $date",
                         "A live streaming event - $date"
                 )
-                return YouTubeApi.getLiveEvents(youtube)
+                return LiveEventsController.getLiveEvents(youtube)
             } catch (e: UserRecoverableAuthIOException) {
                 startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION)
             } catch (e: IOException) {
@@ -312,7 +314,7 @@ class MainActivity : Activity(), Callbacks {
         }
 
         protected override fun onPostExecute(
-                fetchedEvents: List<EventData>?
+                fetchedLiveEvents: List<LiveEvent>?
         ) {
             val buttonCreateEvent = findViewById<View>(R.id.create_button) as Button
             buttonCreateEvent.isEnabled = true
@@ -337,7 +339,7 @@ class MainActivity : Activity(), Callbacks {
             ).setApplicationName(APP_NAME)
                 .build()
             try {
-                YouTubeApi.startEvent(youtube, params[0])
+                LiveEventsController.startEvent(youtube, params[0])
             } catch (e: UserRecoverableAuthIOException) {
                 startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION)
             } catch (e: IOException) {
@@ -369,7 +371,7 @@ class MainActivity : Activity(), Callbacks {
                 .build()
             try {
                 if (params.isNotEmpty()) {
-                    YouTubeApi.endEvent(youtube, params[0])
+                    LiveEventsController.endEvent(youtube, params[0])
                 }
             } catch (e: UserRecoverableAuthIOException) {
                 startActivityForResult(e.intent, REQUEST_AUTHORIZATION)

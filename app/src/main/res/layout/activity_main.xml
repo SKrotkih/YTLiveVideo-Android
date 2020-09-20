@@ -25,7 +25,7 @@
 
     <fragment
             android:id="@+id/list_fragment"
-            android:name="com.skdev.ytlivevideo.EventsListFragment"
+            android:name="com.skdev.ytlivevideo.LiveEventsListFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"

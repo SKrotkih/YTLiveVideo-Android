@@ -29,28 +29,29 @@ import androidx.core.app.ActivityCompat
 import android.util.Log
 import android.view.View
 import android.widget.ToggleButton
+import com.skdev.ytlivevideo.model.services.videoStreaming.VideoStreamingService
 import com.skdev.ytlivevideo.util.Utils
-import com.skdev.ytlivevideo.util.YouTubeApi
+import com.skdev.ytlivevideo.model.youtubeApi.LiveEventsController
 import java.util.*
-import com.skdev.ytlivevideo.StreamerService.LocalBinder
+import com.skdev.ytlivevideo.model.services.videoStreaming.VideoStreamingService.LocalBinder
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
  *
  *
- * StreamerActivity class which previews the camera and streams via StreamerService.
+ * VideoStreamingActivity class which previews the camera and streams via VideoStreamingService.
  */
-class StreamerActivity : Activity() {
+class VideoStreamingActivity : Activity() {
     // Member variables
-    private var streamerService: StreamerService? = null
+    private var videoStreamingService: VideoStreamingService? = null
     private var wakeLock: WakeLock? = null
-    private var preview: Preview? = null
+    private var previewVideo: PreviewVideo? = null
     private var rtmpUrl: String? = null
 
     private val streamerConnection: ServiceConnection? = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             Log.d(MainActivity.APP_NAME, "onServiceConnected")
-            streamerService = (service as LocalBinder).service
+            videoStreamingService = (service as LocalBinder).service
             restoreStateFromService()
             startStreaming()
         }
@@ -59,35 +60,35 @@ class StreamerActivity : Activity() {
             Log.e(MainActivity.APP_NAME, "onServiceDisconnected")
 
             // This should never happen, because our service runs in the same process.
-            streamerService = null
+            videoStreamingService = null
         }
     }
     private var broadcastId: String? = null
     public override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(MainActivity.APP_NAME, "onCreate")
         super.onCreate(savedInstanceState)
-        broadcastId = intent.getStringExtra(YouTubeApi.BROADCAST_ID_KEY)
-        rtmpUrl = intent.getStringExtra(YouTubeApi.RTMP_URL_KEY)
+        broadcastId = intent.getStringExtra(LiveEventsController.BROADCAST_ID_KEY)
+        rtmpUrl = intent.getStringExtra(LiveEventsController.RTMP_URL_KEY)
         if (rtmpUrl == null) {
             Log.w(MainActivity.APP_NAME, "No RTMP URL was passed in; bailing.")
             finish()
         }
         Log.i(MainActivity.APP_NAME, String.format("Got RTMP URL '%s' from calling activity.", rtmpUrl))
         setContentView(R.layout.streamer)
-        preview = findViewById<View>(R.id.surfaceViewPreview) as Preview
+        previewVideo = findViewById<View>(R.id.surfaceViewPreview) as PreviewVideo
         if (!bindService(
-                Intent(this, StreamerService::class.java), streamerConnection!!,
+                Intent(this, VideoStreamingService::class.java), streamerConnection!!,
                 BIND_AUTO_CREATE or BIND_DEBUG_UNBIND
             )
         ) {
-            Log.e(MainActivity.APP_NAME, "Failed to bind StreamerService!")
+            Log.e(MainActivity.APP_NAME, "Failed to bind VideoStreamingService!")
         }
         val toggleButton = findViewById<View>(R.id.toggleBroadcasting) as ToggleButton
         toggleButton.setOnClickListener {
             if (toggleButton.isChecked) {
-                streamerService!!.startStreaming(rtmpUrl)
+                videoStreamingService!!.startStreaming(rtmpUrl)
             } else {
-                streamerService!!.stopStreaming()
+                videoStreamingService!!.stopStreaming()
             }
         }
     }
@@ -95,7 +96,7 @@ class StreamerActivity : Activity() {
     override fun onResume() {
         Log.d(MainActivity.APP_NAME, "onResume")
         super.onResume()
-        if (streamerService != null) {
+        if (videoStreamingService != null) {
             restoreStateFromService()
         }
     }
@@ -103,11 +104,11 @@ class StreamerActivity : Activity() {
     override fun onPause() {
         Log.d(MainActivity.APP_NAME, "onPause")
         super.onPause()
-        if (preview != null) {
-            preview!!.camera = null
+        if (previewVideo != null) {
+            previewVideo!!.camera = null
         }
-        if (streamerService != null) {
-            streamerService!!.releaseCamera()
+        if (videoStreamingService != null) {
+            videoStreamingService!!.releaseCamera()
         }
     }
 
@@ -116,13 +117,13 @@ class StreamerActivity : Activity() {
         super.onDestroy()
         streamerConnection?.let { unbindService(it) }
         stopStreaming()
-        if (streamerService != null) {
-            streamerService!!.releaseCamera()
+        if (videoStreamingService != null) {
+            videoStreamingService!!.releaseCamera()
         }
     }
 
     private fun restoreStateFromService() {
-        preview!!.camera = Utils.getCamera(Camera.CameraInfo.CAMERA_FACING_FRONT)
+        previewVideo!!.camera = Utils.getCamera(Camera.CameraInfo.CAMERA_FACING_FRONT)
     }
 
     private fun startStreaming() {
@@ -130,7 +131,7 @@ class StreamerActivity : Activity() {
         val pm = getSystemService(POWER_SERVICE) as PowerManager
         wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, this.javaClass.name)
         wakeLock!!.acquire()
-        if (!streamerService!!.isStreaming) {
+        if (!videoStreamingService!!.isStreaming) {
             val cameraPermission = Manifest.permission.CAMERA
             val microphonePermission = Manifest.permission.RECORD_AUDIO
             val hasCamPermission = checkSelfPermission(cameraPermission)
@@ -145,13 +146,13 @@ class StreamerActivity : Activity() {
                 ) {
                     // Provide rationale in Snackbar to request permission
                     Snackbar.make(
-                        preview!!, R.string.permission_camera_rationale,
+                        previewVideo!!, R.string.permission_camera_rationale,
                         Snackbar.LENGTH_INDEFINITE
                     ).show()
                 } else {
                     // Explain in Snackbar to turn on permission in settings
                     Snackbar.make(
-                        preview!!, R.string.permission_camera_explain,
+                        previewVideo!!, R.string.permission_camera_explain,
                         Snackbar.LENGTH_INDEFINITE
                     ).show()
                 }
@@ -165,13 +166,13 @@ class StreamerActivity : Activity() {
                 ) {
                     // Provide rationale in Snackbar to request permission
                     Snackbar.make(
-                        preview!!, R.string.permission_microphone_rationale,
+                        previewVideo!!, R.string.permission_microphone_rationale,
                         Snackbar.LENGTH_INDEFINITE
                     ).show()
                 } else {
                     // Explain in Snackbar to turn on permission in settings
                     Snackbar.make(
-                        preview!!, R.string.permission_microphone_explain,
+                        previewVideo!!, R.string.permission_microphone_explain,
                         Snackbar.LENGTH_INDEFINITE
                     ).show()
                 }
@@ -181,7 +182,7 @@ class StreamerActivity : Activity() {
                 ActivityCompat.requestPermissions(this, params, REQUEST_CAMERA_MICROPHONE)
             } else {
                 // We already have permission, so handle as normal
-                streamerService!!.startStreaming(rtmpUrl)
+                videoStreamingService!!.startStreaming(rtmpUrl)
             }
         }
     }
@@ -202,11 +203,11 @@ class StreamerActivity : Activity() {
                 if (Utils.verifyPermissions(grantResults)) {
                     // permissions were granted, yay! do the
                     // streamer task you need to do.
-                    streamerService!!.startStreaming(rtmpUrl)
+                    videoStreamingService!!.startStreaming(rtmpUrl)
                 } else {
                     Log.i(MainActivity.APP_NAME, "Camera with mic permissions were NOT granted.")
                     Snackbar.make(
-                        preview!!, R.string.permissions_not_granted,
+                        previewVideo!!, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT
                     )
                         .show()
@@ -222,14 +223,14 @@ class StreamerActivity : Activity() {
             wakeLock!!.release()
             wakeLock = null
         }
-        if (streamerService!!.isStreaming) {
-            streamerService!!.stopStreaming()
+        if (videoStreamingService!!.isStreaming) {
+            videoStreamingService!!.stopStreaming()
         }
     }
 
     fun endEvent(view: View?) {
         val data = Intent()
-        data.putExtra(YouTubeApi.BROADCAST_ID_KEY, broadcastId)
+        data.putExtra(LiveEventsController.BROADCAST_ID_KEY, broadcastId)
         if (parent == null) {
             setResult(RESULT_OK, data)
         } else {
