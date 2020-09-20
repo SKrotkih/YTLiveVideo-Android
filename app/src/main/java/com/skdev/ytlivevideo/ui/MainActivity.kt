@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.skdev.ytlivevideo
+package com.skdev.ytlivevideo.ui
 
 import android.accounts.AccountManager
 import android.app.Activity
@@ -36,8 +36,10 @@ import com.google.api.client.json.JsonFactory
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.youtube.YouTube
-import com.skdev.ytlivevideo.LiveEventsListFragment.Callbacks
-import com.skdev.ytlivevideo.model.youtubeApi.LiveEvent
+import com.skdev.ytlivevideo.R
+import com.skdev.ytlivevideo.model.network.NetworkSingleton
+import com.skdev.ytlivevideo.ui.LiveEventsListFragment.Callbacks
+import com.skdev.ytlivevideo.model.youtubeApi.LiveEventsItem
 import com.skdev.ytlivevideo.model.youtubeApi.LiveEventsController
 import com.skdev.ytlivevideo.util.*
 import java.io.IOException
@@ -80,14 +82,14 @@ class MainActivity : Activity(), Callbacks {
         }
     }
 
-    private fun startStreaming(liveEvent: LiveEvent) {
-        val broadcastId: String = liveEvent.id
+    private fun startStreaming(liveEventsItem: LiveEventsItem) {
+        val broadcastId: String = liveEventsItem.id
         StartEventTask().execute(broadcastId)
         val intent = Intent(
                 applicationContext,
                 VideoStreamingActivity::class.java
         )
-        intent.putExtra(LiveEventsController.RTMP_URL_KEY, liveEvent.ingestionAddress)
+        intent.putExtra(LiveEventsController.RTMP_URL_KEY, liveEventsItem.ingestionAddress)
         intent.putExtra(LiveEventsController.BROADCAST_ID_KEY, broadcastId)
         startActivityForResult(intent, REQUEST_STREAMER)
     }
@@ -238,13 +240,13 @@ class MainActivity : Activity(), Callbacks {
         return mImageLoader
     }
 
-    override fun onEventSelected(liveBroadcast: LiveEvent?) {
+    override fun onEventSelected(liveBroadcast: LiveEventsItem?) {
         if (liveBroadcast != null) {
             startStreaming(liveBroadcast)
         }
     }
 
-    private inner class GetLiveEventsTask : AsyncTask<Void?, Void?, List<LiveEvent>?>() {
+    private inner class GetLiveEventsTask : AsyncTask<Void?, Void?, List<LiveEventsItem>?>() {
 
         private var progressDialog: Dialog? = null
 
@@ -254,7 +256,7 @@ class MainActivity : Activity(), Callbacks {
             progressDialog?.show()
         }
 
-        override fun doInBackground(vararg params: Void?): List<LiveEvent>? {
+        override fun doInBackground(vararg params: Void?): List<LiveEventsItem>? {
             val youtube = YouTube.Builder(
                     transport, jsonFactory,
                     credential
@@ -271,18 +273,18 @@ class MainActivity : Activity(), Callbacks {
         }
 
         override fun onPostExecute(
-                fetchedLiveEvents: List<LiveEvent>?
+            fetchedLiveEventsItems: List<LiveEventsItem>?
         ) {
-            if (fetchedLiveEvents == null) {
+            if (fetchedLiveEventsItems == null) {
                 progressDialog?.dismiss()
                 return
             }
-            mLiveEventsListFragment?.setEvents(fetchedLiveEvents)
+            mLiveEventsListFragment?.setEvents(fetchedLiveEventsItems)
             progressDialog?.dismiss()
         }
     }
 
-    private inner class CreateLiveEventTask : AsyncTask<Void?, Void?, List<LiveEvent>?>() {
+    private inner class CreateLiveEventTask : AsyncTask<Void?, Void?, List<LiveEventsItem>?>() {
 
         private var progressDialog: Dialog? = null
 
@@ -292,7 +294,7 @@ class MainActivity : Activity(), Callbacks {
             progressDialog?.show()
         }
 
-        override fun doInBackground(vararg params: Void?): List<LiveEvent>? {
+        override fun doInBackground(vararg params: Void?): List<LiveEventsItem>? {
             val youtube = YouTube.Builder(
                     transport, jsonFactory,
                     credential
@@ -314,7 +316,7 @@ class MainActivity : Activity(), Callbacks {
         }
 
         protected override fun onPostExecute(
-                fetchedLiveEvents: List<LiveEvent>?
+            fetchedLiveEventsItems: List<LiveEventsItem>?
         ) {
             val buttonCreateEvent = findViewById<View>(R.id.create_button) as Button
             buttonCreateEvent.isEnabled = true

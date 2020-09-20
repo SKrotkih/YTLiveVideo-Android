@@ -16,13 +16,13 @@ package com.skdev.ytlivevideo.model.services.videoStreaming
 import android.hardware.Camera
 import android.util.Log
 import android.view.Surface
-import com.skdev.ytlivevideo.AudioFrameGrabber
-import com.skdev.ytlivevideo.model.services.videoStreaming.Ffmpeg.encodeAudioFrame
-import com.skdev.ytlivevideo.model.services.videoStreaming.Ffmpeg.encodeVideoFrame
-import com.skdev.ytlivevideo.model.services.videoStreaming.Ffmpeg.init
-import com.skdev.ytlivevideo.model.services.videoStreaming.Ffmpeg.shutdown
-import com.skdev.ytlivevideo.MainActivity
-import com.skdev.ytlivevideo.VideoFrameGrabber
+import com.skdev.ytlivevideo.media.audio.AudioFrameGrabber
+import com.skdev.ytlivevideo.media.Ffmpeg.encodeAudioFrame
+import com.skdev.ytlivevideo.media.Ffmpeg.encodeVideoFrame
+import com.skdev.ytlivevideo.media.Ffmpeg.init
+import com.skdev.ytlivevideo.media.Ffmpeg.shutdown
+import com.skdev.ytlivevideo.ui.MainActivity
+import com.skdev.ytlivevideo.media.video.VideoFrameGrabber
 
 class VideoStreamingConnection : VideoStreamingInterface {
     // Member variables.

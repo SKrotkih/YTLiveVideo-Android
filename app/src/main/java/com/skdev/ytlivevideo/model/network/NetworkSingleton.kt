@@ -11,13 +11,14 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.skdev.ytlivevideo.util
+package com.skdev.ytlivevideo.model.network
 
 import android.content.Context
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.Volley
+import com.skdev.ytlivevideo.util.LruBitmapCache
 
 class NetworkSingleton private constructor(private var mCtx: Context) {
     private var mRequestQueue: RequestQueue?

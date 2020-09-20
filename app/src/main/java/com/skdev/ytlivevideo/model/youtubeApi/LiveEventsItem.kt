@@ -21,7 +21,7 @@ import com.google.api.services.youtube.model.LiveBroadcast
  *
  * Helper class to handle YouTube videos.
  */
-class LiveEvent {
+class LiveEventsItem {
     var event: LiveBroadcast? = null
 
     var ingestionAddress: String? = null

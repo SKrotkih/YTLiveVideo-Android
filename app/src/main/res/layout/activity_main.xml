@@ -25,11 +25,11 @@
 
     <fragment
             android:id="@+id/list_fragment"
-            android:name="com.skdev.ytlivevideo.LiveEventsListFragment"
+            android:name="com.skdev.ytlivevideo.ui.LiveEventsListFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            tools:layout="@layout/list_fragment">
+            tools:layout="@layout/fragment_live_events_list">
     </fragment>
 
     <LinearLayout

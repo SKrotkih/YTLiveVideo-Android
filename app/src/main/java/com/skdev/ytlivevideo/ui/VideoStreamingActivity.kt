@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.skdev.ytlivevideo
+package com.skdev.ytlivevideo.ui
 
 import android.Manifest
 import android.app.Activity
@@ -29,6 +29,7 @@ import androidx.core.app.ActivityCompat
 import android.util.Log
 import android.view.View
 import android.widget.ToggleButton
+import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.services.videoStreaming.VideoStreamingService
 import com.skdev.ytlivevideo.util.Utils
 import com.skdev.ytlivevideo.model.youtubeApi.LiveEventsController
@@ -74,7 +75,7 @@ class VideoStreamingActivity : Activity() {
             finish()
         }
         Log.i(MainActivity.APP_NAME, String.format("Got RTMP URL '%s' from calling activity.", rtmpUrl))
-        setContentView(R.layout.streamer)
+        setContentView(R.layout.activity_video_streaming)
         previewVideo = findViewById<View>(R.id.surfaceViewPreview) as PreviewVideo
         if (!bindService(
                 Intent(this, VideoStreamingService::class.java), streamerConnection!!,
@@ -202,7 +203,7 @@ class VideoStreamingActivity : Activity() {
                 // checked.
                 if (Utils.verifyPermissions(grantResults)) {
                     // permissions were granted, yay! do the
-                    // streamer task you need to do.
+                    // activity_video_streaming task you need to do.
                     videoStreamingService!!.startStreaming(rtmpUrl)
                 } else {
                     Log.i(MainActivity.APP_NAME, "Camera with mic permissions were NOT granted.")

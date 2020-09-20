@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.skdev.ytlivevideo
+package com.skdev.ytlivevideo.ui
 
 import android.app.Activity
 import android.app.Fragment
@@ -24,13 +24,14 @@ import android.view.ViewGroup
 import android.widget.*
 import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.NetworkImageView
-import com.skdev.ytlivevideo.model.youtubeApi.LiveEvent
+import com.skdev.ytlivevideo.model.youtubeApi.LiveEventsItem
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks
 import com.google.android.gms.plus.Plus
 import com.google.android.gms.plus.PlusOneButton
 import com.google.android.gms.plus.model.people.Person
+import com.skdev.ytlivevideo.R
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
@@ -56,7 +57,7 @@ class LiveEventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val listView: View = inflater.inflate(
-            R.layout.list_fragment,
+            R.layout.fragment_live_events_list,
             container,
             false
         )
@@ -72,11 +73,11 @@ class LiveEventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.
         setProfileInfo()
     }
 
-    fun setEvents(liveEvents: List<LiveEvent>) {
+    fun setEvents(liveEventsItems: List<LiveEventsItem>) {
         if (!isAdded) {
             return
         }
-        mGridView!!.adapter = LiveEventAdapter(liveEvents)
+        mGridView!!.adapter = LiveEventAdapter(liveEventsItems)
     }
 
     private fun setProfileInfo() {
@@ -164,21 +165,21 @@ class LiveEventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.
 
     interface Callbacks {
         fun onGetImageLoader(): ImageLoader?
-        fun onEventSelected(liveEvent: LiveEvent?)
+        fun onEventSelected(liveEventsItem: LiveEventsItem?)
         fun onConnected(connectedAccountName: String?)
     }
 
-    private inner class LiveEventAdapter(private val mLiveEvents: List<LiveEvent>) : BaseAdapter() {
+    private inner class LiveEventAdapter(private val mLiveEventsItems: List<LiveEventsItem>) : BaseAdapter() {
         override fun getCount(): Int {
-            return mLiveEvents.size
+            return mLiveEventsItems.size
         }
 
         override fun getItem(i: Int): Any {
-            return mLiveEvents[i]
+            return mLiveEventsItems[i]
         }
 
         override fun getItemId(i: Int): Long {
-            return mLiveEvents[i].id.hashCode().toLong()
+            return mLiveEventsItems[i].id.hashCode().toLong()
         }
 
         override fun getView(
@@ -188,10 +189,10 @@ class LiveEventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.
             var convertView = convertView
             if (convertView == null) {
                 convertView = LayoutInflater.from(activity).inflate(
-                    R.layout.list_item, container, false
+                    R.layout.live_events_list_item, container, false
                 )
             }
-            val event = mLiveEvents[position]
+            val event = mLiveEventsItems[position]
             (convertView.findViewById<View>(R.id.text1) as TextView).text = event.title
             (convertView.findViewById<View>(R.id.thumbnail) as NetworkImageView).setImageUrl(
                 event.thumbUri,
@@ -203,7 +204,7 @@ class LiveEventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.
             }
             convertView.findViewById<View>(R.id.main_target)
                 .setOnClickListener {
-                    mCallbacks!!.onEventSelected(mLiveEvents[position])
+                    mCallbacks!!.onEventSelected(mLiveEventsItems[position])
                 }
             return convertView
         }

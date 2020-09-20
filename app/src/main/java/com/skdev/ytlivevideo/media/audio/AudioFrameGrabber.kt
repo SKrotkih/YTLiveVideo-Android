@@ -11,12 +11,13 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.skdev.ytlivevideo
+package com.skdev.ytlivevideo.media.audio
 
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.util.Log
+import com.skdev.ytlivevideo.ui.MainActivity
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
@@ -39,7 +40,6 @@ class AudioFrameGrabber {
      * @param frequency - Recording frequency.
      */
     fun start(frequency: Int) {
-        Log.d(MainActivity.APP_NAME, "start")
         this.frequency = frequency
         cancel = false
         thread = Thread { recordThread() }
@@ -72,27 +72,29 @@ class AudioFrameGrabber {
             if (bufferReadResult > 0) {
                 frameCallback!!.handleFrame(buffer, bufferReadResult)
             } else if (bufferReadResult < 0) {
-                Log.w(MainActivity.APP_NAME, "Error calling recorder.read: $bufferReadResult")
+                Log.w(OBJ_NAME, "Error calling recorder.read: $bufferReadResult")
             }
         }
         recorder.stop()
-        Log.d(MainActivity.APP_NAME, "exit recordThread")
     }
 
     /**
      * Stops recording.
      */
     fun stop() {
-        Log.d(MainActivity.APP_NAME, "stop")
         cancel = true
         try {
             thread!!.join()
         } catch (e: InterruptedException) {
-            Log.e(MainActivity.APP_NAME, "", e)
+            Log.e(OBJ_NAME, "", e)
         }
     }
 
     interface FrameCallback {
         fun handleFrame(audio_data: ShortArray?, length: Int)
+    }
+
+    companion object {
+        const val OBJ_NAME = "AudioGrabber"
     }
 }

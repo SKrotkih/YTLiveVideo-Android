@@ -23,7 +23,7 @@ import android.hardware.Camera.CameraInfo
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
-import com.skdev.ytlivevideo.MainActivity
+import com.skdev.ytlivevideo.ui.MainActivity
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.util.Utils
 

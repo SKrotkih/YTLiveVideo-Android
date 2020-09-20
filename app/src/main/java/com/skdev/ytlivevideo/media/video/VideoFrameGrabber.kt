@@ -11,10 +11,11 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.skdev.ytlivevideo
+package com.skdev.ytlivevideo.media.video
 
 import android.graphics.ImageFormat
 import android.hardware.Camera
+import com.skdev.ytlivevideo.ui.VideoStreamingActivity
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
@@ -62,5 +63,9 @@ class VideoFrameGrabber {
 
     interface FrameCallback {
         fun handleFrame(yuv_image: ByteArray?)
+    }
+
+    companion object {
+        const val OBJ_NAME = "VideoGrabber"
     }
 }

@@ -14,7 +14,7 @@
 package com.skdev.ytlivevideo.model.youtubeApi
 
 import android.util.Log
-import com.skdev.ytlivevideo.MainActivity
+import com.skdev.ytlivevideo.ui.MainActivity
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.google.api.client.util.DateTime
 import com.google.api.services.youtube.YouTube
@@ -130,7 +130,7 @@ object LiveEventsController {
     @Throws(IOException::class)
     fun getLiveEvents(
         youtube: YouTube
-    ): List<LiveEvent> {
+    ): List<LiveEventsItem> {
         Log.i(MainActivity.APP_NAME, "Requesting live events.")
         val liveBroadcastRequest = youtube
             .liveBroadcasts().list("id,snippet,contentDetails")
@@ -142,17 +142,17 @@ object LiveEventsController {
 
         // Get the list of broadcasts associated with the user.
         val returnedList = returnedListResponse.items
-        val resultList: MutableList<LiveEvent> = ArrayList(returnedList.size)
-        var liveEvent: LiveEvent
+        val resultList: MutableList<LiveEventsItem> = ArrayList(returnedList.size)
+        var liveEventsItem: LiveEventsItem
         for (broadcast in returnedList) {
-            liveEvent = LiveEvent()
-            liveEvent.event = broadcast
+            liveEventsItem = LiveEventsItem()
+            liveEventsItem.event = broadcast
             val streamId = broadcast.contentDetails.boundStreamId
             if (streamId != null) {
                 val ingestionAddress = getIngestionAddress(youtube, streamId)
-                liveEvent.ingestionAddress = ingestionAddress
+                liveEventsItem.ingestionAddress = ingestionAddress
             }
-            resultList.add(liveEvent)
+            resultList.add(liveEventsItem)
         }
         return resultList
     }
