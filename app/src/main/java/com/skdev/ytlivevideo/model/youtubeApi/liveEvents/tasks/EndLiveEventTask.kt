@@ -19,10 +19,9 @@ import com.skdev.ytlivevideo.util.ProgressDialog
 import java.io.IOException
 
 class EndLiveEventTask(val context: Activity,
-                       val broadcastId: String?,
-                       val googleCredential: GoogleAccountCredential,
-                       val onAuthException: () -> Void,
-                       val completion: (List<LiveEventsItem>?) -> Void) : AsyncTask<Void?, Void?, List<LiveEventsItem>?>() {
+                       private val googleCredential: GoogleAccountCredential?,
+                       private val broadcastId: String?,
+                       private val listener: LiveEventTaskCallback) : AsyncTask<Void?, Void?, List<LiveEventsItem>?>() {
 
     private var progressDialog: Dialog? = null
     private val transport: HttpTransport = AndroidHttp.newCompatibleTransport()
@@ -45,7 +44,7 @@ class EndLiveEventTask(val context: Activity,
                 LiveEventsController.endEvent(youtube, broadcastId)
             }
         } catch (e: UserRecoverableAuthIOException) {
-            onAuthException()
+            listener.onAuthException(e)
         } catch (e: IOException) {
             Log.e(OBJ_NAME, "", e)
         }
@@ -55,7 +54,6 @@ class EndLiveEventTask(val context: Activity,
     override fun onPostExecute(
         fetchedLiveEventsItems: List<LiveEventsItem>?
     ) {
-        completion(fetchedLiveEventsItems)
         progressDialog?.dismiss()
     }
 

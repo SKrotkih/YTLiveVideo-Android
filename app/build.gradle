@@ -55,6 +55,10 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'androidx.preference:preference-ktx:1.1.1'
 
+    // Dependency for Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0"
+
     // Dependency for Google Sign-In
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
 

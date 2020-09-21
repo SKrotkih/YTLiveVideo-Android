@@ -20,9 +20,8 @@ import java.io.IOException
 import java.util.*
 
 class CreateLiveEventTask(val context: Activity,
-                        val googleCredential: GoogleAccountCredential,
-                        val onAuthException: () -> Void,
-                        val completion: (List<LiveEventsItem>?) -> Void) : AsyncTask<Void?, Void?, List<LiveEventsItem>?>() {
+                          private val googleCredential: GoogleAccountCredential?,
+                          private val listener: LiveEventTaskCallback) : AsyncTask<Void?, Void?, List<LiveEventsItem>?>() {
 
     private var progressDialog: Dialog? = null
     private val transport: HttpTransport = AndroidHttp.newCompatibleTransport()
@@ -49,18 +48,17 @@ class CreateLiveEventTask(val context: Activity,
             )
             return LiveEventsController.getLiveEvents(youtube)
         } catch (e: UserRecoverableAuthIOException) {
-            onAuthException()
+            listener.onAuthException(e)
         } catch (e: IOException) {
             Log.e(OBJ_NAME, "Unexpected Exception", e)
         }
         return null
     }
 
-    protected override fun onPostExecute(
+    override fun onPostExecute(
         fetchedLiveEventsItems: List<LiveEventsItem>?
     ) {
         progressDialog?.dismiss()
-        completion(fetchedLiveEventsItems)
     }
 
     companion object {

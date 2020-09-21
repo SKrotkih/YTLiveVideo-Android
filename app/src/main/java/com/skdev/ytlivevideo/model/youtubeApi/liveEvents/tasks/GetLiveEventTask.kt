@@ -18,10 +18,22 @@ import com.skdev.ytlivevideo.ui.MainActivity
 import com.skdev.ytlivevideo.util.ProgressDialog
 import java.io.IOException
 
+interface LiveEventTaskCallback {
+    fun onAuthException(e: UserRecoverableAuthIOException)
+    fun onCompletion(items: List<LiveEventsItem>)
+}
+
+/**
+    GetLiveEventTask(this, credential, object : LiveEventTaskCallback {
+        override fun onAuthException() {
+        }
+        override fun onCompletion(items: List<LiveEventsItem>?) {
+        }
+    }).execute()
+ */
 class GetLiveEventTask(val context: Activity,
-                       val googleCredential: GoogleAccountCredential,
-                       val onAuthException: () -> Void,
-                       val completion: (List<LiveEventsItem>?) -> Void) : AsyncTask<Void?, Void?, List<LiveEventsItem>?>() {
+                       private val googleCredential: GoogleAccountCredential?,
+                       private val listener: LiveEventTaskCallback) : AsyncTask<Void?, Void?, List<LiveEventsItem>?>() {
 
     private var progressDialog: Dialog? = null
     private val transport: HttpTransport = AndroidHttp.newCompatibleTransport()
@@ -42,7 +54,7 @@ class GetLiveEventTask(val context: Activity,
         try {
             return LiveEventsController.getLiveEvents(youtube)
         } catch (e: UserRecoverableAuthIOException) {
-            onAuthException()
+            listener.onAuthException(e)
         } catch (e: IOException) {
             Log.e(OBJ_NAME, "", e)
         }
@@ -56,7 +68,7 @@ class GetLiveEventTask(val context: Activity,
             progressDialog?.dismiss()
             return
         }
-        completion(fetchedLiveEventsItems)
+        listener.onCompletion(fetchedLiveEventsItems)
         progressDialog?.dismiss()
     }
 
