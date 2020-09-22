@@ -72,7 +72,7 @@ class MainActivity : Activity(), Callbacks {
         when (item.itemId) {
             R.id.menu_refresh -> fetchLiveBroadcastItems()
             R.id.menu_accounts -> {
-                chooseAccount()
+                startSelectAccountActivity()
                 return true
             }
         }
@@ -84,34 +84,44 @@ class MainActivity : Activity(), Callbacks {
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
+
+
         when (requestCode) {
             REQUEST_GMS_ERROR_DIALOG -> {
             }
             REQUEST_GOOGLE_PLAY_SERVICES -> if (resultCode == RESULT_OK) {
-                haveGooglePlayServices()
+                didCheckGooglePlayServices()
             } else {
                 checkGooglePlayServicesAvailable()
             }
             REQUEST_AUTHORIZATION -> if (resultCode != RESULT_OK) {
-                chooseAccount()
+                startSelectAccountActivity()
             }
             REQUEST_ACCOUNT_PICKER -> if (resultCode == RESULT_OK && data.extras != null) {
-                val accountName = data.extras!!.getString(AccountManager.KEY_ACCOUNT_NAME)
-                credential!!.selectedAccountName = accountName
-                AccountName.saveName(this, accountName)
+                didSelectAccount(data)
             }
             REQUEST_STREAMER -> if (resultCode == RESULT_OK && data.extras != null) {
-                val broadcastId = data.getStringExtra(YouTubeLiveBroadcastRequest.BROADCAST_ID_KEY)
-                if (broadcastId != null) {
-                    EndLiveEvent(this, credential, broadcastId, object : LiveEventTaskCallback {
-                        override fun onAuthException(e: UserRecoverableAuthIOException) {
-                            startActivityForResult(e.intent, REQUEST_AUTHORIZATION)
-                        }
-                        override fun onCompletion(fetchedLiveBroadcastItems: List<LiveBroadcastItem>) {
-                        }
-                    }).execute()
-                }
+                didSelectBroadcast(data)
             }
+        }
+    }
+
+    private fun didSelectAccount(data: Intent) {
+        val accountName = data.extras!!.getString(AccountManager.KEY_ACCOUNT_NAME)
+        credential!!.selectedAccountName = accountName
+        AccountName.saveName(this, accountName)
+    }
+
+    private fun didSelectBroadcast(data: Intent) {
+        val broadcastId = data.getStringExtra(YouTubeLiveBroadcastRequest.BROADCAST_ID_KEY)
+        if (broadcastId != null) {
+            EndLiveEvent(this, credential, broadcastId, object : LiveEventTaskCallback {
+                override fun onAuthException(e: UserRecoverableAuthIOException) {
+                    startActivityForResult(e.intent, REQUEST_AUTHORIZATION)
+                }
+                override fun onCompletion(fetchedLiveBroadcastItems: List<LiveBroadcastItem>) {
+                }
+            }).execute()
         }
     }
 
@@ -138,17 +148,17 @@ class MainActivity : Activity(), Callbacks {
         return true
     }
 
-    private fun haveGooglePlayServices() {
-        Log.i(APP_NAME, "haveGooglePlayServices")
+    private fun didCheckGooglePlayServices() {
+        Log.i(APP_NAME, "didCheckGooglePlayServices")
         // check if there is already an account selected
         if (credential?.selectedAccountName == null) {
             // ask user to choose account
-            chooseAccount()
+            startSelectAccountActivity()
         }
     }
 
-    private fun chooseAccount() {
-        Log.i(APP_NAME, "chooseAccount")
+    private fun startSelectAccountActivity() {
+        Log.i(APP_NAME, "startSelectAccountActivity")
         startActivityForResult(credential!!.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER)
     }
 
@@ -169,7 +179,7 @@ class MainActivity : Activity(), Callbacks {
     }
 
     /**
-     * Show GooglePlay Services Availability Error
+     * Show GooglePlay Services Availability Error Dialog
      */
     private fun showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode: Int) {
         runOnUiThread {
