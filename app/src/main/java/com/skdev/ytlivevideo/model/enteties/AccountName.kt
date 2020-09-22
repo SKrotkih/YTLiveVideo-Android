@@ -8,14 +8,15 @@ import com.skdev.ytlivevideo.ui.MainActivity
 
 object AccountName {
     private var mChosenAccountName: String? = null
+    const val ACCOUNT_KEY = "AccountKey"
 
     fun getName(context: Context, bundle: Bundle? = null): String? {
         if (mChosenAccountName == null) {
             mChosenAccountName = if (bundle != null) {
-                bundle.getString(MainActivity.ACCOUNT_KEY)
+                bundle.getString(ACCOUNT_KEY)
             } else {
                 val sp = PreferenceManager.getDefaultSharedPreferences(context)
-                sp.getString(MainActivity.ACCOUNT_KEY, null)
+                sp.getString(ACCOUNT_KEY, null)
             }
         }
         return mChosenAccountName
@@ -29,9 +30,9 @@ object AccountName {
         }
         if (bundle == null) {
             val sp = PreferenceManager.getDefaultSharedPreferences(context)
-            sp.edit().putString(MainActivity.ACCOUNT_KEY, accountName).apply()
+            sp.edit().putString(ACCOUNT_KEY, accountName).apply()
         } else {
-            bundle.putString(MainActivity.ACCOUNT_KEY, accountName)
+            bundle.putString(ACCOUNT_KEY, accountName)
         }
         mChosenAccountName = accountName
         Log.i(MainActivity.APP_NAME, "accountName=$accountName")
