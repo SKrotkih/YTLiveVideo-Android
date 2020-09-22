@@ -1,78 +1,74 @@
-package com.skdev.ytlivevideo.model.youtubeApi.liveEvents.tasks
+package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests
 
 import android.app.Activity
 import android.app.Dialog
 import android.os.AsyncTask
 import android.util.Log
-import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.google.api.client.http.HttpTransport
+import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.JsonFactory
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.youtube.YouTube
 import com.skdev.ytlivevideo.R
-import com.skdev.ytlivevideo.model.youtubeApi.liveEvents.LiveEventsController
-import com.skdev.ytlivevideo.model.youtubeApi.liveEvents.LiveEventsItem
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.ui.MainActivity
 import com.skdev.ytlivevideo.util.ProgressDialog
 import java.io.IOException
 
-interface LiveEventTaskCallback {
-    fun onAuthException(e: UserRecoverableAuthIOException)
-    fun onCompletion(items: List<LiveEventsItem>)
-}
-
 /**
-    GetLiveEventTask(this, credential, object : LiveEventTaskCallback {
+    GetLiveEvent(this, credential, object : LiveEventTaskCallback {
         override fun onAuthException() {
         }
         override fun onCompletion(items: List<LiveEventsItem>?) {
         }
     }).execute()
  */
-class GetLiveEventTask(val context: Activity,
-                       private val googleCredential: GoogleAccountCredential?,
-                       private val listener: LiveEventTaskCallback) : AsyncTask<Void?, Void?, List<LiveEventsItem>?>() {
+class GetLiveEvent(val context: Activity,
+                       private val credential: GoogleAccountCredential?,
+                       private val callback: LiveEventTaskCallback) : AsyncTask<Void?, Void?, List<LiveBroadcastItem>?>() {
 
     private var progressDialog: Dialog? = null
-    private val transport: HttpTransport = AndroidHttp.newCompatibleTransport()
+    private val transport: HttpTransport = NetHttpTransport()
     private val jsonFactory: JsonFactory = GsonFactory()
 
     override fun onPreExecute() {
-        Log.d(OBJ_NAME, "onPreExecute")
+        Log.d(TAG, "Start")
         progressDialog = ProgressDialog.create(context, R.string.loadingEvents)
         progressDialog?.show()
     }
 
-    override fun doInBackground(vararg params: Void?): List<LiveEventsItem>? {
+    override fun doInBackground(vararg params: Void?): List<LiveBroadcastItem>? {
         val youtube = YouTube.Builder(transport,
             jsonFactory,
-            googleCredential
+            credential
         ).setApplicationName(MainActivity.APP_NAME)
             .build()
         try {
-            return LiveEventsController.getLiveEvents(youtube)
+            return YouTubeLiveBroadcastRequest.getLiveEvents(youtube)
         } catch (e: UserRecoverableAuthIOException) {
-            listener.onAuthException(e)
+            callback.onAuthException(e)
         } catch (e: IOException) {
-            Log.e(OBJ_NAME, "", e)
+            Log.e(TAG, "", e)
         }
         return null
     }
 
     override fun onPostExecute(
-        fetchedLiveEventsItems: List<LiveEventsItem>?
+        fetchedLiveBroadcastItems: List<LiveBroadcastItem>?
     ) {
-        if (fetchedLiveEventsItems == null) {
+        if (fetchedLiveBroadcastItems == null) {
             progressDialog?.dismiss()
             return
         }
-        listener.onCompletion(fetchedLiveEventsItems)
+        callback.onCompletion(fetchedLiveBroadcastItems)
+        Log.d(TAG, "Finish")
         progressDialog?.dismiss()
     }
 
     companion object {
-        const val OBJ_NAME = "GetLiveEventTask"
+        const val TAG = "GetLiveEvent"
     }
 }

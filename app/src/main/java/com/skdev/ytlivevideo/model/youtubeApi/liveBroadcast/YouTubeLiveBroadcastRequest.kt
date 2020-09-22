@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.skdev.ytlivevideo.model.youtubeApi.liveEvents
+package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast
 
 import android.util.Log
 import com.skdev.ytlivevideo.ui.MainActivity
@@ -23,14 +23,12 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-object LiveEventsController {
+object YouTubeLiveBroadcastRequest {
     const val RTMP_URL_KEY = "rtmpUrl"
     const val BROADCAST_ID_KEY = "broadcastId"
     private const val FUTURE_DATE_OFFSET_MILLIS = 5 * 1000
-    fun createLiveEvent(
-        youtube: YouTube, description: String?,
-        name: String?
-    ) {
+
+    fun createLiveEvent(youtube: YouTube, description: String?, name: String?) {
         // We need a date that's in the proper ISO format and is in the future,
         // since the API won't
         // create events that start in the past.
@@ -69,7 +67,8 @@ object LiveEventsController {
 
             // Create the insert request
             val liveBroadcastInsert = youtube
-                .liveBroadcasts().insert(
+                .liveBroadcasts()
+                .insert(
                     "snippet,status,contentDetails",
                     broadcast
                 )
@@ -92,7 +91,8 @@ object LiveEventsController {
             stream.cdn = cdn
 
             // Create the insert request
-            val liveStreamInsert = youtube.liveStreams()
+            val liveStreamInsert = youtube
+                .liveStreams()
                 .insert("snippet,cdn", stream)
 
             // Request is executed and inserted stream is returned
@@ -100,7 +100,8 @@ object LiveEventsController {
 
             // Create the bind request
             val liveBroadcastBind = youtube
-                .liveBroadcasts().bind(
+                .liveBroadcasts()
+                .bind(
                     returnedBroadcast.id,
                     "id,contentDetails"
                 )
@@ -128,9 +129,7 @@ object LiveEventsController {
 
     // TODO: Catch those exceptions and handle them here.
     @Throws(IOException::class)
-    fun getLiveEvents(
-        youtube: YouTube
-    ): List<LiveEventsItem> {
+    fun getLiveEvents(youtube: YouTube): List<LiveBroadcastItem> {
         Log.i(MainActivity.APP_NAME, "Requesting live events.")
         val liveBroadcastRequest = youtube
             .liveBroadcasts().list("id,snippet,contentDetails")
@@ -142,17 +141,17 @@ object LiveEventsController {
 
         // Get the list of broadcasts associated with the user.
         val returnedList = returnedListResponse.items
-        val resultList: MutableList<LiveEventsItem> = ArrayList(returnedList.size)
-        var liveEventsItem: LiveEventsItem
+        val resultList: MutableList<LiveBroadcastItem> = ArrayList(returnedList.size)
+        var liveBroadcastItem: LiveBroadcastItem
         for (broadcast in returnedList) {
-            liveEventsItem = LiveEventsItem()
-            liveEventsItem.event = broadcast
+            liveBroadcastItem = LiveBroadcastItem()
+            liveBroadcastItem.event = broadcast
             val streamId = broadcast.contentDetails.boundStreamId
             if (streamId != null) {
                 val ingestionAddress = getIngestionAddress(youtube, streamId)
-                liveEventsItem.ingestionAddress = ingestionAddress
+                liveBroadcastItem.ingestionAddress = ingestionAddress
             }
-            resultList.add(liveEventsItem)
+            resultList.add(liveBroadcastItem)
         }
         return resultList
     }
@@ -180,7 +179,8 @@ object LiveEventsController {
 
     @Throws(IOException::class)
     fun getIngestionAddress(youtube: YouTube, streamId: String?): String {
-        val liveStreamRequest = youtube.liveStreams()
+        val liveStreamRequest = youtube
+            .liveStreams()
             .list("cdn")
         liveStreamRequest.id = streamId
         val returnedStream = liveStreamRequest.execute()

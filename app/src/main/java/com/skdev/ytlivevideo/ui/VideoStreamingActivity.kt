@@ -32,7 +32,7 @@ import android.widget.ToggleButton
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.services.videoStreaming.VideoStreamingService
 import com.skdev.ytlivevideo.util.Utils
-import com.skdev.ytlivevideo.model.youtubeApi.liveEvents.LiveEventsController
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
 import java.util.*
 import com.skdev.ytlivevideo.model.services.videoStreaming.VideoStreamingService.LocalBinder
 
@@ -68,8 +68,8 @@ class VideoStreamingActivity : Activity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(MainActivity.APP_NAME, "onCreate")
         super.onCreate(savedInstanceState)
-        broadcastId = intent.getStringExtra(LiveEventsController.BROADCAST_ID_KEY)
-        rtmpUrl = intent.getStringExtra(LiveEventsController.RTMP_URL_KEY)
+        broadcastId = intent.getStringExtra(YouTubeLiveBroadcastRequest.BROADCAST_ID_KEY)
+        rtmpUrl = intent.getStringExtra(YouTubeLiveBroadcastRequest.RTMP_URL_KEY)
         if (rtmpUrl == null) {
             Log.w(MainActivity.APP_NAME, "No RTMP URL was passed in; bailing.")
             finish()
@@ -231,7 +231,7 @@ class VideoStreamingActivity : Activity() {
 
     fun endEvent(view: View?) {
         val data = Intent()
-        data.putExtra(LiveEventsController.BROADCAST_ID_KEY, broadcastId)
+        data.putExtra(YouTubeLiveBroadcastRequest.BROADCAST_ID_KEY, broadcastId)
         if (parent == null) {
             setResult(RESULT_OK, data)
         } else {
