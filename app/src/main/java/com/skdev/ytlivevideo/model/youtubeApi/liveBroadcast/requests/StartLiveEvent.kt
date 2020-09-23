@@ -58,6 +58,6 @@ class StartLiveEvent(val context: Activity,
     }
 
     companion object {
-        const val TAG = "StartLiveEventTask"
+        val TAG: String = StartLiveEvent::class.java.name
     }
 }

@@ -69,6 +69,6 @@ class GetLiveEvent(val context: Activity,
     }
 
     companion object {
-        const val TAG = "GetLiveEvent"
+        val TAG: String = GetLiveEvent::class.java.name
     }
 }

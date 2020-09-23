@@ -55,6 +55,6 @@ class EndLiveEvent(val context: Activity,
     }
 
     companion object {
-        const val TAG = "EndLiveEventTask"
+        val TAG: String = EndLiveEvent::class.java.name
     }
 }

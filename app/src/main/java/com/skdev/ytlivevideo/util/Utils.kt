@@ -30,8 +30,6 @@ import com.google.api.services.youtube.YouTubeScopes
  * Class containing some static utility methods.
  */
 object Utils {
-    val SCOPES = listOf(Scopes.PROFILE, YouTubeScopes.YOUTUBE)
-
     private var camera: Camera? = null
 
     fun getCamera(cameraType: Int): Camera? {

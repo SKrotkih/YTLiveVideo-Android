@@ -57,6 +57,6 @@ class CreateLiveEvent(val context: Activity,
     }
 
     companion object {
-        const val TAG = "CreateLiveEventTask"
+        val TAG: String = CreateLiveEvent::class.java.name
     }
 }

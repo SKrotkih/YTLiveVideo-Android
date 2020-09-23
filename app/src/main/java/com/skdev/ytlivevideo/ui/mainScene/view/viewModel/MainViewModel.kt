@@ -7,9 +7,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.common.Scopes
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.google.api.client.util.ExponentialBackOff
+import com.google.api.services.youtube.YouTubeScopes
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.enteties.AccountName
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
@@ -53,7 +55,8 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface {
      */
     override fun sighIn(context: Context, savedInstanceState: Bundle?) {
         Log.d(TAG, "sighIn")
-        credential = GoogleAccountCredential.usingOAuth2(context, Utils.SCOPES)
+        val scopes = listOf(Scopes.PROFILE, YouTubeScopes.YOUTUBE)
+        credential = GoogleAccountCredential.usingOAuth2(context, scopes)
         if (credential == null) {
             val message = view.resources.getText(R.string.oauth2_credentials_are_empty).toString()
             Utils.showError(view, message)
@@ -158,7 +161,7 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface {
     }
 
     companion object {
-        private const val TAG = "MainViewModel"
+        private val TAG = MainViewModel::class.java.name
         const val REQUEST_GOOGLE_PLAY_SERVICES = 0
         const val REQUEST_GMS_ERROR_DIALOG = 1
         const val REQUEST_ACCOUNT_PICKER = 2

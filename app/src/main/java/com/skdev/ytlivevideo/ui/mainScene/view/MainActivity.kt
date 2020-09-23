@@ -82,6 +82,7 @@ class MainActivity : Activity(), Callbacks {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
         viewModel.handleActivitiesResults(requestCode, resultCode, data)
+        mLiveEventsListFragment.handleActivitiesResults(requestCode, resultCode, data)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -114,7 +115,7 @@ class MainActivity : Activity(), Callbacks {
     }
 
     fun didFetchLiveBroadcastItems(fetchedLiveBroadcastItems: List<LiveBroadcastItem>) {
-        Log.d(APP_NAME, "didFetchLiveBroadcastItems=$fetchedLiveBroadcastItems")
+        Log.i(APP_NAME, "didFetchLiveBroadcastItems=$fetchedLiveBroadcastItems")
         mLiveEventsListFragment.setEvents(fetchedLiveBroadcastItems)
     }
 

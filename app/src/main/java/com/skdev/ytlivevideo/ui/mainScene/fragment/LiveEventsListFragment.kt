@@ -15,6 +15,7 @@ package com.skdev.ytlivevideo.ui.mainScene.fragment
 
 import android.app.Activity
 import android.app.Fragment
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -44,7 +45,6 @@ class LiveEventsListFragment : Fragment(), ApiClientDelegate {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "Build Api client")
         apiClient = MainFragmentViewModel(activity, this)
-        apiClient.build()
         Log.d(TAG, "Api client has been built")
     }
 
@@ -74,43 +74,27 @@ class LiveEventsListFragment : Fragment(), ApiClientDelegate {
     }
 
     private fun setProfileInfo() {
-        if (!apiClient.isConnected() || apiClient.getCurrentPerson() == null) {
-            (view!!.findViewById<View>(R.id.avatar) as ImageView)
-                .setImageDrawable(null)
-            (view!!.findViewById<View>(R.id.display_name) as TextView)
-                .setText(R.string.not_signed_in)
-        } else {
-            val currentPerson: Person = apiClient.getCurrentPerson() ?: return
-            if (currentPerson.hasImage()) {
-                // Set the URL of the image that should be loaded into this view, and
-                // specify the ImageLoader that will be used to make the request.
-                (view!!.findViewById<View>(R.id.avatar) as NetworkImageView).setImageUrl(
-                    currentPerson.image.url, mImageLoader
-                )
-            }
-            if (currentPerson.hasDisplayName()) {
-                (view!!.findViewById<View>(R.id.display_name) as TextView).text = currentPerson.displayName
-            }
-        }
+        val accountName: String? = apiClient.getAccountName()
+        (view!!.findViewById<View>(R.id.avatar) as ImageView)
+            .setImageDrawable(null)
+//            if (currentPerson.hasImage()) {
+//                // Set the URL of the image that should be loaded into this view, and
+//                // specify the ImageLoader that will be used to make the request.
+//                (view!!.findViewById<View>(R.id.avatar) as NetworkImageView).setImageUrl(
+//                    currentPerson.image.url, mImageLoader
+//                )
+//            }
+        (view!!.findViewById<View>(R.id.display_name) as TextView).text = accountName
     }
 
     override fun onResume() {
         super.onResume()
-        apiClient.connect()
+        apiClient.signIn()
     }
 
     override fun onPause() {
         super.onPause()
-        apiClient.disconnect()
-    }
-
-    override fun onApiClientConnected() {
-        if (mGridView?.adapter != null) {
-            (mGridView!!.adapter as LiveEventAdapter)
-                .notifyDataSetChanged()
-        }
-        setProfileInfo()
-        mCallbacks?.onConnected(apiClient.getAccountName())
+        apiClient.signOut()
     }
 
     override fun onAttach(activity: Activity) {
@@ -173,6 +157,25 @@ class LiveEventsListFragment : Fragment(), ApiClientDelegate {
                 }
             return convertView
         }
+    }
+
+    /**
+     *  ApiClientDelegate
+     */
+    override fun onApiClientConnected() {
+        if (mGridView?.adapter != null) {
+            (mGridView!!.adapter as LiveEventAdapter)
+                .notifyDataSetChanged()
+        }
+        setProfileInfo()
+        mCallbacks?.onConnected(apiClient.getAccountName())
+    }
+    /**
+     *
+     */
+
+    fun handleActivitiesResults(requestCode: Int, resultCode: Int, data: Intent?) {
+        apiClient.onActivityResult(requestCode, resultCode, data)
     }
 
     companion object {
