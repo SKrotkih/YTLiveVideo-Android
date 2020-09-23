@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.skdev.ytlivevideo.ui
+package com.skdev.ytlivevideo.ui.mainScene.view
 
 import android.app.Activity
 import android.app.Dialog
@@ -20,15 +20,19 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.Window
 import com.android.volley.toolbox.ImageLoader
 import com.google.android.gms.common.GoogleApiAvailability
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.enteties.AccountName
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
-import com.skdev.ytlivevideo.ui.LiveEventsListFragment.Callbacks
+import com.skdev.ytlivevideo.ui.mainScene.fragment.LiveEventsListFragment.Callbacks
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
+import com.skdev.ytlivevideo.ui.mainScene.fragment.LiveEventsListFragment
+import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
+import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
@@ -90,23 +94,27 @@ class MainActivity : Activity(), Callbacks {
     }
 
     override fun onBackPressed() {
-        Log.i(APP_NAME, "onBackPressed")
+        Log.d(APP_NAME, "onBackPressed")
     }
 
     override fun onGetImageLoader(): ImageLoader? {
-        Log.i(APP_NAME, "onGetImageLoader")
+        Log.d(APP_NAME, "onGetImageLoader")
         return mImageLoader
     }
 
     override fun onEventSelected(liveBroadcast: LiveBroadcastItem?) {
-        Log.i(APP_NAME, "onEventSelected")
+        Log.d(APP_NAME, "onEventSelected")
         if (liveBroadcast != null) {
             viewModel.startStreaming(liveBroadcast)
         }
     }
 
+    fun createEvent(context: View?) {
+        viewModel.createEvent()
+    }
+
     fun didFetchLiveBroadcastItems(fetchedLiveBroadcastItems: List<LiveBroadcastItem>) {
-        Log.i(MainActivity.APP_NAME, "didFetchLiveBroadcastItems=$fetchedLiveBroadcastItems")
+        Log.d(APP_NAME, "didFetchLiveBroadcastItems=$fetchedLiveBroadcastItems")
         mLiveEventsListFragment.setEvents(fetchedLiveBroadcastItems)
     }
 
@@ -137,7 +145,7 @@ class MainActivity : Activity(), Callbacks {
             val dialog: Dialog = googleAPI.getErrorDialog(
                 this@MainActivity,
                 connectionStatusCode,
-                MainViewModel.REQUEST_GOOGLE_PLAY_SERVICES
+                    MainViewModel.REQUEST_GOOGLE_PLAY_SERVICES
             )
             dialog.show()
         }

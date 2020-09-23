@@ -20,7 +20,7 @@ import android.hardware.Camera
 import android.hardware.Camera.CameraInfo
 import android.util.Log
 import android.widget.Toast
-import com.skdev.ytlivevideo.ui.MainActivity
+import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.R
 import com.google.android.gms.common.Scopes
 import com.google.api.client.googleapis.json.GoogleJsonResponseException

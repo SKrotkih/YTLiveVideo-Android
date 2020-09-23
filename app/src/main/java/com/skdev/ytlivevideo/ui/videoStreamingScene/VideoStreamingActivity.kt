@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.skdev.ytlivevideo.ui
+package com.skdev.ytlivevideo.ui.videoStreamingScene
 
 import android.Manifest
 import android.app.Activity
@@ -35,6 +35,8 @@ import com.skdev.ytlivevideo.util.Utils
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
 import java.util.*
 import com.skdev.ytlivevideo.model.services.videoStreaming.VideoStreamingService.LocalBinder
+import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
+import com.skdev.ytlivevideo.ui.mainScene.view.PreviewVideo
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
@@ -74,7 +76,7 @@ class VideoStreamingActivity : Activity() {
             Log.w(MainActivity.APP_NAME, "No RTMP URL was passed in; bailing.")
             finish()
         }
-        Log.i(MainActivity.APP_NAME, String.format("Got RTMP URL '%s' from calling activity.", rtmpUrl))
+        Log.d(MainActivity.APP_NAME, String.format("Got RTMP URL '%s' from calling activity.", rtmpUrl))
         setContentView(R.layout.activity_video_streaming)
         previewVideo = findViewById<View>(R.id.surfaceViewPreview) as PreviewVideo
         if (!bindService(
@@ -197,7 +199,7 @@ class VideoStreamingActivity : Activity() {
     ) {
         when (requestCode) {
             REQUEST_CAMERA_MICROPHONE -> {
-                Log.i(MainActivity.APP_NAME, "Received response for camera with mic permissions request.")
+                Log.d(MainActivity.APP_NAME, "Received response for camera with mic permissions request.")
 
                 // We have requested multiple permissions for contacts, so all of them need to be
                 // checked.
@@ -206,7 +208,7 @@ class VideoStreamingActivity : Activity() {
                     // activity_video_streaming task you need to do.
                     videoStreamingService!!.startStreaming(rtmpUrl)
                 } else {
-                    Log.i(MainActivity.APP_NAME, "Camera with mic permissions were NOT granted.")
+                    Log.d(MainActivity.APP_NAME, "Camera with mic permissions were NOT granted.")
                     Snackbar.make(
                         previewVideo!!, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT

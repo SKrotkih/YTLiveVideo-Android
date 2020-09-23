@@ -11,11 +11,10 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.skdev.ytlivevideo.ui
+package com.skdev.ytlivevideo.ui.mainScene.fragment
 
 import android.app.Activity
 import android.app.Fragment
-import android.content.IntentSender.SendIntentException
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,10 +24,6 @@ import android.widget.*
 import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.NetworkImageView
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks
-import com.google.android.gms.plus.Plus
 import com.google.android.gms.plus.PlusOneButton
 import com.google.android.gms.plus.model.people.Person
 import com.skdev.ytlivevideo.R
@@ -39,20 +34,18 @@ import com.skdev.ytlivevideo.R
  *
  * Left side fragment showing user's uploaded YouTube videos.
  */
-class LiveEventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+class LiveEventsListFragment : Fragment(), ApiClientDelegate {
     private var mCallbacks: Callbacks? = null
     private var mImageLoader: ImageLoader? = null
-    private var mGoogleApiClient: GoogleApiClient? = null
+    private lateinit var apiClient: ApiClientInterface
     private var mGridView: GridView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mGoogleApiClient = GoogleApiClient.Builder(activity)
-            .addApi(Plus.API)
-            .addScope(Plus.SCOPE_PLUS_PROFILE)
-            .addConnectionCallbacks(this)
-            .addOnConnectionFailedListener(this)
-            .build()
+        Log.d(TAG, "Build Api client")
+        apiClient = MainFragmentViewModel(activity, this)
+        apiClient.build()
+        Log.d(TAG, "Api client has been built")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -81,15 +74,13 @@ class LiveEventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.
     }
 
     private fun setProfileInfo() {
-        if (!mGoogleApiClient!!.isConnected
-            || Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) == null
-        ) {
+        if (!apiClient.isConnected() || apiClient.getCurrentPerson() == null) {
             (view!!.findViewById<View>(R.id.avatar) as ImageView)
                 .setImageDrawable(null)
             (view!!.findViewById<View>(R.id.display_name) as TextView)
                 .setText(R.string.not_signed_in)
         } else {
-            val currentPerson: Person = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient)
+            val currentPerson: Person = apiClient.getCurrentPerson() ?: return
             if (currentPerson.hasImage()) {
                 // Set the URL of the image that should be loaded into this view, and
                 // specify the ImageLoader that will be used to make the request.
@@ -105,47 +96,21 @@ class LiveEventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.
 
     override fun onResume() {
         super.onResume()
-        mGoogleApiClient?.connect()
+        apiClient.connect()
     }
 
     override fun onPause() {
         super.onPause()
-        mGoogleApiClient?.disconnect()
+        apiClient.disconnect()
     }
 
-    override fun onConnected(bundle: Bundle?) {
+    override fun onApiClientConnected() {
         if (mGridView?.adapter != null) {
             (mGridView!!.adapter as LiveEventAdapter)
                 .notifyDataSetChanged()
         }
         setProfileInfo()
-        mCallbacks?.onConnected(Plus.AccountApi.getAccountName(mGoogleApiClient))
-    }
-
-    override fun onConnectionSuspended(i: Int) {
-    }
-
-    override fun onConnectionFailed(connectionResult: ConnectionResult) {
-        if (connectionResult.hasResolution()) {
-            Toast.makeText(
-                activity,
-                R.string.connection_to_google_play_failed,
-                Toast.LENGTH_SHORT
-            ).show()
-            Log.e(
-                TAG,
-                java.lang.String.format(
-                    "Connection to Play Services Failed, error: %d, reason: %s",
-                    connectionResult.errorCode,
-                    connectionResult.toString()
-                )
-            )
-            try {
-                connectionResult.startResolutionForResult(activity, 0)
-            } catch (e: SendIntentException) {
-                Log.e(TAG, e.toString(), e)
-            }
-        }
+        mCallbacks?.onConnected(apiClient.getAccountName())
     }
 
     override fun onAttach(activity: Activity) {
@@ -198,7 +163,7 @@ class LiveEventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.
                 event.thumbUri,
                 mImageLoader
             )
-            if (mGoogleApiClient!!.isConnected) {
+            if (apiClient.isConnected()) {
                 (convertView.findViewById<View>(R.id.plus_button) as PlusOneButton)
                     .initialize(event.watchUri, null)
             }
@@ -213,4 +178,8 @@ class LiveEventsListFragment : Fragment(), ConnectionCallbacks, GoogleApiClient.
     companion object {
         private val TAG = LiveEventsListFragment::class.java.name
     }
+}
+
+interface ApiClientDelegate {
+    fun onApiClientConnected()
 }

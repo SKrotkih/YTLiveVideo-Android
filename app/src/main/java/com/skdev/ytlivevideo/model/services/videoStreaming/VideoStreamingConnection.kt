@@ -21,7 +21,7 @@ import com.skdev.ytlivevideo.media.Ffmpeg.encodeAudioFrame
 import com.skdev.ytlivevideo.media.Ffmpeg.encodeVideoFrame
 import com.skdev.ytlivevideo.media.Ffmpeg.init
 import com.skdev.ytlivevideo.media.Ffmpeg.shutdown
-import com.skdev.ytlivevideo.ui.MainActivity
+import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.media.video.VideoFrameGrabber
 
 class VideoStreamingConnection : VideoStreamingInterface {
@@ -55,12 +55,12 @@ class VideoStreamingConnection : VideoStreamingInterface {
             val width = previewSize.width
             val height = previewSize.height
             encoding = init(width, height, AUDIO_SAMPLE_RATE, url)
-            Log.i(MainActivity.APP_NAME, "Ffmpeg.init() returned $encoding")
+            Log.d(MainActivity.APP_NAME, "Ffmpeg.init() returned $encoding")
         }
     }
 
     override fun close() {
-        Log.i(MainActivity.APP_NAME, "close")
+        Log.d(MainActivity.APP_NAME, "close")
         videoFrameGrabber?.stop()
         audioFrameGrabber?.stop()
         encoding = false

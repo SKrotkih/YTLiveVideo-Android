@@ -24,7 +24,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.mainScene.view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".ui.VideoStreamingActivity"
+                android:name=".ui.videoStreamingScene.VideoStreamingActivity"
                 android:label="@string/app_name"
                 android:screenOrientation="landscape">
         </activity>

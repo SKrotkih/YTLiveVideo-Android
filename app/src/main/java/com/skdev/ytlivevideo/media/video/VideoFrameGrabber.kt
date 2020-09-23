@@ -15,7 +15,7 @@ package com.skdev.ytlivevideo.media.video
 
 import android.graphics.ImageFormat
 import android.hardware.Camera
-import com.skdev.ytlivevideo.ui.VideoStreamingActivity
+import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>

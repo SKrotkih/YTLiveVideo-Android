@@ -14,14 +14,14 @@ import com.google.api.services.youtube.YouTube
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
-import com.skdev.ytlivevideo.ui.MainActivity
+import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.util.ProgressDialog
 import java.io.IOException
 
 class EndLiveEvent(val context: Activity,
                    private val credential: GoogleAccountCredential?,
                    private val broadcastId: String?,
-                   private val callback: LiveEventTaskCallback) : AsyncTask<Void?, Void?, List<LiveBroadcastItem>?>() {
+                   private val callback: LiveBroadcastApiInterface) : AsyncTask<Void?, Void?, List<LiveBroadcastItem>?>() {
 
     private var progressDialog: Dialog? = null
     private val transport: HttpTransport = NetHttpTransport()

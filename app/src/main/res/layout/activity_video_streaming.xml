@@ -24,7 +24,7 @@
     android:showDividers="middle"
     android:verticalSpacing="10dp">
 
-    <com.skdev.ytlivevideo.ui.PreviewVideo
+    <com.skdev.ytlivevideo.ui.mainScene.view.PreviewVideo
         android:id="@+id/surfaceViewPreview"
         android:layout_width="match_parent"
         android:layout_height="0dp"

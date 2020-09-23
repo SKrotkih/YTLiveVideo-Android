@@ -14,7 +14,7 @@
 package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast
 
 import android.util.Log
-import com.skdev.ytlivevideo.ui.MainActivity
+import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.google.api.client.util.DateTime
 import com.google.api.services.youtube.YouTube
@@ -41,7 +41,7 @@ object YouTubeLiveBroadcastRequest {
         val futureDate = Date()
         futureDate.time = futureDateMillis
         val date = dateFormat.format(futureDate)
-        Log.i(
+        Log.d(
             MainActivity.APP_NAME, String.format(
                 "Creating event: name='%s', description='%s', date='%s'.",
                 name, description, date
@@ -130,7 +130,7 @@ object YouTubeLiveBroadcastRequest {
     // TODO: Catch those exceptions and handle them here.
     @Throws(IOException::class)
     fun getLiveEvents(youtube: YouTube): List<LiveBroadcastItem> {
-        Log.i(MainActivity.APP_NAME, "Requesting live events.")
+        Log.d(MainActivity.APP_NAME, "Requesting live events.")
         val liveBroadcastRequest = youtube
             .liveBroadcasts().list("id,snippet,contentDetails")
         // liveBroadcastRequest.setMine(true);
