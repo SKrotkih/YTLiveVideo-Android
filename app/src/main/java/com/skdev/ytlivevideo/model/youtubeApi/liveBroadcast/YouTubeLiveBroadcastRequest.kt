@@ -19,6 +19,7 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.google.api.client.util.DateTime
 import com.google.api.services.youtube.YouTube
 import com.google.api.services.youtube.model.*
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.CreateLiveEvent
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -134,9 +135,6 @@ object YouTubeLiveBroadcastRequest {
         val liveBroadcastRequest = youtube.liveBroadcasts().list("id,snippet,contentDetails")
         //liveBroadcastRequest.setMine(true);
         liveBroadcastRequest.broadcastStatus = "upcoming"
-
-        Log.d("${Thread.currentThread()}", "Current thread")
-
         try {
             // List request is executed and list of broadcasts are returned
             val returnedListResponse = liveBroadcastRequest.execute()
@@ -156,9 +154,9 @@ object YouTubeLiveBroadcastRequest {
             }
             return resultList
         } catch (e: IOException) {
-            Log.d("", e.localizedMessage)
+            Log.e(MainActivity.APP_NAME, "Error while get broadcasts list request (see 'Caused by'):", e)
+            throw e
         }
-        return emptyList()
     }
 
     @Throws(IOException::class)

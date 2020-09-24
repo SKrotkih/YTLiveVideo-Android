@@ -103,18 +103,20 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         val description = "Event - $date"
         val name = "A live streaming event - $date"
 
-        try {
-            val progressDialog = ProgressDialog.create(view, R.string.creatingEvent)
-            progressDialog.show()
-            CoroutineScope(Dispatchers.IO).launch {
+        val progressDialog = ProgressDialog.create(view, R.string.creatingEvent)
+        progressDialog.show()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
                 val list = CreateLiveEvent.createLiveEventAsync(view, accountManager.credential!!, name, description)
                 Log.d(TAG, "$list")
                 progressDialog.dismiss()
+            } catch (e: UserRecoverableAuthIOException) {
+                progressDialog.dismiss()
+                view.startAuthorization(e.intent)
+            } catch (e: IOException) {
+                progressDialog.dismiss()
+                Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
             }
-        } catch (e: UserRecoverableAuthIOException) {
-            view.startAuthorization(e.intent)
-        } catch (e: IOException) {
-            Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
         }
     }
 
