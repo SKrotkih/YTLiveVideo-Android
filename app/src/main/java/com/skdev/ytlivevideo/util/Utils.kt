@@ -22,9 +22,7 @@ import android.util.Log
 import android.widget.Toast
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.R
-import com.google.android.gms.common.Scopes
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
-import com.google.api.services.youtube.YouTubeScopes
 
 /**
  * Class containing some static utility methods.
@@ -41,7 +39,7 @@ object Utils {
                     try {
                         camera = Camera.open(i)
                     } catch (e: RuntimeException) {
-                        Log.e(MainActivity.APP_NAME, String.format("Couldn't open camera type '%d'.", cameraType), e)
+                        Log.e(Config.APP_NAME, String.format("Couldn't open camera type '%d'.", cameraType), e)
                     }
                 }
             }

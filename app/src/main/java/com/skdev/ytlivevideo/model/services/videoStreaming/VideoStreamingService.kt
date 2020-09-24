@@ -25,6 +25,7 @@ import android.os.IBinder
 import android.util.Log
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.R
+import com.skdev.ytlivevideo.util.Config
 import com.skdev.ytlivevideo.util.Utils
 
 /**
@@ -42,26 +43,26 @@ class VideoStreamingService : Service() {
     private var camera: Camera? = null
 
     override fun onCreate() {
-        Log.d(MainActivity.APP_NAME, "onCreate")
+        Log.d(Config.APP_NAME, "onCreate")
     }
 
     override fun onDestroy() {
-        Log.d(MainActivity.APP_NAME, "onDestroy")
+        Log.d(Config.APP_NAME, "onDestroy")
     }
 
     override fun onBind(intent: Intent): IBinder? {
         camera = Utils.getCamera(CameraInfo.CAMERA_FACING_FRONT)
-        Log.d(MainActivity.APP_NAME, "onBind")
+        Log.d(Config.APP_NAME, "onBind")
         return binder
     }
 
     override fun onUnbind(intent: Intent): Boolean {
-        Log.d(MainActivity.APP_NAME, "onUnbind")
+        Log.d(Config.APP_NAME, "onUnbind")
         return false
     }
 
     fun startStreaming(streamUrl: String?) {
-        Log.d(MainActivity.APP_NAME, "startStreaming")
+        Log.d(Config.APP_NAME, "startStreaming")
         showForegroundNotification()
         connection = VideoStreamingConnection()
         // TODO Pass an actual preview surface.
@@ -69,7 +70,7 @@ class VideoStreamingService : Service() {
     }
 
     fun stopStreaming() {
-        Log.d(MainActivity.APP_NAME, "stopStreaming")
+        Log.d(Config.APP_NAME, "stopStreaming")
         connection?.close()
         connection = null
         stopForeground(true)
@@ -79,13 +80,13 @@ class VideoStreamingService : Service() {
         get() = connection != null
 
     fun releaseCamera() {
-        Log.d(MainActivity.APP_NAME, "releaseCamera")
+        Log.d(Config.APP_NAME, "releaseCamera")
         if (!isStreaming && camera != null) {
             Utils.releaseCamera()
-            Log.d(MainActivity.APP_NAME, "Camera was released.")
+            Log.d(Config.APP_NAME, "Camera was released.")
             camera = null
         } else {
-            Log.d(MainActivity.APP_NAME, "Camera was not released.")
+            Log.d(Config.APP_NAME, "Camera was not released.")
         }
     }
 

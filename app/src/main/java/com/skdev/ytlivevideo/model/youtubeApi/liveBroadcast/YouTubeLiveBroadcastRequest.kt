@@ -20,6 +20,7 @@ import com.google.api.client.util.DateTime
 import com.google.api.services.youtube.YouTube
 import com.google.api.services.youtube.model.*
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.CreateLiveEvent
+import com.skdev.ytlivevideo.util.Config
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -43,7 +44,7 @@ object YouTubeLiveBroadcastRequest {
         futureDate.time = futureDateMillis
         val date = dateFormat.format(futureDate)
         Log.d(
-            MainActivity.APP_NAME, String.format(
+            Config.APP_NAME, String.format(
                 "Creating event: name='%s', description='%s', date='%s'.",
                 name, description, date
             )
@@ -131,7 +132,7 @@ object YouTubeLiveBroadcastRequest {
     // TODO: Catch those exceptions and handle them here.
     @Throws(IOException::class)
     fun getLiveEvents(youtube: YouTube): List<LiveBroadcastItem> {
-        Log.d(MainActivity.APP_NAME, "Requesting live events.")
+        Log.d(Config.APP_NAME, "Requesting live events.")
         val liveBroadcastRequest = youtube.liveBroadcasts().list("id,snippet,contentDetails")
         //liveBroadcastRequest.setMine(true);
         liveBroadcastRequest.broadcastStatus = "upcoming"
@@ -154,7 +155,7 @@ object YouTubeLiveBroadcastRequest {
             }
             return resultList
         } catch (e: IOException) {
-            Log.e(MainActivity.APP_NAME, "Error while get broadcasts list request (see 'Caused by'):", e)
+            Log.e(Config.APP_NAME, "Error while get broadcasts list request (see 'Caused by'):", e)
             throw e
         }
     }
@@ -164,7 +165,7 @@ object YouTubeLiveBroadcastRequest {
         try {
             Thread.sleep(10000)
         } catch (e: InterruptedException) {
-            Log.e(MainActivity.APP_NAME, "", e)
+            Log.e(Config.APP_NAME, "", e)
         }
         val transitionRequest = youtube.liveBroadcasts().transition(
             "live", broadcastId, "status"

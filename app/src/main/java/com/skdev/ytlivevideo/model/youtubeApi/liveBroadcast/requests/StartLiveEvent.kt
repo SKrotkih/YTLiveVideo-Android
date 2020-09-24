@@ -15,6 +15,7 @@ import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
+import com.skdev.ytlivevideo.util.Config
 import com.skdev.ytlivevideo.util.ProgressDialog
 import java.io.IOException
 
@@ -38,7 +39,7 @@ class StartLiveEvent(val context: Activity,
             transport,
             jsonFactory,
             credential
-        ).setApplicationName(MainActivity.APP_NAME)
+        ).setApplicationName(Config.APP_NAME)
             .build()
         try {
             YouTubeLiveBroadcastRequest.startEvent(youtube, broadcastId)

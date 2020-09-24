@@ -64,6 +64,7 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         accountManager.setUpGoogleAccount(signInManager.account!!)
         view.invalidateOptionsMenu()
         signInConnectDelegate.signedIn()
+        fetchLiveBroadcastItems()
     }
 
     override fun sighIn(context: Context, savedInstanceState: Bundle?) {
@@ -79,18 +80,22 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
      * Fetch all broadcasts
      */
     override fun fetchLiveBroadcastItems() {
-        if (AccountName.getName(view) == null || accountManager.credential == null) {
-            return
-        }
         Log.d(TAG, "fetchLiveBroadcastItems")
-        GetLiveEvent(view, accountManager.credential, object : LiveBroadcastApiInterface {
-            override fun onAuthException(e: UserRecoverableAuthIOException) {
+        val progressDialog = ProgressDialog.create(view, R.string.loadingEvents)
+        progressDialog.show()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val list = FetchAllLiveEvents.runAsync(view, accountManager.credential!!)
+                Log.d(TAG, "$list")
+                progressDialog.dismiss()
+            } catch (e: UserRecoverableAuthIOException) {
+                progressDialog.dismiss()
                 view.startAuthorization(e.intent)
+            } catch (e: IOException) {
+                progressDialog.dismiss()
+                Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
             }
-            override fun onCompletion(fetchedLiveBroadcastItems: List<LiveBroadcastItem>) {
-                view.didFetchLiveBroadcastItems(fetchedLiveBroadcastItems)
-            }
-        }).execute()
+        }
     }
 
     /**
@@ -107,8 +112,7 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val list = CreateLiveEvent.createLiveEventAsync(view, accountManager.credential!!, name, description)
-                Log.d(TAG, "$list")
+                CreateLiveEvent.runAsync(view, accountManager.credential!!, name, description)
                 progressDialog.dismiss()
             } catch (e: UserRecoverableAuthIOException) {
                 progressDialog.dismiss()

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.preference.PreferenceManager
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
+import com.skdev.ytlivevideo.util.Config
 
 object AccountName {
     private var mChosenAccountName: String? = null
@@ -23,7 +24,7 @@ object AccountName {
     }
 
     fun saveName(context: Context, accountName: String?, bundle: Bundle? = null) {
-        Log.d(MainActivity.APP_NAME, "saveAccountName")
+        Log.d(Config.APP_NAME, "saveAccountName")
         if (accountName == null) {
             mChosenAccountName = null
             return
@@ -35,6 +36,6 @@ object AccountName {
             bundle.putString(ACCOUNT_KEY, accountName)
         }
         mChosenAccountName = accountName
-        Log.d(MainActivity.APP_NAME, "accountName=$accountName")
+        Log.d(Config.APP_NAME, "accountName=$accountName")
     }
 }

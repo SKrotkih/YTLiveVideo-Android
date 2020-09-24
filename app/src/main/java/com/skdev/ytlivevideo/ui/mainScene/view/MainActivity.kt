@@ -33,6 +33,7 @@ import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcast
 import com.skdev.ytlivevideo.ui.mainScene.fragment.LiveEventsListFragment
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
+import com.skdev.ytlivevideo.util.Config
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -98,16 +99,16 @@ class MainActivity : Activity(), Callbacks {
     }
 
     override fun onBackPressed() {
-        Log.d(APP_NAME, "onBackPressed")
+        Log.d(Config.APP_NAME, "onBackPressed")
     }
 
     override fun onGetImageLoader(): ImageLoader? {
-        Log.d(APP_NAME, "onGetImageLoader")
+        Log.d(Config.APP_NAME, "onGetImageLoader")
         return mImageLoader
     }
 
     override fun onEventSelected(liveBroadcast: LiveBroadcastItem?) {
-        Log.d(APP_NAME, "onEventSelected")
+        Log.d(Config.APP_NAME, "onEventSelected")
         if (liveBroadcast != null) {
             viewModel.startStreaming(liveBroadcast)
         }
@@ -118,7 +119,7 @@ class MainActivity : Activity(), Callbacks {
     }
 
     fun didFetchLiveBroadcastItems(fetchedLiveBroadcastItems: List<LiveBroadcastItem>) {
-        Log.i(APP_NAME, "didFetchLiveBroadcastItems=$fetchedLiveBroadcastItems")
+        Log.i(Config.APP_NAME, "didFetchLiveBroadcastItems=$fetchedLiveBroadcastItems")
         mLiveEventsListFragment.setEvents(fetchedLiveBroadcastItems)
     }
 
@@ -153,9 +154,5 @@ class MainActivity : Activity(), Callbacks {
             )
             dialog.show()
         }
-    }
-
-    companion object {
-        const val APP_NAME = "YTLiveVideo"
     }
 }

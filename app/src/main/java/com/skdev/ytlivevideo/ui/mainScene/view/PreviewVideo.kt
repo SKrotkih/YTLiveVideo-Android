@@ -21,6 +21,7 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.ViewGroup
 import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
+import com.skdev.ytlivevideo.util.Config
 import com.skdev.ytlivevideo.util.Utils
 import java.io.IOException
 
@@ -45,7 +46,7 @@ internal class PreviewVideo(context: Context?, attributes: AttributeSet?) : View
             if (camera != null) {
                 supportedPreviewSizes = camera!!.parameters.supportedPreviewSizes
                 for (s in supportedPreviewSizes!!) {
-                    Log.d(MainActivity.APP_NAME, String.format("Supported size: %dw x %dh", s.width, s.height))
+                    Log.d(Config.APP_NAME, String.format("Supported size: %dw x %dh", s.width, s.height))
                 }
                 requestLayout()
             }
@@ -102,7 +103,7 @@ internal class PreviewVideo(context: Context?, attributes: AttributeSet?) : View
                 camera!!.setPreviewDisplay(holder)
             }
         } catch (exception: IOException) {
-            Log.e(MainActivity.APP_NAME, "IOException caused by setPreviewDisplay()", exception)
+            Log.e(Config.APP_NAME, "IOException caused by setPreviewDisplay()", exception)
         }
     }
 
@@ -112,7 +113,7 @@ internal class PreviewVideo(context: Context?, attributes: AttributeSet?) : View
             try {
                 camera!!.setPreviewDisplay(null)
             } catch (e: IOException) {
-                Log.e(MainActivity.APP_NAME, "Caught IOException", e)
+                Log.e(Config.APP_NAME, "Caught IOException", e)
             }
         }
     }
@@ -158,7 +159,7 @@ internal class PreviewVideo(context: Context?, attributes: AttributeSet?) : View
             try {
                 camera!!.setPreviewDisplay(holder)
             } catch (e: IOException) {
-                Log.e(MainActivity.APP_NAME, "", e)
+                Log.e(Config.APP_NAME, "", e)
             }
             camera!!.startPreview()
         }

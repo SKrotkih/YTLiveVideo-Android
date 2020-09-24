@@ -37,6 +37,7 @@ import java.util.*
 import com.skdev.ytlivevideo.model.services.videoStreaming.VideoStreamingService.LocalBinder
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.ui.mainScene.view.PreviewVideo
+import com.skdev.ytlivevideo.util.Config
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
@@ -53,14 +54,14 @@ class VideoStreamingActivity : Activity() {
 
     private val streamerConnection: ServiceConnection? = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            Log.d(MainActivity.APP_NAME, "onServiceConnected")
+            Log.d(Config.APP_NAME, "onServiceConnected")
             videoStreamingService = (service as LocalBinder).service
             restoreStateFromService()
             startStreaming()
         }
 
         override fun onServiceDisconnected(className: ComponentName) {
-            Log.e(MainActivity.APP_NAME, "onServiceDisconnected")
+            Log.e(Config.APP_NAME, "onServiceDisconnected")
 
             // This should never happen, because our service runs in the same process.
             videoStreamingService = null
@@ -68,15 +69,15 @@ class VideoStreamingActivity : Activity() {
     }
     private var broadcastId: String? = null
     public override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(MainActivity.APP_NAME, "onCreate")
+        Log.d(Config.APP_NAME, "onCreate")
         super.onCreate(savedInstanceState)
         broadcastId = intent.getStringExtra(YouTubeLiveBroadcastRequest.BROADCAST_ID_KEY)
         rtmpUrl = intent.getStringExtra(YouTubeLiveBroadcastRequest.RTMP_URL_KEY)
         if (rtmpUrl == null) {
-            Log.w(MainActivity.APP_NAME, "No RTMP URL was passed in; bailing.")
+            Log.w(Config.APP_NAME, "No RTMP URL was passed in; bailing.")
             finish()
         }
-        Log.d(MainActivity.APP_NAME, String.format("Got RTMP URL '%s' from calling activity.", rtmpUrl))
+        Log.d(Config.APP_NAME, String.format("Got RTMP URL '%s' from calling activity.", rtmpUrl))
         setContentView(R.layout.activity_video_streaming)
         previewVideo = findViewById<View>(R.id.surfaceViewPreview) as PreviewVideo
         if (!bindService(
@@ -84,7 +85,7 @@ class VideoStreamingActivity : Activity() {
                 BIND_AUTO_CREATE or BIND_DEBUG_UNBIND
             )
         ) {
-            Log.e(MainActivity.APP_NAME, "Failed to bind VideoStreamingService!")
+            Log.e(Config.APP_NAME, "Failed to bind VideoStreamingService!")
         }
         val toggleButton = findViewById<View>(R.id.toggleBroadcasting) as ToggleButton
         toggleButton.setOnClickListener {
@@ -97,7 +98,7 @@ class VideoStreamingActivity : Activity() {
     }
 
     override fun onResume() {
-        Log.d(MainActivity.APP_NAME, "onResume")
+        Log.d(Config.APP_NAME, "onResume")
         super.onResume()
         if (videoStreamingService != null) {
             restoreStateFromService()
@@ -105,7 +106,7 @@ class VideoStreamingActivity : Activity() {
     }
 
     override fun onPause() {
-        Log.d(MainActivity.APP_NAME, "onPause")
+        Log.d(Config.APP_NAME, "onPause")
         super.onPause()
         if (previewVideo != null) {
             previewVideo!!.camera = null
@@ -116,7 +117,7 @@ class VideoStreamingActivity : Activity() {
     }
 
     override fun onDestroy() {
-        Log.d(MainActivity.APP_NAME, "onDestroy")
+        Log.d(Config.APP_NAME, "onDestroy")
         super.onDestroy()
         streamerConnection?.let { unbindService(it) }
         stopStreaming()
@@ -130,7 +131,7 @@ class VideoStreamingActivity : Activity() {
     }
 
     private fun startStreaming() {
-        Log.d(MainActivity.APP_NAME, "startStreaming")
+        Log.d(Config.APP_NAME, "startStreaming")
         val pm = getSystemService(POWER_SERVICE) as PowerManager
         wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, this.javaClass.name)
         wakeLock!!.acquire()
@@ -199,7 +200,7 @@ class VideoStreamingActivity : Activity() {
     ) {
         when (requestCode) {
             REQUEST_CAMERA_MICROPHONE -> {
-                Log.d(MainActivity.APP_NAME, "Received response for camera with mic permissions request.")
+                Log.d(Config.APP_NAME, "Received response for camera with mic permissions request.")
 
                 // We have requested multiple permissions for contacts, so all of them need to be
                 // checked.
@@ -208,7 +209,7 @@ class VideoStreamingActivity : Activity() {
                     // activity_video_streaming task you need to do.
                     videoStreamingService!!.startStreaming(rtmpUrl)
                 } else {
-                    Log.d(MainActivity.APP_NAME, "Camera with mic permissions were NOT granted.")
+                    Log.d(Config.APP_NAME, "Camera with mic permissions were NOT granted.")
                     Snackbar.make(
                         previewVideo!!, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT
@@ -221,7 +222,7 @@ class VideoStreamingActivity : Activity() {
     }
 
     private fun stopStreaming() {
-        Log.d(MainActivity.APP_NAME, "stopStreaming")
+        Log.d(Config.APP_NAME, "stopStreaming")
         if (wakeLock != null) {
             wakeLock!!.release()
             wakeLock = null

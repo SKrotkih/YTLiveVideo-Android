@@ -18,6 +18,7 @@ import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.util.Log
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
+import com.skdev.ytlivevideo.util.Config
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
@@ -50,11 +51,11 @@ class AudioFrameGrabber {
      * Records audio and pushes to buffer.
      */
     private fun recordThread() {
-        Log.d(MainActivity.APP_NAME, "recordThread")
+        Log.d(Config.APP_NAME, "recordThread")
         val audioEncoding = AudioFormat.ENCODING_PCM_16BIT
         val channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_STEREO
         var bufferSize = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding)
-        Log.d(MainActivity.APP_NAME, "AudioRecord buffer size: $bufferSize")
+        Log.d(Config.APP_NAME, "AudioRecord buffer size: $bufferSize")
 
         // 16 bit PCM stereo recording was chosen as example.
         val recorder = AudioRecord(
