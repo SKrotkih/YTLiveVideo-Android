@@ -6,23 +6,32 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.common.Scopes
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
-import com.google.api.client.util.ExponentialBackOff
-import com.google.api.services.youtube.YouTubeScopes
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.enteties.AccountName
+import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
+import com.skdev.ytlivevideo.model.googleAccount.GoogleSignInManager
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.*
+import com.skdev.ytlivevideo.ui.mainScene.fragment.SignInConnectDelegate
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
+import com.skdev.ytlivevideo.util.ProgressDialog
 import com.skdev.ytlivevideo.util.Utils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.IOException
+import java.util.*
 
-class MainViewModel(val view: MainActivity) : MainViewModelInterface {
+class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSignInDelegate {
 
-    private var credential: GoogleAccountCredential? = null
+    private val accountManager = GoogleAccountManager()
+    private val signInManager = GoogleSignInManager(view, this)
+    lateinit var signInConnectDelegate: SignInConnectDelegate
 
     override fun handleActivitiesResults(requestCode: Int, resultCode: Int, data: Intent) {
         when (requestCode) {
@@ -43,39 +52,38 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface {
                 didSelectBroadcast(data)
             }
         }
+        signInManager.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun startSelectAccountActivity() {
         Log.d(TAG, "startSelectAccountActivity")
-        view.startAccountPicker(credential!!.newChooseAccountIntent())
+        view.startAccountPicker(accountManager.credential!!.newChooseAccountIntent())
     }
 
-    /**
-     * Present User accounts dialog
-     */
+    override fun didUserGoogleSignIn() {
+        accountManager.setUpGoogleAccount(signInManager.account!!)
+        view.invalidateOptionsMenu()
+        signInConnectDelegate.signedIn()
+    }
+
     override fun sighIn(context: Context, savedInstanceState: Bundle?) {
-        Log.d(TAG, "sighIn")
-        val scopes = listOf(Scopes.PROFILE, YouTubeScopes.YOUTUBE)
-        credential = GoogleAccountCredential.usingOAuth2(context, scopes)
-        if (credential == null) {
+        if (accountManager.sighIn(context, savedInstanceState)) {
+            signInManager.googleSignIn()
+        } else {
             val message = view.resources.getText(R.string.oauth2_credentials_are_empty).toString()
             Utils.showError(view, message)
-            return
         }
-        credential!!.backOff = ExponentialBackOff()
-        credential!!.selectedAccountName = AccountName.getName(view, savedInstanceState)
-        view.invalidateOptionsMenu()
     }
 
     /**
      * Fetch all broadcasts
      */
     override fun fetchLiveBroadcastItems() {
-        if (AccountName.getName(view) == null || credential == null) {
+        if (AccountName.getName(view) == null || accountManager.credential == null) {
             return
         }
         Log.d(TAG, "fetchLiveBroadcastItems")
-        GetLiveEvent(view, credential, object : LiveBroadcastApiInterface {
+        GetLiveEvent(view, accountManager.credential, object : LiveBroadcastApiInterface {
             override fun onAuthException(e: UserRecoverableAuthIOException) {
                 view.startAuthorization(e.intent)
             }
@@ -90,13 +98,24 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface {
      */
     override fun createEvent() {
         Log.d(TAG, "createEvent")
-        CreateLiveEvent(view, credential, object : LiveBroadcastApiInterface {
-            override fun onAuthException(e: UserRecoverableAuthIOException) {
-                view.startAuthorization(e.intent)
+
+        val date = Date().toString()
+        val description = "Event - $date"
+        val name = "A live streaming event - $date"
+
+        try {
+            val progressDialog = ProgressDialog.create(view, R.string.creatingEvent)
+            progressDialog.show()
+            CoroutineScope(Dispatchers.IO).launch {
+                val list = CreateLiveEvent.createLiveEventAsync(view, accountManager.credential!!, name, description)
+                Log.d(TAG, "$list")
+                progressDialog.dismiss()
             }
-            override fun onCompletion(fetchedLiveBroadcastItems: List<LiveBroadcastItem>) {
-            }
-        }).execute()
+        } catch (e: UserRecoverableAuthIOException) {
+            view.startAuthorization(e.intent)
+        } catch (e: IOException) {
+            Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
+        }
     }
 
     /**
@@ -105,7 +124,7 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface {
     override fun startStreaming(liveBroadcastItem: LiveBroadcastItem) {
         Log.d(TAG, "startStreaming")
         val broadcastId: String = liveBroadcastItem.id
-        StartLiveEvent(view, credential, broadcastId, object : LiveBroadcastApiInterface {
+        StartLiveEvent(view, accountManager.credential, broadcastId, object : LiveBroadcastApiInterface {
             override fun onAuthException(e: UserRecoverableAuthIOException) {
                 view.startAuthorization(e.intent)
             }
@@ -135,7 +154,7 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface {
     private fun didCheckGooglePlayServices() {
         Log.d(TAG, "didCheckGooglePlayServices")
         // check if there is already an account selected
-        if (credential?.selectedAccountName == null) {
+        if (accountManager.credential?.selectedAccountName == null) {
             // ask user to choose account
             startSelectAccountActivity()
         }
@@ -143,14 +162,14 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface {
 
     private fun didSelectAccount(intent: Intent) {
         val accountName = intent.extras!!.getString(AccountManager.KEY_ACCOUNT_NAME)
-        credential!!.selectedAccountName = accountName
+        accountManager.credential!!.selectedAccountName = accountName
         AccountName.saveName(view, accountName)
     }
 
     private fun didSelectBroadcast(intent: Intent) {
         val broadcastId = intent.getStringExtra(YouTubeLiveBroadcastRequest.BROADCAST_ID_KEY)
         if (broadcastId != null) {
-            EndLiveEvent(view, credential, broadcastId, object : LiveBroadcastApiInterface {
+            EndLiveEvent(view, accountManager.credential, broadcastId, object : LiveBroadcastApiInterface {
                 override fun onAuthException(e: UserRecoverableAuthIOException) {
                     view.startAuthorization(e.intent)
                 }
@@ -158,6 +177,18 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface {
                 }
             }).execute()
         }
+    }
+
+    fun getLastSignedInAccount(): GoogleSignInAccount? {
+        return signInManager.lastSignedInAccount
+    }
+
+    fun isConnected() : Boolean {
+        return signInManager.isConnected
+    }
+
+    fun getAccountName() : String {
+        return signInManager.accountName
     }
 
     companion object {
@@ -168,4 +199,8 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface {
         const val REQUEST_AUTHORIZATION = 3
         const val REQUEST_STREAMER = 4
     }
+}
+
+interface GoogleSignInDelegate {
+    fun didUserGoogleSignIn()
 }

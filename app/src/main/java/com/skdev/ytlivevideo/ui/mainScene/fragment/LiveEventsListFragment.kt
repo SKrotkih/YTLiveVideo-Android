@@ -15,7 +15,6 @@ package com.skdev.ytlivevideo.ui.mainScene.fragment
 
 import android.app.Activity
 import android.app.Fragment
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,8 +25,8 @@ import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.NetworkImageView
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.google.android.gms.plus.PlusOneButton
-import com.google.android.gms.plus.model.people.Person
 import com.skdev.ytlivevideo.R
+import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
@@ -35,18 +34,17 @@ import com.skdev.ytlivevideo.R
  *
  * Left side fragment showing user's uploaded YouTube videos.
  */
-class LiveEventsListFragment : Fragment(), ApiClientDelegate {
+class LiveEventsListFragment : Fragment(), SignInConnectDelegate {
+
+    var viewModel: MainViewModel? = null
+        set(value) {
+            field = value
+            viewModel!!.signInConnectDelegate = this
+        }
+
     private var mCallbacks: Callbacks? = null
     private var mImageLoader: ImageLoader? = null
-    private lateinit var apiClient: ApiClientInterface
     private var mGridView: GridView? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "Build Api client")
-        apiClient = MainFragmentViewModel(activity, this)
-        Log.d(TAG, "Api client has been built")
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val listView: View = inflater.inflate(
@@ -61,11 +59,6 @@ class LiveEventsListFragment : Fragment(), ApiClientDelegate {
         return listView
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setProfileInfo()
-    }
-
     fun setEvents(liveBroadcastItems: List<LiveBroadcastItem>) {
         if (!isAdded) {
             return
@@ -74,7 +67,7 @@ class LiveEventsListFragment : Fragment(), ApiClientDelegate {
     }
 
     private fun setProfileInfo() {
-        val accountName: String? = apiClient.getAccountName()
+        val accountName: String? = viewModel!!.getAccountName()
         (view!!.findViewById<View>(R.id.avatar) as ImageView)
             .setImageDrawable(null)
 //            if (currentPerson.hasImage()) {
@@ -85,16 +78,6 @@ class LiveEventsListFragment : Fragment(), ApiClientDelegate {
 //                )
 //            }
         (view!!.findViewById<View>(R.id.display_name) as TextView).text = accountName
-    }
-
-    override fun onResume() {
-        super.onResume()
-        apiClient.signIn()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        apiClient.signOut()
     }
 
     override fun onAttach(activity: Activity) {
@@ -147,7 +130,7 @@ class LiveEventsListFragment : Fragment(), ApiClientDelegate {
                 event.thumbUri,
                 mImageLoader
             )
-            if (apiClient.isConnected()) {
+            if (viewModel!!.isConnected()) {
                 (convertView.findViewById<View>(R.id.plus_button) as PlusOneButton)
                     .initialize(event.watchUri, null)
             }
@@ -160,29 +143,26 @@ class LiveEventsListFragment : Fragment(), ApiClientDelegate {
     }
 
     /**
-     *  ApiClientDelegate
+     *  SignInConnectDelegate
      */
-    override fun onApiClientConnected() {
+    override fun signedIn() {
+        setProfileInfo()
         if (mGridView?.adapter != null) {
             (mGridView!!.adapter as LiveEventAdapter)
                 .notifyDataSetChanged()
         }
         setProfileInfo()
-        mCallbacks?.onConnected(apiClient.getAccountName())
+        mCallbacks?.onConnected(viewModel!!.getAccountName())
     }
     /**
      *
      */
-
-    fun handleActivitiesResults(requestCode: Int, resultCode: Int, data: Intent?) {
-        apiClient.onActivityResult(requestCode, resultCode, data)
-    }
 
     companion object {
         private val TAG = LiveEventsListFragment::class.java.name
     }
 }
 
-interface ApiClientDelegate {
-    fun onApiClientConnected()
+interface SignInConnectDelegate {
+    fun signedIn()
 }

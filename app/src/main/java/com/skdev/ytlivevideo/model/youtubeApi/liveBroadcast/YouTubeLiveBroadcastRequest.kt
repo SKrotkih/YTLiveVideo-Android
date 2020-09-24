@@ -131,29 +131,34 @@ object YouTubeLiveBroadcastRequest {
     @Throws(IOException::class)
     fun getLiveEvents(youtube: YouTube): List<LiveBroadcastItem> {
         Log.d(MainActivity.APP_NAME, "Requesting live events.")
-        val liveBroadcastRequest = youtube
-            .liveBroadcasts().list("id,snippet,contentDetails")
-        // liveBroadcastRequest.setMine(true);
+        val liveBroadcastRequest = youtube.liveBroadcasts().list("id,snippet,contentDetails")
+        //liveBroadcastRequest.setMine(true);
         liveBroadcastRequest.broadcastStatus = "upcoming"
 
-        // List request is executed and list of broadcasts are returned
-        val returnedListResponse = liveBroadcastRequest.execute()
+        Log.d("${Thread.currentThread()}", "Current thread")
 
-        // Get the list of broadcasts associated with the user.
-        val returnedList = returnedListResponse.items
-        val resultList: MutableList<LiveBroadcastItem> = ArrayList(returnedList.size)
-        var liveBroadcastItem: LiveBroadcastItem
-        for (broadcast in returnedList) {
-            liveBroadcastItem = LiveBroadcastItem()
-            liveBroadcastItem.event = broadcast
-            val streamId = broadcast.contentDetails.boundStreamId
-            if (streamId != null) {
-                val ingestionAddress = getIngestionAddress(youtube, streamId)
-                liveBroadcastItem.ingestionAddress = ingestionAddress
+        try {
+            // List request is executed and list of broadcasts are returned
+            val returnedListResponse = liveBroadcastRequest.execute()
+            // Get the list of broadcasts associated with the user.
+            val returnedList = returnedListResponse.items
+            val resultList: MutableList<LiveBroadcastItem> = ArrayList(returnedList.size)
+            var liveBroadcastItem: LiveBroadcastItem
+            for (broadcast in returnedList) {
+                liveBroadcastItem = LiveBroadcastItem()
+                liveBroadcastItem.event = broadcast
+                val streamId = broadcast.contentDetails.boundStreamId
+                if (streamId != null) {
+                    val ingestionAddress = getIngestionAddress(youtube, streamId)
+                    liveBroadcastItem.ingestionAddress = ingestionAddress
+                }
+                resultList.add(liveBroadcastItem)
             }
-            resultList.add(liveBroadcastItem)
+            return resultList
+        } catch (e: IOException) {
+            Log.d("", e.localizedMessage)
         }
-        return resultList
+        return emptyList()
     }
 
     @Throws(IOException::class)

@@ -33,6 +33,9 @@ import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcast
 import com.skdev.ytlivevideo.ui.mainScene.fragment.LiveEventsListFragment
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
@@ -53,6 +56,7 @@ class MainActivity : Activity(), Callbacks {
         window.requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        mLiveEventsListFragment.viewModel = viewModel
         viewModel.sighIn(applicationContext, savedInstanceState)
     }
 
@@ -82,7 +86,6 @@ class MainActivity : Activity(), Callbacks {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
         viewModel.handleActivitiesResults(requestCode, resultCode, data)
-        mLiveEventsListFragment.handleActivitiesResults(requestCode, resultCode, data)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -141,12 +144,12 @@ class MainActivity : Activity(), Callbacks {
      * Show GooglePlay Services Availability Error Dialog
      */
     fun showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode: Int) {
-        runOnUiThread {
+        CoroutineScope(Dispatchers.Main).launch {
             val googleAPI = GoogleApiAvailability.getInstance()
             val dialog: Dialog = googleAPI.getErrorDialog(
                 this@MainActivity,
                 connectionStatusCode,
-                    MainViewModel.REQUEST_GOOGLE_PLAY_SERVICES
+                MainViewModel.REQUEST_GOOGLE_PLAY_SERVICES
             )
             dialog.show()
         }
