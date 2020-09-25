@@ -85,14 +85,14 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val list = FetchAllLiveEvents.runAsync(view, accountManager.credential!!)
+                val list = FetchAllLiveEvents.runAsync(view, accountManager.credential!!).await()
                 Log.d(TAG, "$list")
-                progressDialog.dismiss()
+                launch(Dispatchers.Main) { progressDialog.dismiss() }
             } catch (e: UserRecoverableAuthIOException) {
-                progressDialog.dismiss()
+                launch(Dispatchers.Main) { progressDialog.dismiss() }
                 view.startAuthorization(e.intent)
             } catch (e: IOException) {
-                progressDialog.dismiss()
+                launch(Dispatchers.Main) { progressDialog.dismiss() }
                 Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
             }
         }
@@ -112,13 +112,13 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                CreateLiveEvent.runAsync(view, accountManager.credential!!, name, description)
-                progressDialog.dismiss()
+                CreateLiveEvent.runAsync(view, accountManager.credential!!, name, description).await()
+                launch(Dispatchers.Main) { progressDialog.dismiss() }
             } catch (e: UserRecoverableAuthIOException) {
-                progressDialog.dismiss()
+                launch(Dispatchers.Main) { progressDialog.dismiss() }
                 view.startAuthorization(e.intent)
             } catch (e: IOException) {
-                progressDialog.dismiss()
+                launch(Dispatchers.Main) { progressDialog.dismiss() }
                 Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
             }
         }
@@ -132,7 +132,7 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         val broadcastId: String = liveBroadcastItem.id
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                StartLiveEvent.runAsync(view, accountManager.credential!!, broadcastId)
+                StartLiveEvent.runAsync(view, accountManager.credential!!, broadcastId).await()
                 view.startBroadcastStreaming(broadcastId, liveBroadcastItem.ingestionAddress!!)
             } catch (e: UserRecoverableAuthIOException) {
                 view.startAuthorization(e.intent)
@@ -181,7 +181,8 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         val broadcastId = intent.getStringExtra(YouTubeLiveBroadcastRequest.BROADCAST_ID_KEY)
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                EndLiveEvent.runAsync(view, accountManager.credential!!, broadcastId)
+                EndLiveEvent.runAsync(view, accountManager.credential!!, broadcastId).await()
+                Log.d(TAG, "The Broadcast is finished")
             } catch (e: UserRecoverableAuthIOException) {
                 view.startAuthorization(e.intent)
             } catch (e: IOException) {
