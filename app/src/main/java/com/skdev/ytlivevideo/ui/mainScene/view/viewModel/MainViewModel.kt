@@ -21,6 +21,7 @@ import com.skdev.ytlivevideo.ui.mainScene.fragment.SignInConnectDelegate
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.util.ProgressDialog
 import com.skdev.ytlivevideo.util.Utils
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -83,7 +84,8 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         Log.d(TAG, "fetchOfAllBroadcasts")
         val progressDialog = ProgressDialog.create(view, R.string.loadingEvents)
         progressDialog.show()
-        CoroutineScope(Dispatchers.IO).launch {
+
+        CoroutineScope(Dispatchers.IO).launch() {
             try {
                 val list = FetchAllLiveEvents.runAsync(view, accountManager.credential!!).await()
                 launch(Dispatchers.Main) {
@@ -91,11 +93,15 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
                     view.didfetchOfAllBroadcasts(list)
                 }
             } catch (e: UserRecoverableAuthIOException) {
-                launch(Dispatchers.Main) { progressDialog.dismiss() }
-                view.startAuthorization(e.intent)
+                launch(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    view.startAuthorization(e.intent)
+                }
             } catch (e: IOException) {
-                launch(Dispatchers.Main) { progressDialog.dismiss() }
-                Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
+                launch(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
@@ -117,11 +123,15 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
                 CreateLiveEvent.runAsync(view, accountManager.credential!!, name, description).await()
                 launch(Dispatchers.Main) { progressDialog.dismiss() }
             } catch (e: UserRecoverableAuthIOException) {
-                launch(Dispatchers.Main) { progressDialog.dismiss() }
-                view.startAuthorization(e.intent)
+                launch(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    view.startAuthorization(e.intent)
+                }
             } catch (e: IOException) {
-                launch(Dispatchers.Main) { progressDialog.dismiss() }
-                Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
+                launch(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
@@ -135,11 +145,17 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 StartLiveEvent.runAsync(view, accountManager.credential!!, broadcastId).await()
-                view.startBroadcastStreaming(broadcastId, liveBroadcastItem.ingestionAddress!!)
+                launch(Dispatchers.Main) {
+                    view.startBroadcastStreaming(broadcastId, liveBroadcastItem.ingestionAddress!!)
+                }
             } catch (e: UserRecoverableAuthIOException) {
-                view.startAuthorization(e.intent)
+                launch(Dispatchers.Main) {
+                    view.startAuthorization(e.intent)
+                }
             } catch (e: IOException) {
-                Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
+                launch(Dispatchers.Main) {
+                    Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
@@ -186,9 +202,13 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
                 EndLiveEvent.runAsync(view, accountManager.credential!!, broadcastId).await()
                 Log.d(TAG, "The Broadcast is finished")
             } catch (e: UserRecoverableAuthIOException) {
-                view.startAuthorization(e.intent)
+                launch(Dispatchers.Main) {
+                    view.startAuthorization(e.intent)
+                }
             } catch (e: IOException) {
-                Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
+                launch(Dispatchers.Main) {
+                    Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }

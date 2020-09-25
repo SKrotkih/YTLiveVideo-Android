@@ -22,7 +22,8 @@ object CreateLiveEvent  {
                 createLiveEventRequest(credential, name, description)
             } catch (e: IOException) {
                 Log.e(TAG, "Error while creating a new event request:", e)
-                throw e
+                val message = e.cause?.message ?: "Error while creating a new event request"
+                throw IOException(message)
             }
         }
 

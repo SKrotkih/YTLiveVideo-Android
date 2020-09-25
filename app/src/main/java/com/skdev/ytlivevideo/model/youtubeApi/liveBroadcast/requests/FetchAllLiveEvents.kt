@@ -27,7 +27,8 @@ object FetchAllLiveEvents {
                 return@async list
             } catch (e: IOException) {
                 Log.e(TAG, "Error while fetching all live events request:", e)
-                throw e
+                val message = e.cause?.message ?: "Error while fetching all live events request"
+                throw IOException(message)
             }
         }
 

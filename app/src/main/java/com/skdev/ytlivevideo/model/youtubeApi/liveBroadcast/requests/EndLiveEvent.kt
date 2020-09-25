@@ -32,7 +32,8 @@ object EndLiveEvent {
                 endLiveEvent(credential, broadcastId)
             } catch (e: IOException) {
                 Log.e(TAG, "Error while finishing broadcast request:", e)
-                throw e
+                val message = e.cause?.message ?: "Error while finishing broadcast request"
+                throw IOException(message)
             }
         }
 
