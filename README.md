@@ -1,7 +1,8 @@
 # YTLiveStreaming for Android
 
-Example of using YouTube Data API v3 on Android
-See example of using it on iOS here: [YTLiveStreaming for iOS](https://github.com/SKrotkih/YTLiveStreaming) 
+Example of using YouTube Data API v3 on Android.
+
+See example of using the same API on iOS just here: [YTLiveStreaming for iOS](https://github.com/SKrotkih/YTLiveStreaming). 
 
 Here was upgraded deprecated [YouTube WatchMe for Android](https://github.com/youtube/yt-watchme) project to the Kotlin 1.4.10.
 
