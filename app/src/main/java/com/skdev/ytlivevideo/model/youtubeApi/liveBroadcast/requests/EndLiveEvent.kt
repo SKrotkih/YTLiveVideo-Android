@@ -17,45 +17,38 @@ import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.util.Config
 import com.skdev.ytlivevideo.util.ProgressDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import java.io.IOException
 
-class EndLiveEvent(val context: Activity,
-                   private val credential: GoogleAccountCredential?,
-                   private val broadcastId: String?,
-                   private val callback: LiveBroadcastApiInterface) : AsyncTask<Void?, Void?, List<LiveBroadcastItem>?>() {
+object EndLiveEvent {
 
-    private var progressDialog: Dialog? = null
-    private val transport: HttpTransport = NetHttpTransport()
-    private val jsonFactory: JsonFactory = GsonFactory()
+    @Throws(IOException::class)
+    fun runAsync(context: Activity, credential: GoogleAccountCredential, broadcastId: String?) : Deferred<Unit> =
+        CoroutineScope(Dispatchers.IO).async() {
+            try {
+                endLiveEvent(credential, broadcastId)
+            } catch (e: IOException) {
+                Log.e(TAG, "Error while finishing broadcast request:", e)
+                throw e
+            }
+        }
 
-    override fun onPreExecute() {
-        Log.d(TAG, "Start")
-        progressDialog = ProgressDialog.create(context, R.string.endingEvent)
-        progressDialog?.show()
-    }
-
-    override fun doInBackground(vararg params: Void?): List<LiveBroadcastItem>? {
+    private fun endLiveEvent(credential: GoogleAccountCredential, broadcastId: String?) {
+        Log.d(TAG, "endLiveEvent")
+        val transport: HttpTransport = NetHttpTransport()
+        val jsonFactory: JsonFactory = GsonFactory()
         val youtube = YouTube.Builder(transport, jsonFactory, credential)
             .setApplicationName(Config.APP_NAME)
             .build()
-        try {
-            if (!broadcastId.isNullOrBlank()) {
-                YouTubeLiveBroadcastRequest.endEvent(youtube, broadcastId)
-            }
-        } catch (e: UserRecoverableAuthIOException) {
-            callback.onAuthException(e)
-        } catch (e: IOException) {
-            Log.e(TAG, "", e)
+        if (broadcastId.isNullOrBlank()) {
+            throw IOException("The Broadcast ID is not presented")
+        } else {
+            YouTubeLiveBroadcastRequest.endEvent(youtube, broadcastId)
         }
-        return null
     }
 
-    override fun onPostExecute(fetchedLiveBroadcastItems: List<LiveBroadcastItem>?) {
-        Log.d(TAG, "Finish")
-        progressDialog?.dismiss()
-    }
-
-    companion object {
-        val TAG: String = EndLiveEvent::class.java.name
-    }
+    private val TAG: String = EndLiveEvent::class.java.name
 }

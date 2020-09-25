@@ -72,7 +72,7 @@ class MainActivity : Activity(), Callbacks {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_refresh -> viewModel.fetchLiveBroadcastItems()
+            R.id.menu_refresh -> viewModel.fetchOfAllBroadcasts()
             R.id.menu_accounts -> {
                 viewModel.startSelectAccountActivity()
                 return true
@@ -95,7 +95,7 @@ class MainActivity : Activity(), Callbacks {
     }
 
     override fun onConnected(connectedAccountName: String?) {
-        viewModel.fetchLiveBroadcastItems()
+        viewModel.fetchOfAllBroadcasts()
     }
 
     override fun onBackPressed() {
@@ -115,11 +115,11 @@ class MainActivity : Activity(), Callbacks {
     }
 
     fun createEvent(context: View?) {
-        viewModel.createEvent()
+        viewModel.createNewBroadcast()
     }
 
-    fun didFetchLiveBroadcastItems(fetchedLiveBroadcastItems: List<LiveBroadcastItem>) {
-        Log.i(Config.APP_NAME, "didFetchLiveBroadcastItems=$fetchedLiveBroadcastItems")
+    fun didfetchOfAllBroadcasts(fetchedLiveBroadcastItems: List<LiveBroadcastItem>) {
+        Log.i(Config.APP_NAME, "didfetchOfAllBroadcasts=$fetchedLiveBroadcastItems")
         mLiveEventsListFragment.setEvents(fetchedLiveBroadcastItems)
     }
 

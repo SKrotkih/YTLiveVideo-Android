@@ -9,7 +9,7 @@ interface MainViewModelInterface {
     fun handleActivitiesResults(requestCode: Int, resultCode: Int, data: Intent)
     fun startSelectAccountActivity()
     fun sighIn(context: Context, savedInstanceState: Bundle?)
-    fun fetchLiveBroadcastItems()
-    fun createEvent()
+    fun fetchOfAllBroadcasts()
+    fun createNewBroadcast()
     fun startStreaming(liveBroadcastItem: LiveBroadcastItem)
 }

@@ -64,7 +64,7 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         accountManager.setUpGoogleAccount(signInManager.account!!)
         view.invalidateOptionsMenu()
         signInConnectDelegate.signedIn()
-        fetchLiveBroadcastItems()
+        fetchOfAllBroadcasts()
     }
 
     override fun sighIn(context: Context, savedInstanceState: Bundle?) {
@@ -79,8 +79,8 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
     /**
      * Fetch all broadcasts
      */
-    override fun fetchLiveBroadcastItems() {
-        Log.d(TAG, "fetchLiveBroadcastItems")
+    override fun fetchOfAllBroadcasts() {
+        Log.d(TAG, "fetchOfAllBroadcasts")
         val progressDialog = ProgressDialog.create(view, R.string.loadingEvents)
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
@@ -99,9 +99,9 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
     }
 
     /**
-     * Create new Broadcast
+     * Create a new Broadcast
      */
-    override fun createEvent() {
+    override fun createNewBroadcast() {
         Log.d(TAG, "createEvent")
 
         val date = Date().toString()
@@ -125,19 +125,21 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
     }
 
     /**
-     * Start Broadcast live video
+     * Start live video
      */
     override fun startStreaming(liveBroadcastItem: LiveBroadcastItem) {
         Log.d(TAG, "startStreaming")
         val broadcastId: String = liveBroadcastItem.id
-        StartLiveEvent(view, accountManager.credential, broadcastId, object : LiveBroadcastApiInterface {
-            override fun onAuthException(e: UserRecoverableAuthIOException) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                StartLiveEvent.runAsync(view, accountManager.credential!!, broadcastId)
+                view.startBroadcastStreaming(broadcastId, liveBroadcastItem.ingestionAddress!!)
+            } catch (e: UserRecoverableAuthIOException) {
                 view.startAuthorization(e.intent)
+            } catch (e: IOException) {
+                Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
             }
-            override fun onCompletion(fetchedLiveBroadcastItems: List<LiveBroadcastItem>) {
-            }
-        }).execute()
-        view.startBroadcastStreaming(broadcastId, liveBroadcastItem.ingestionAddress!!)
+        }
     }
 
     /**
@@ -172,16 +174,19 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         AccountName.saveName(view, accountName)
     }
 
+    /**
+     * Finish Live Video
+     */
     private fun didSelectBroadcast(intent: Intent) {
         val broadcastId = intent.getStringExtra(YouTubeLiveBroadcastRequest.BROADCAST_ID_KEY)
-        if (broadcastId != null) {
-            EndLiveEvent(view, accountManager.credential, broadcastId, object : LiveBroadcastApiInterface {
-                override fun onAuthException(e: UserRecoverableAuthIOException) {
-                    view.startAuthorization(e.intent)
-                }
-                override fun onCompletion(fetchedLiveBroadcastItems: List<LiveBroadcastItem>) {
-                }
-            }).execute()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                EndLiveEvent.runAsync(view, accountManager.credential!!, broadcastId)
+            } catch (e: UserRecoverableAuthIOException) {
+                view.startAuthorization(e.intent)
+            } catch (e: IOException) {
+                Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
+            }
         }
     }
 
