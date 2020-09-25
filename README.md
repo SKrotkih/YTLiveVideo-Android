@@ -6,7 +6,7 @@ See example of using the same API on iOS just here: [YTLiveStreaming for iOS](ht
 
 Here you can see upgraded in Kotlin 1.4 deprecated version of the [YouTube WatchMe for Android](https://github.com/youtube/yt-watchme) project.
 
-It uses the same API implementation  [Google Java API Client Services](https://github.com/googleapis/google-api-java-client-services) like as [YouTube WatchMe for Android]
+It uses the same API implementation  [Google Java API Client Services](https://github.com/googleapis/google-api-java-client-services) like as [YouTube WatchMe for Android](https://github.com/youtube/yt-watchme)
 
 Was used Google Sign-In. 
 
