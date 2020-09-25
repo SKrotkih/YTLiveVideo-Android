@@ -2,9 +2,9 @@
 
 Example of using YouTube Data API v3 on Android
 
-Was upgraded deprecated [YouTube WatchMe for Android](https://github.com/youtube/yt-watchme) project to the Kotlin 1.4.10.
+Here was upgraded deprecated [YouTube WatchMe for Android](https://github.com/youtube/yt-watchme) project to the Kotlin 1.4.10.
 
-Note. [YouTube WatchMe for Android](https://github.com/youtube/yt-watchme) has integrated with [Google Java API Client Services](https://github.com/googleapis/google-api-java-client-services) 
+Please pay attention the [YouTube WatchMe for Android](https://github.com/youtube/yt-watchme) is integrated with [Google Java API Client Services](https://github.com/googleapis/google-api-java-client-services) and uses it API 
 
 Used Google SignIn 
 
