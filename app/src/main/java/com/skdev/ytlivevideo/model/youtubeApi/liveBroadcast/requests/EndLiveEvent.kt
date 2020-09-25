@@ -25,7 +25,7 @@ import java.io.IOException
 
 object EndLiveEvent {
 
-    @Throws(IOException::class)
+    @Throws(IllegalArgumentException::class)
     fun runAsync(context: Activity, credential: GoogleAccountCredential, broadcastId: String?) : Deferred<Unit> =
         CoroutineScope(Dispatchers.IO).async() {
             try {
@@ -44,7 +44,7 @@ object EndLiveEvent {
             .setApplicationName(Config.APP_NAME)
             .build()
         if (broadcastId.isNullOrBlank()) {
-            throw IOException("The Broadcast ID is not presented")
+            throw IllegalArgumentException("The Broadcast ID is not presented")
         } else {
             YouTubeLiveBroadcastRequest.endEvent(youtube, broadcastId)
         }

@@ -16,7 +16,6 @@ package com.skdev.ytlivevideo.ui.mainScene.fragment
 import android.app.Activity
 import android.app.Fragment
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +26,7 @@ import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.google.android.gms.plus.PlusOneButton
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
+import kotlinx.android.synthetic.main.live_events_list_item.view.*
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
@@ -39,7 +39,7 @@ class LiveEventsListFragment : Fragment(), SignInConnectDelegate {
     var viewModel: MainViewModel? = null
         set(value) {
             field = value
-            viewModel!!.signInConnectDelegate = this
+            field!!.signInConnectDelegate = this
         }
 
     private var mCallbacks: Callbacks? = null
@@ -47,7 +47,7 @@ class LiveEventsListFragment : Fragment(), SignInConnectDelegate {
     private var mGridView: GridView? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val listView: View = inflater.inflate(
+        val listView = inflater.inflate(
             R.layout.fragment_live_events_list,
             container,
             false
@@ -60,9 +60,6 @@ class LiveEventsListFragment : Fragment(), SignInConnectDelegate {
     }
 
     fun setEvents(liveBroadcastItems: List<LiveBroadcastItem>) {
-        if (!isAdded) {
-            return
-        }
         mGridView!!.adapter = LiveEventAdapter(liveBroadcastItems)
     }
 
@@ -114,31 +111,21 @@ class LiveEventsListFragment : Fragment(), SignInConnectDelegate {
             return mLiveBroadcastItems[i].id.hashCode().toLong()
         }
 
-        override fun getView(
-            position: Int, convertView: View,
-            container: ViewGroup
-        ): View {
-            var convertView = convertView
-            if (convertView == null) {
-                convertView = LayoutInflater.from(activity).inflate(
-                    R.layout.live_events_list_item, container, false
-                )
-            }
+        override fun getView(position: Int, convertView: View?, container: ViewGroup): View {
+            val view: View = convertView ?: LayoutInflater.from(activity).inflate(R.layout.live_events_list_item, container, false)
             val event = mLiveBroadcastItems[position]
-            (convertView.findViewById<View>(R.id.text1) as TextView).text = event.title
-            (convertView.findViewById<View>(R.id.thumbnail) as NetworkImageView).setImageUrl(
-                event.thumbUri,
-                mImageLoader
-            )
+            val titleTextView = view.title as TextView
+            titleTextView.text = event.title
+            val thumbNailImageView = view.thumbnail as NetworkImageView
+            thumbNailImageView.setImageUrl(event.thumbUri, mImageLoader)
             if (viewModel!!.isConnected()) {
-                (convertView.findViewById<View>(R.id.plus_button) as PlusOneButton)
-                    .initialize(event.watchUri, null)
+                (view.plus_button as PlusOneButton).initialize(event.watchUri, null)
             }
-            convertView.findViewById<View>(R.id.main_target)
-                .setOnClickListener {
-                    mCallbacks!!.onEventSelected(mLiveBroadcastItems[position])
-                }
-            return convertView
+            val backgroundView = view.main_target
+            backgroundView.setOnClickListener {
+                mCallbacks!!.onEventSelected(mLiveBroadcastItems[position])
+            }
+            return view
         }
     }
 
@@ -154,9 +141,6 @@ class LiveEventsListFragment : Fragment(), SignInConnectDelegate {
         setProfileInfo()
         mCallbacks?.onConnected(viewModel!!.getAccountName())
     }
-    /**
-     *
-     */
 
     companion object {
         private val TAG = LiveEventsListFragment::class.java.name

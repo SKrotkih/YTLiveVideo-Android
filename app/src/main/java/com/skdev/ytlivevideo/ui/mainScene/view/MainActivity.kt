@@ -36,6 +36,7 @@ import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
 import com.skdev.ytlivevideo.util.Config
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 /**
@@ -118,7 +119,8 @@ class MainActivity : Activity(), Callbacks {
         viewModel.createNewBroadcast()
     }
 
-    fun didfetchOfAllBroadcasts(fetchedLiveBroadcastItems: List<LiveBroadcastItem>) {
+    fun didfetchOfAllBroadcasts(fetchedLiveBroadcastItems: List<LiveBroadcastItem>?) {
+        if (fetchedLiveBroadcastItems == null) return
         Log.i(Config.APP_NAME, "didfetchOfAllBroadcasts=$fetchedLiveBroadcastItems")
         mLiveEventsListFragment.setEvents(fetchedLiveBroadcastItems)
     }

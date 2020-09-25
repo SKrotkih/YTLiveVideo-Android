@@ -86,8 +86,10 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val list = FetchAllLiveEvents.runAsync(view, accountManager.credential!!).await()
-                Log.d(TAG, "$list")
-                launch(Dispatchers.Main) { progressDialog.dismiss() }
+                launch(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    view.didfetchOfAllBroadcasts(list)
+                }
             } catch (e: UserRecoverableAuthIOException) {
                 launch(Dispatchers.Main) { progressDialog.dismiss() }
                 view.startAuthorization(e.intent)
