@@ -25,7 +25,7 @@ object StartLiveEvent {
                 startLiveEvent(credential, broadcastId)
             } catch (e: IOException) {
                 Log.e(TAG, "Error while starting broadcast request:", e)
-                val message = e.cause?.message ?: "Error while starting broadcast request"
+                val message = e.localizedMessage
                 throw IOException(message)
             }
         }

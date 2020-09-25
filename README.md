@@ -16,3 +16,7 @@ To use this application,
 1. In your [Google Developers Console](https://console.developers.google.com),
  1. Enable the YouTube Data API v3 and Google+ API.
  1. Create a client ID for Android, using your SHA1 and package name.
+
+Demo  video 
+
+![g1](https://user-images.githubusercontent.com/2775621/94280668-56fe5400-ff56-11ea-9928-31511f6f508d.gif)

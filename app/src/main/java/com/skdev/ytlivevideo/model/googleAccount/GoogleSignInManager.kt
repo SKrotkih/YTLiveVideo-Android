@@ -35,7 +35,7 @@ class GoogleSignInManager(val context: Activity, private val delegate: GoogleSig
         }
     }
 
-    fun signOut() {
+    fun logOut() {
         mGoogleSignInClient?.signOut()
     }
 

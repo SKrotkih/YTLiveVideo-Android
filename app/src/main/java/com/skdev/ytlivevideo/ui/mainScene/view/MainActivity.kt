@@ -78,6 +78,10 @@ class MainActivity : Activity(), Callbacks {
                 viewModel.startSelectAccountActivity()
                 return true
             }
+            R.id.menu_logout -> {
+                viewModel.logOut()
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }

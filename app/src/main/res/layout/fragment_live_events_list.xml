@@ -38,13 +38,13 @@
             android:scaleType="centerCrop" />
 
         <TextView
-            android:id="@+id/display_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:fontFamily="sans-serif-light"
-            android:textAppearance="?android:textAppearanceLarge" />
+                android:id="@+id/display_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif-medium"
+                android:textAppearance="?android:textAppearanceLarge" android:textSize="18sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -55,13 +55,13 @@
         android:padding="8dp">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginStart="4dip"
-            android:fontFamily="sans-serif-condensed"
-            android:text="@string/pick_one_of_your_videos_to_submit"
-            android:textAppearance="?android:textAppearanceMedium">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dip"
+                android:fontFamily="sans-serif-condensed"
+                android:text="@string/pick_one_of_your_videos_to_submit"
+                android:textAppearance="?android:textAppearanceMedium" android:textSize="14sp">
         </TextView>
 
     </LinearLayout>

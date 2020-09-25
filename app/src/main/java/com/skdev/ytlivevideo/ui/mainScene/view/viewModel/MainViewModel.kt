@@ -77,6 +77,10 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         }
     }
 
+    override fun logOut() {
+        signInManager.logOut()
+    }
+
     /**
      * Fetch all broadcasts
      */
@@ -121,7 +125,10 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 CreateLiveEvent.runAsync(view, accountManager.credential!!, name, description).await()
-                launch(Dispatchers.Main) { progressDialog.dismiss() }
+                launch(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    fetchOfAllBroadcasts()
+                }
             } catch (e: UserRecoverableAuthIOException) {
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
@@ -142,18 +149,50 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
     override fun startStreaming(liveBroadcastItem: LiveBroadcastItem) {
         Log.d(TAG, "startStreaming")
         val broadcastId: String = liveBroadcastItem.id
+        val progressDialog = ProgressDialog.create(view, R.string.startStreaming)
+        progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 StartLiveEvent.runAsync(view, accountManager.credential!!, broadcastId).await()
                 launch(Dispatchers.Main) {
+                    progressDialog.dismiss()
                     view.startBroadcastStreaming(broadcastId, liveBroadcastItem.ingestionAddress!!)
                 }
             } catch (e: UserRecoverableAuthIOException) {
                 launch(Dispatchers.Main) {
+                    progressDialog.dismiss()
                     view.startAuthorization(e.intent)
                 }
             } catch (e: IOException) {
                 launch(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+    /**
+     * Finish Live Video
+     */
+    private fun didSelectBroadcast(intent: Intent) {
+        val broadcastId = intent.getStringExtra(YouTubeLiveBroadcastRequest.BROADCAST_ID_KEY)
+        val progressDialog = ProgressDialog.create(view, R.string.startStreaming)
+        progressDialog.show()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                EndLiveEvent.runAsync(view, accountManager.credential!!, broadcastId).await()
+                Log.d(TAG, "The Broadcast is finished")
+                launch(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                }
+            } catch (e: UserRecoverableAuthIOException) {
+                launch(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    view.startAuthorization(e.intent)
+                }
+            } catch (e: IOException) {
+                launch(Dispatchers.Main) {
+                    progressDialog.dismiss()
                     Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
                 }
             }
@@ -190,27 +229,6 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         val accountName = intent.extras!!.getString(AccountManager.KEY_ACCOUNT_NAME)
         accountManager.credential!!.selectedAccountName = accountName
         AccountName.saveName(view, accountName)
-    }
-
-    /**
-     * Finish Live Video
-     */
-    private fun didSelectBroadcast(intent: Intent) {
-        val broadcastId = intent.getStringExtra(YouTubeLiveBroadcastRequest.BROADCAST_ID_KEY)
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                EndLiveEvent.runAsync(view, accountManager.credential!!, broadcastId).await()
-                Log.d(TAG, "The Broadcast is finished")
-            } catch (e: UserRecoverableAuthIOException) {
-                launch(Dispatchers.Main) {
-                    view.startAuthorization(e.intent)
-                }
-            } catch (e: IOException) {
-                launch(Dispatchers.Main) {
-                    Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
-                }
-            }
-        }
     }
 
     fun getLastSignedInAccount(): GoogleSignInAccount? {

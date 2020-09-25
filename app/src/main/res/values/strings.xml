@@ -16,23 +16,25 @@
 
 <resources>
 
-    <string name="app_name">YouTube LiveVideo</string>
+    <string name="app_name">YouTube Live Video</string>
     <string name="button_create">CREATE LIVE EVENT</string>
     <string name="connection_to_google_play_failed">Connection to Play Services failed.</string>
     <string name="not_signed_in">Not signed in</string>
     <string name="error">Error</string>
     <string name="error_format">[Error] %s</string>
     <string name="refresh">Refresh</string>
+    <string name="logout">Log Out</string>
     <string name="accounts">Accounts</string>
-    <string name="pick_one_of_your_videos_to_submit">Create a new live liveEventsItem or click on one of your liveEventsItems to start
+    <string name="pick_one_of_your_videos_to_submit">Create a new live event or click on one of your live events items to start
         streaming
     </string>
     <string name="no_videos_to_show_here_">No videos to show here.</string>
     <string name="avatar">avatar</string>
     <string name="activeStreamingStatus">Currently streaming video.</string>
     <string name="activeStreamingLabel">Watch Me is streaming!</string>
-    <string name="loadingEvents">Loading liveEventsItems. Please wait…</string>
-    <string name="creatingEvent">Creating liveEventsItem. Please wait…</string>
+    <string name="loadingEvents">Downloading all your broadcasts…</string>
+    <string name="creatingEvent">Creating new live video on your account. Please wait…</string>
+    <string name="startStreaming">Starting broadcast. Please wait…</string>
     <string name="streamingOn">STREAMING</string>
     <string name="streamingOff">PAUSED</string>
     <string name="startEvent">START EVENT</string>
