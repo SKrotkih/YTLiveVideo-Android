@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.ViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
@@ -21,20 +22,23 @@ import com.skdev.ytlivevideo.ui.mainScene.fragment.SignInConnectDelegate
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.util.ProgressDialog
 import com.skdev.ytlivevideo.util.Utils
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
 
-class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSignInDelegate {
+class MainViewModel : ViewModel(), MainViewModelInterface, GoogleSignInDelegate {
 
     private val accountManager = GoogleAccountManager()
-    private val signInManager = GoogleSignInManager(view, this)
     lateinit var signInConnectDelegate: SignInConnectDelegate
+    lateinit var viewDelegate: MainActivity
 
-    override fun handleActivitiesResults(requestCode: Int, resultCode: Int, data: Intent) {
+    private val signInManager: GoogleSignInManager by lazy {
+        GoogleSignInManager(viewDelegate, this)
+    }
+
+    override fun handleActivitiesResults(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_GMS_ERROR_DIALOG -> {
             }
@@ -46,10 +50,10 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
             REQUEST_AUTHORIZATION -> if (resultCode != Activity.RESULT_OK) {
                 startSelectAccountActivity()
             }
-            REQUEST_ACCOUNT_PICKER -> if (resultCode == Activity.RESULT_OK && data.extras != null) {
+            REQUEST_ACCOUNT_PICKER -> if (resultCode == Activity.RESULT_OK && data?.extras != null) {
                 didSelectAccount(data)
             }
-            REQUEST_STREAMER -> if (resultCode == Activity.RESULT_OK && data.extras != null) {
+            REQUEST_STREAMER -> if (resultCode == Activity.RESULT_OK && data?.extras != null) {
                 didSelectBroadcast(data)
             }
         }
@@ -58,12 +62,12 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
 
     override fun startSelectAccountActivity() {
         Log.d(TAG, "startSelectAccountActivity")
-        view.startAccountPicker(accountManager.credential!!.newChooseAccountIntent())
+        viewDelegate.startAccountPicker(accountManager.credential!!.newChooseAccountIntent())
     }
 
     override fun didUserGoogleSignIn() {
         accountManager.setUpGoogleAccount(signInManager.account!!)
-        view.invalidateOptionsMenu()
+        viewDelegate.invalidateOptionsMenu()
         signInConnectDelegate.signedIn()
         fetchOfAllBroadcasts()
     }
@@ -72,8 +76,8 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         if (accountManager.sighIn(context, savedInstanceState)) {
             signInManager.googleSignIn()
         } else {
-            val message = view.resources.getText(R.string.oauth2_credentials_are_empty).toString()
-            Utils.showError(view, message)
+            val message = viewDelegate.resources.getText(R.string.oauth2_credentials_are_empty).toString()
+            Utils.showError(viewDelegate, message)
         }
     }
 
@@ -82,29 +86,37 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
     }
 
     /**
+     * When the owner activity is finished, the framework calls the ViewModel objects's onCleared() method so that it can clean up resources
+     */
+    override fun onCleared() {
+        super.onCleared()
+
+    }
+
+    /**
      * Fetch all broadcasts
      */
     override fun fetchOfAllBroadcasts() {
         Log.d(TAG, "fetchOfAllBroadcasts")
-        val progressDialog = ProgressDialog.create(view, R.string.loadingEvents)
+        val progressDialog = ProgressDialog.create(viewDelegate, R.string.loadingEvents)
         progressDialog.show()
 
         CoroutineScope(Dispatchers.IO).launch() {
             try {
-                val list = FetchAllLiveEvents.runAsync(view, accountManager.credential!!).await()
+                val list = FetchAllLiveEvents.runAsync(viewDelegate, accountManager.credential!!).await()
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
-                    view.didfetchOfAllBroadcasts(list)
+                    viewDelegate.didfetchOfAllBroadcasts(list)
                 }
             } catch (e: UserRecoverableAuthIOException) {
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
-                    view.startAuthorization(e.intent)
+                    viewDelegate.startAuthorization(e.intent)
                 }
             } catch (e: IOException) {
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
-                    Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(viewDelegate, e.localizedMessage, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -120,11 +132,11 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
         val description = "Event - $date"
         val name = "A live streaming event - $date"
 
-        val progressDialog = ProgressDialog.create(view, R.string.creatingEvent)
+        val progressDialog = ProgressDialog.create(viewDelegate, R.string.creatingEvent)
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                CreateLiveEvent.runAsync(view, accountManager.credential!!, name, description).await()
+                CreateLiveEvent.runAsync(viewDelegate, accountManager.credential!!, name, description).await()
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
                     fetchOfAllBroadcasts()
@@ -132,12 +144,12 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
             } catch (e: UserRecoverableAuthIOException) {
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
-                    view.startAuthorization(e.intent)
+                    viewDelegate.startAuthorization(e.intent)
                 }
             } catch (e: IOException) {
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
-                    Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(viewDelegate, e.localizedMessage, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -149,24 +161,24 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
     override fun startStreaming(liveBroadcastItem: LiveBroadcastItem) {
         Log.d(TAG, "startStreaming")
         val broadcastId: String = liveBroadcastItem.id
-        val progressDialog = ProgressDialog.create(view, R.string.startStreaming)
+        val progressDialog = ProgressDialog.create(viewDelegate, R.string.startStreaming)
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                StartLiveEvent.runAsync(view, accountManager.credential!!, broadcastId).await()
+                StartLiveEvent.runAsync(viewDelegate, accountManager.credential!!, broadcastId).await()
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
-                    view.startBroadcastStreaming(broadcastId, liveBroadcastItem.ingestionAddress!!)
+                    viewDelegate.startBroadcastStreaming(broadcastId, liveBroadcastItem.ingestionAddress!!)
                 }
             } catch (e: UserRecoverableAuthIOException) {
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
-                    view.startAuthorization(e.intent)
+                    viewDelegate.startAuthorization(e.intent)
                 }
             } catch (e: IOException) {
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
-                    Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(viewDelegate, e.localizedMessage, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -176,11 +188,11 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
      */
     private fun didSelectBroadcast(intent: Intent) {
         val broadcastId = intent.getStringExtra(YouTubeLiveBroadcastRequest.BROADCAST_ID_KEY)
-        val progressDialog = ProgressDialog.create(view, R.string.startStreaming)
+        val progressDialog = ProgressDialog.create(viewDelegate, R.string.startStreaming)
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                EndLiveEvent.runAsync(view, accountManager.credential!!, broadcastId).await()
+                EndLiveEvent.runAsync(viewDelegate, accountManager.credential!!, broadcastId).await()
                 Log.d(TAG, "The Broadcast is finished")
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
@@ -188,12 +200,12 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
             } catch (e: UserRecoverableAuthIOException) {
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
-                    view.startAuthorization(e.intent)
+                    viewDelegate.startAuthorization(e.intent)
                 }
             } catch (e: IOException) {
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
-                    Toast.makeText(view, e.localizedMessage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(viewDelegate, e.localizedMessage, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -208,9 +220,9 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
      */
     private fun checkGooglePlayServicesAvailable(): Boolean {
         val googleAPI = GoogleApiAvailability.getInstance()
-        val connectionStatusCode: Int = googleAPI.isGooglePlayServicesAvailable(view)
+        val connectionStatusCode: Int = googleAPI.isGooglePlayServicesAvailable(viewDelegate)
         if (googleAPI.isUserResolvableError(connectionStatusCode)) {
-            view.showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode)
+            viewDelegate.showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode)
             return false
         }
         return true
@@ -228,7 +240,7 @@ class MainViewModel(val view: MainActivity) : MainViewModelInterface, GoogleSign
     private fun didSelectAccount(intent: Intent) {
         val accountName = intent.extras!!.getString(AccountManager.KEY_ACCOUNT_NAME)
         accountManager.credential!!.selectedAccountName = accountName
-        AccountName.saveName(view, accountName)
+        AccountName.saveName(viewDelegate, accountName)
     }
 
     fun getLastSignedInAccount(): GoogleSignInAccount? {

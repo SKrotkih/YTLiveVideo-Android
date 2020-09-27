@@ -14,16 +14,17 @@
 package com.skdev.ytlivevideo.ui.mainScene.fragment
 
 import android.app.Activity
-import android.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.NetworkImageView
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.google.android.gms.plus.PlusOneButton
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import kotlinx.android.synthetic.main.live_events_list_item.view.*
@@ -36,22 +37,17 @@ import kotlinx.android.synthetic.main.live_events_list_item.view.*
  */
 class LiveEventsListFragment : Fragment(), SignInConnectDelegate {
 
-    var viewModel: MainViewModel? = null
-        set(value) {
-            field = value
-            field!!.signInConnectDelegate = this
-        }
+    companion object {
+        fun newInstance() = LiveEventsListFragment()
+        private val TAG = LiveEventsListFragment::class.java.name
+    }
 
     private var mCallbacks: Callbacks? = null
     private var mImageLoader: ImageLoader? = null
     private var mGridView: GridView? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val listView = inflater.inflate(
-            R.layout.fragment_live_events_list,
-            container,
-            false
-        )
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val listView = inflater.inflate(R.layout.fragment_live_events_list, container, false)
         mGridView = listView.findViewById<View>(R.id.grid_view) as GridView
         val emptyView = listView
             .findViewById<View>(R.id.empty) as TextView
@@ -64,7 +60,8 @@ class LiveEventsListFragment : Fragment(), SignInConnectDelegate {
     }
 
     private fun setProfileInfo() {
-        val accountName: String? = viewModel!!.getAccountName()
+        val viewModel: MainViewModel by activityViewModels()
+        val accountName: String? = viewModel.getAccountName()
         (view!!.findViewById<View>(R.id.avatar) as ImageView)
             .setImageDrawable(null)
 //            if (currentPerson.hasImage()) {
@@ -118,7 +115,8 @@ class LiveEventsListFragment : Fragment(), SignInConnectDelegate {
             titleTextView.text = event.title
             val thumbNailImageView = view.thumbnail as NetworkImageView
             thumbNailImageView.setImageUrl(event.thumbUri, mImageLoader)
-            if (viewModel!!.isConnected()) {
+            val viewModel: MainViewModel by activityViewModels()
+            if (viewModel.isConnected()) {
                 (view.plus_button as PlusOneButton).initialize(event.watchUri, null)
             }
             val backgroundView = view.main_target
@@ -139,11 +137,8 @@ class LiveEventsListFragment : Fragment(), SignInConnectDelegate {
                 .notifyDataSetChanged()
         }
         setProfileInfo()
-        mCallbacks?.onConnected(viewModel!!.getAccountName())
-    }
-
-    companion object {
-        private val TAG = LiveEventsListFragment::class.java.name
+        val viewModel: MainViewModel by activityViewModels()
+        mCallbacks?.onConnected(viewModel.getAccountName())
     }
 }
 

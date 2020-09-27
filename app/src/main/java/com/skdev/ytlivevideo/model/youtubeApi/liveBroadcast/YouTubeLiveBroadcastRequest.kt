@@ -162,11 +162,6 @@ object YouTubeLiveBroadcastRequest {
 
     @Throws(IOException::class)
     fun startEvent(youtube: YouTube, broadcastId: String?) {
-        try {
-            Thread.sleep(10000)
-        } catch (e: InterruptedException) {
-            Log.e(Config.APP_NAME, "", e)
-        }
         val transitionRequest = youtube.liveBroadcasts().transition(
             "live", broadcastId, "status"
         )

@@ -13,7 +13,6 @@
  */
 package com.skdev.ytlivevideo.ui.mainScene.view
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
@@ -22,6 +21,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelStoreOwner
 import com.android.volley.toolbox.ImageLoader
 import com.google.android.gms.common.GoogleApiAvailability
 import com.skdev.ytlivevideo.R
@@ -36,7 +38,6 @@ import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
 import com.skdev.ytlivevideo.util.Config
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 /**
@@ -45,11 +46,9 @@ import kotlinx.coroutines.launch
  *
  * Main activity class which handles authorization and intents.
  */
-class MainActivity : Activity(), Callbacks {
-    private val viewModel = MainViewModel(this)
-    private val mLiveEventsListFragment: LiveEventsListFragment by lazy {
-        fragmentManager.findFragmentById(R.id.list_fragment) as LiveEventsListFragment
-    }
+class MainActivity : AppCompatActivity(), Callbacks, ViewModelStoreOwner {
+    private lateinit var mLiveEventsListFragment: LiveEventsListFragment
+
     private val mImageLoader: ImageLoader? by lazy {
         NetworkSingleton.getInstance(this)?.imageLoader
     }
@@ -58,9 +57,18 @@ class MainActivity : Activity(), Callbacks {
         window.requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mLiveEventsListFragment.viewModel = viewModel
+        if (savedInstanceState == null) {
+            mLiveEventsListFragment = LiveEventsListFragment.newInstance()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container, mLiveEventsListFragment)
+                .commitNow()
+        }
+        val viewModel: MainViewModel by viewModels()
+        viewModel.signInConnectDelegate = mLiveEventsListFragment
+        viewModel.viewDelegate = this
         viewModel.sighIn(applicationContext, savedInstanceState)
     }
+
 
     /**
         Menu
@@ -72,6 +80,7 @@ class MainActivity : Activity(), Callbacks {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val viewModel: MainViewModel by viewModels()
         when (item.itemId) {
             R.id.menu_refresh -> viewModel.fetchOfAllBroadcasts()
             R.id.menu_accounts -> {
@@ -89,8 +98,9 @@ class MainActivity : Activity(), Callbacks {
     /**
         Parse Activity Results
      */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        val viewModel: MainViewModel by viewModels()
         viewModel.handleActivitiesResults(requestCode, resultCode, data)
     }
 
@@ -100,6 +110,7 @@ class MainActivity : Activity(), Callbacks {
     }
 
     override fun onConnected(connectedAccountName: String?) {
+        val viewModel: MainViewModel by viewModels()
         viewModel.fetchOfAllBroadcasts()
     }
 
@@ -115,11 +126,13 @@ class MainActivity : Activity(), Callbacks {
     override fun onEventSelected(liveBroadcast: LiveBroadcastItem?) {
         Log.d(Config.APP_NAME, "onEventSelected")
         if (liveBroadcast != null) {
+            val viewModel: MainViewModel by viewModels()
             viewModel.startStreaming(liveBroadcast)
         }
     }
 
     fun createEvent(context: View?) {
+        val viewModel: MainViewModel by viewModels()
         viewModel.createNewBroadcast()
     }
 

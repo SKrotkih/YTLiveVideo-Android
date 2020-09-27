@@ -39,3 +39,7 @@ object CreateLiveEvent  {
 
     private val TAG: String = CreateLiveEvent::class.java.name
 }
+
+/**
+ * https://developers.google.com/youtube/v3/live/docs/liveBroadcasts/insert
+ */
