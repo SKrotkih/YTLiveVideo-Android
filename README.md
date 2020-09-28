@@ -1,6 +1,6 @@
 # YTLiveStreaming for Android
 
-Example of using YouTube Data API v3 on Android.
+Example of using [YouTube Live Streaming API v3](https://developers.google.com/youtube/v3/live/docs) on Android (Kotlin).
 
 Here you can see upgraded in [Kotlin 1.4](https://github.com/JetBrains/kotlin/releases/tag/v1.4.10) deprecated version of the [YouTube WatchMe for Android](https://github.com/youtube/yt-watchme) project.
 
