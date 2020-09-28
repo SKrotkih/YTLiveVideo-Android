@@ -161,14 +161,15 @@ class MainViewModel : ViewModel(), MainViewModelInterface, GoogleSignInDelegate 
     override fun startStreaming(liveBroadcastItem: LiveBroadcastItem) {
         Log.d(TAG, "startStreaming")
         val broadcastId: String = liveBroadcastItem.id
+        val streamId = liveBroadcastItem.streamId
         val progressDialog = ProgressDialog.create(viewDelegate, R.string.startStreaming)
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                StartLiveEvent.runAsync(viewDelegate, accountManager.credential!!, broadcastId).await()
+                val isBroadcastingStarted = StartLiveEvent.runAsync(accountManager.credential!!, streamId).await()
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
-                    viewDelegate.startBroadcastStreaming(broadcastId, liveBroadcastItem.ingestionAddress!!)
+                    if (isBroadcastingStarted) viewDelegate.startBroadcastStreaming(broadcastId, liveBroadcastItem.ingestionAddress!!)
                 }
             } catch (e: UserRecoverableAuthIOException) {
                 launch(Dispatchers.Main) {

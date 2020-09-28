@@ -16,48 +16,31 @@ import java.lang.Thread.sleep
 
 object StartLiveEvent {
 
-    fun runAsync(context: Activity, credential: GoogleAccountCredential, broadcastId: String?) : Deferred<Unit> =
+    fun runAsync(credential: GoogleAccountCredential, streamId: String?) : Deferred<Boolean> =
         CoroutineScope(Dispatchers.IO).async() {
             try {
-
+                if (streamId.isNullOrBlank()) {
+                    throw IllegalArgumentException("The Stream ID is not presented")
+                }
                 delay(10000)
-
-//                checkStreamStatus(credential, broadcastId!!, broadcastId!!)
-
-                startLiveEvent(credential, broadcastId)
+                val result = checkAndStartStreaming(credential, streamId)
+                return@async result
             } catch (e: IOException) {
-                Log.e(TAG, "Error while starting broadcast request:", e)
+                Log.e(TAG, "Failed start broadcasting:", e)
                 val message = e.localizedMessage
                 throw IOException(message)
             }
         }
 
-    private fun startLiveEvent(credential: GoogleAccountCredential, broadcastId: String?) {
+    private fun checkAndStartStreaming(credential: GoogleAccountCredential, streamId: String) : Boolean {
         Log.d(TAG, "startLiveEvent")
         val transport: HttpTransport = NetHttpTransport()
         val jsonFactory: JsonFactory = GsonFactory()
         val youtube = YouTube.Builder(transport, jsonFactory, credential)
             .setApplicationName(Config.APP_NAME)
             .build()
-        if (broadcastId.isNullOrBlank()) {
-            throw IllegalArgumentException("The Broadcast ID is not presented")
-        } else {
-            YouTubeLiveBroadcastRequest.startEvent(youtube, broadcastId)
-        }
-    }
-
-    @Throws(IOException::class)
-    suspend fun checkStreamStatus(credential: GoogleAccountCredential, mStreamId: String, broadcastId: String) {
-
-        delay(10000)
-
-        val transport: HttpTransport = NetHttpTransport()
-        val jsonFactory: JsonFactory = GsonFactory()
-        val youtube = YouTube.Builder(transport, jsonFactory, credential)
-            .setApplicationName(Config.APP_NAME)
-            .build()
         val livestreamRequest = youtube.liveStreams().list("status")
-        livestreamRequest.id = mStreamId
+        livestreamRequest.id = streamId
         val returnedListResponse = livestreamRequest.execute()
         val returnedList = returnedListResponse.items
         if (returnedList.size == 1) {
@@ -65,9 +48,13 @@ object StartLiveEvent {
             Log.v(TAG, "the current stream status is : " + stream.status.streamStatus)
             if (stream.status.streamStatus == "active") {
                 Log.v(TAG, "start broadcasting now")
-                startLiveEvent(credential, stream.id)    // broadcastId
+                YouTubeLiveBroadcastRequest.startEvent(youtube, streamId)
+                return true
+            } else {
+                throw IOException("The Stream is not in Active state. It's in ${stream.status.streamStatus} state.")
             }
         }
+        return false
     }
 
     private val TAG: String = StartLiveEvent::class.java.name
