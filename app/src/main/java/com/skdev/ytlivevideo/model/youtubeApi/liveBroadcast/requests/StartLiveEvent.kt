@@ -16,7 +16,6 @@ import java.lang.Thread.sleep
 
 object StartLiveEvent {
 
-    @Throws(IllegalArgumentException::class)
     fun runAsync(context: Activity, credential: GoogleAccountCredential, broadcastId: String?) : Deferred<Unit> =
         CoroutineScope(Dispatchers.IO).async() {
             try {

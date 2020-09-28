@@ -11,22 +11,19 @@ import com.google.api.services.youtube.YouTube
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
 import com.skdev.ytlivevideo.util.Config
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import java.io.IOException
 
 object FetchAllLiveEvents {
 
-    @Throws(IOException::class)
-    fun runAsync(context: Activity, credential: GoogleAccountCredential) : Deferred<List<LiveBroadcastItem>?> =
-        CoroutineScope(Dispatchers.IO).async() {
+     suspend fun runAsync(context: Activity, credential: GoogleAccountCredential) : List<LiveBroadcastItem>? =
+        withContext(Dispatchers.IO) {
             try {
                 val list = fetchAllLiveEvents(credential)
-                return@async list
+                Log.d(TAG, list.toString())
+                return@withContext list
             } catch (e: IOException) {
-                Log.e(TAG, "Error while fetching all live events request:", e)
+                Log.e(TAG, "Failed fetch all live events:", e)
                 val message = e.cause?.message ?: "Error while fetching all live events request"
                 throw IOException(message)
             }
@@ -40,7 +37,7 @@ object FetchAllLiveEvents {
             .setApplicationName(Config.APP_NAME)
             .build()
         val listItems = YouTubeLiveBroadcastRequest.getLiveEvents(youtube)
-        Log.d(TAG, "Current my list broadcasts: $listItems")
+        Log.d(TAG, "My current list broadcasts: $listItems")
         return listItems
     }
 

@@ -15,7 +15,6 @@ import java.io.IOException
 
 object CreateLiveEvent  {
 
-    @Throws(IOException::class)
     fun runAsync(context: Activity, credential: GoogleAccountCredential, name: String, description: String) : Deferred<Unit> =
         CoroutineScope(Dispatchers.IO).async() {
             try {

@@ -103,7 +103,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface, GoogleSignInDelegate 
 
         CoroutineScope(Dispatchers.IO).launch() {
             try {
-                val list = FetchAllLiveEvents.runAsync(viewDelegate, accountManager.credential!!).await()
+                val list = FetchAllLiveEvents.runAsync(viewDelegate, accountManager.credential!!)
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
                     viewDelegate.didfetchOfAllBroadcasts(list)

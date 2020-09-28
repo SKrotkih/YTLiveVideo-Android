@@ -25,7 +25,6 @@ import java.io.IOException
 
 object EndLiveEvent {
 
-    @Throws(IllegalArgumentException::class)
     fun runAsync(context: Activity, credential: GoogleAccountCredential, broadcastId: String?) : Deferred<Unit> =
         CoroutineScope(Dispatchers.IO).async() {
             try {

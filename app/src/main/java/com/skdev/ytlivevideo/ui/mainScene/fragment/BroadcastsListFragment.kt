@@ -15,6 +15,7 @@ package com.skdev.ytlivevideo.ui.mainScene.fragment
 
 import android.app.Activity
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,11 +23,12 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.android.volley.toolbox.ImageLoader
-import com.android.volley.toolbox.NetworkImageView
 import com.google.android.gms.plus.PlusOneButton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.synthetic.main.fragment_live_events_list.*
 import kotlinx.android.synthetic.main.live_events_list_item.view.*
 
 /**
@@ -38,6 +40,23 @@ class BroadcastsListFragment : Fragment(), SignInConnectDelegate {
 
     companion object {
         fun newInstance() = BroadcastsListFragment()
+//        Pass parameters into Fragment
+//        fun newInstance(tutorial: Tutorial): BroadcastsListFragment {
+//            val fragment = BroadcastsListFragment()
+//            val args = Bundle()
+//            args.putParcelable(TUTORIAL_KEY, tutorial)
+//            fragment.arguments = args
+//            return fragmentHome
+//        }
+//        Tutorial.kt:
+//        @Parcelize
+//        data class Tutorial(
+//            val name: String,
+//            val url: String,
+//            val description: String) : Parcelable
+//       Somewhere in BroadcastsListFragment:
+//       val tutorial = arguments?.getParcelable(TUTORIAL_KEY) as Tutorial
+
         private val TAG = BroadcastsListFragment::class.java.name
     }
 
@@ -91,20 +110,15 @@ class BroadcastsListFragment : Fragment(), SignInConnectDelegate {
         }
 
         private fun renderGridItem(view: View, broadcastItem: LiveBroadcastItem) {
-            val titleTextView = view.title as TextView
-            titleTextView.text = broadcastItem.title
-            val createdAtTextView = view.createdAt as TextView
-            createdAtTextView.text = "Created: ${broadcastItem.publishedAt}"
-            val scheduledAtTextView = view.scheduledAt as TextView
-            scheduledAtTextView.text = "Scheduled: ${broadcastItem.publishedAt}"
-            val thumbNailImageView = view.thumbnail as NetworkImageView
-            thumbNailImageView.setImageUrl(broadcastItem.thumbUri, mImageLoader)
+            view.title.text = broadcastItem.title
+            view.createdAt.text = "Created: ${broadcastItem.publishedAt}"
+            view.scheduledAt.text = "Scheduled: ${broadcastItem.publishedAt}"
+            view.thumbnail.setImageUrl(broadcastItem.thumbUri, mImageLoader)
             val viewModel: MainViewModel by activityViewModels()
             if (viewModel.isConnected()) {
                 (view.plus_button as PlusOneButton).initialize(broadcastItem.watchUri, null)
             }
-            val backgroundView = view.main_target
-            backgroundView.setOnClickListener {
+            view.main_target.setOnClickListener {
                 mFragmentDelegate!!.onEventSelected(broadcastItem)
             }
         }
@@ -114,7 +128,6 @@ class BroadcastsListFragment : Fragment(), SignInConnectDelegate {
      *  SignInConnectDelegate
      */
     override fun signedIn() {
-        setProfileInfo()
         if (mGridView?.adapter != null) {
             (mGridView!!.adapter as LiveEventAdapter)
                 .notifyDataSetChanged()
@@ -135,9 +148,8 @@ class BroadcastsListFragment : Fragment(), SignInConnectDelegate {
 
     private fun setProfileInfo() {
         val viewModel: MainViewModel by activityViewModels()
-        val accountName: String? = viewModel.getAccountName()
-        (view!!.findViewById<View>(R.id.avatar) as ImageView)
-            .setImageDrawable(null)
+        display_name.text = viewModel.getAccountName()
+        avatar.setImageDrawable(null)
 //            if (currentPerson.hasImage()) {
 //                // Set the URL of the image that should be loaded into this view, and
 //                // specify the ImageLoader that will be used to make the request.
@@ -145,6 +157,5 @@ class BroadcastsListFragment : Fragment(), SignInConnectDelegate {
 //                    currentPerson.image.url, mImageLoader
 //                )
 //            }
-        (view!!.findViewById<View>(R.id.display_name) as TextView).text = accountName
     }
 }
