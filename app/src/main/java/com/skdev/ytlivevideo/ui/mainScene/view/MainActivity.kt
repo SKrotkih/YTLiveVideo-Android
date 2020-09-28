@@ -29,10 +29,10 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.enteties.AccountName
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
-import com.skdev.ytlivevideo.ui.mainScene.fragment.LiveEventsListFragment.Callbacks
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
-import com.skdev.ytlivevideo.ui.mainScene.fragment.LiveEventsListFragment
+import com.skdev.ytlivevideo.ui.mainScene.fragment.BroadcastsListFragment
+import com.skdev.ytlivevideo.ui.mainScene.fragment.FragmentDelegate
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
 import com.skdev.ytlivevideo.util.Config
@@ -46,8 +46,8 @@ import kotlinx.coroutines.launch
  *
  * Main activity class which handles authorization and intents.
  */
-class MainActivity : AppCompatActivity(), Callbacks, ViewModelStoreOwner {
-    private lateinit var mLiveEventsListFragment: LiveEventsListFragment
+class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner {
+    private lateinit var mBroadcastsListFragment: BroadcastsListFragment
 
     private val mImageLoader: ImageLoader? by lazy {
         NetworkSingleton.getInstance(this)?.imageLoader
@@ -58,17 +58,14 @@ class MainActivity : AppCompatActivity(), Callbacks, ViewModelStoreOwner {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
-            mLiveEventsListFragment = LiveEventsListFragment.newInstance()
+            mBroadcastsListFragment = BroadcastsListFragment.newInstance()
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, mLiveEventsListFragment)
+                .replace(R.id.container, mBroadcastsListFragment)
                 .commitNow()
         }
-        val viewModel: MainViewModel by viewModels()
-        viewModel.signInConnectDelegate = mLiveEventsListFragment
-        viewModel.viewDelegate = this
-        viewModel.sighIn(applicationContext, savedInstanceState)
+        configureViewModel()
+        logInIfNeeded(savedInstanceState)
     }
-
 
     /**
         Menu
@@ -139,7 +136,7 @@ class MainActivity : AppCompatActivity(), Callbacks, ViewModelStoreOwner {
     fun didfetchOfAllBroadcasts(fetchedLiveBroadcastItems: List<LiveBroadcastItem>?) {
         if (fetchedLiveBroadcastItems == null) return
         Log.i(Config.APP_NAME, "didfetchOfAllBroadcasts=$fetchedLiveBroadcastItems")
-        mLiveEventsListFragment.setEvents(fetchedLiveBroadcastItems)
+        mBroadcastsListFragment.setEvents(fetchedLiveBroadcastItems)
     }
 
     fun startBroadcastStreaming(broadcastId: String, ingestionAddress: String) {
@@ -161,7 +158,7 @@ class MainActivity : AppCompatActivity(), Callbacks, ViewModelStoreOwner {
     }
 
     /**
-     * Show GooglePlay Services Availability Error Dialog
+     * Show Error Dialog
      */
     fun showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode: Int) {
         CoroutineScope(Dispatchers.Main).launch {
@@ -173,5 +170,16 @@ class MainActivity : AppCompatActivity(), Callbacks, ViewModelStoreOwner {
             )
             dialog.show()
         }
+    }
+
+    private fun configureViewModel() {
+        val viewModel: MainViewModel by viewModels()
+        viewModel.signInConnectDelegate = mBroadcastsListFragment
+        viewModel.viewDelegate = this
+    }
+
+    private fun logInIfNeeded(savedInstanceState: Bundle?) {
+        val viewModel: MainViewModel by viewModels()
+        viewModel.signIn(applicationContext, savedInstanceState)
     }
 }

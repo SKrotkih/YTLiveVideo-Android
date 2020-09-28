@@ -72,8 +72,8 @@ class MainViewModel : ViewModel(), MainViewModelInterface, GoogleSignInDelegate 
         fetchOfAllBroadcasts()
     }
 
-    override fun sighIn(context: Context, savedInstanceState: Bundle?) {
-        if (accountManager.sighIn(context, savedInstanceState)) {
+    override fun signIn(context: Context, savedInstanceState: Bundle?) {
+        if (accountManager.signIn(context, savedInstanceState)) {
             signInManager.googleSignIn()
         } else {
             val message = viewDelegate.resources.getText(R.string.oauth2_credentials_are_empty).toString()

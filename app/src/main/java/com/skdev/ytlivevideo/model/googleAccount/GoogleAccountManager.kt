@@ -22,8 +22,8 @@ class GoogleAccountManager {
         mCredential!!.selectedAccount = googleAccount.account
     }
 
-    fun sighIn(context: Context, savedInstanceState: Bundle?): Boolean {
-        Log.d(TAG, "sighIn")
+    fun signIn(context: Context, savedInstanceState: Bundle?): Boolean {
+        Log.d(TAG, "signIn")
         val scopes = listOf(Scopes.PROFILE, YouTubeScopes.YOUTUBE)
         mCredential = GoogleAccountCredential.usingOAuth2(context, scopes)
         return if (mCredential == null) {

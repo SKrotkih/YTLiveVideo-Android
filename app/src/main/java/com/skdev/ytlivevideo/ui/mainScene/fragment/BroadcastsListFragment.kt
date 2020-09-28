@@ -32,67 +32,42 @@ import kotlinx.android.synthetic.main.live_events_list_item.view.*
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
  *
- *
  * Left side fragment showing user's uploaded YouTube videos.
  */
-class LiveEventsListFragment : Fragment(), SignInConnectDelegate {
+class BroadcastsListFragment : Fragment(), SignInConnectDelegate {
 
     companion object {
-        fun newInstance() = LiveEventsListFragment()
-        private val TAG = LiveEventsListFragment::class.java.name
+        fun newInstance() = BroadcastsListFragment()
+        private val TAG = BroadcastsListFragment::class.java.name
     }
 
-    private var mCallbacks: Callbacks? = null
+    private var mFragmentDelegate: FragmentDelegate? = null
     private var mImageLoader: ImageLoader? = null
     private var mGridView: GridView? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val listView = inflater.inflate(R.layout.fragment_live_events_list, container, false)
-        mGridView = listView.findViewById<View>(R.id.grid_view) as GridView
-        val emptyView = listView
-            .findViewById<View>(R.id.empty) as TextView
-        mGridView!!.emptyView = emptyView
-        return listView
-    }
-
-    fun setEvents(liveBroadcastItems: List<LiveBroadcastItem>) {
-        mGridView!!.adapter = LiveEventAdapter(liveBroadcastItems)
-    }
-
-    private fun setProfileInfo() {
-        val viewModel: MainViewModel by activityViewModels()
-        val accountName: String? = viewModel.getAccountName()
-        (view!!.findViewById<View>(R.id.avatar) as ImageView)
-            .setImageDrawable(null)
-//            if (currentPerson.hasImage()) {
-//                // Set the URL of the image that should be loaded into this view, and
-//                // specify the ImageLoader that will be used to make the request.
-//                (view!!.findViewById<View>(R.id.avatar) as NetworkImageView).setImageUrl(
-//                    currentPerson.image.url, mImageLoader
-//                )
-//            }
-        (view!!.findViewById<View>(R.id.display_name) as TextView).text = accountName
+        val fragmentView = inflater.inflate(R.layout.fragment_live_events_list, container, false)
+        configureGrid(fragmentView)
+        return fragmentView
     }
 
     override fun onAttach(activity: Activity) {
         super.onAttach(activity)
-        if (activity !is Callbacks) {
+        if (activity !is FragmentDelegate) {
             throw ClassCastException("Activity must implement callbacks.")
         }
-        mCallbacks = activity
-        mImageLoader = mCallbacks!!.onGetImageLoader()
+        mFragmentDelegate = activity
+        mImageLoader = mFragmentDelegate!!.onGetImageLoader()
     }
 
     override fun onDetach() {
         super.onDetach()
-        mCallbacks = null
+        mFragmentDelegate = null
         mImageLoader = null
     }
 
-    interface Callbacks {
-        fun onGetImageLoader(): ImageLoader?
-        fun onEventSelected(liveBroadcastItem: LiveBroadcastItem?)
-        fun onConnected(connectedAccountName: String?)
+    fun setEvents(liveBroadcastItems: List<LiveBroadcastItem>) {
+        mGridView!!.adapter = LiveEventAdapter(liveBroadcastItems)
     }
 
     private inner class LiveEventAdapter(private val mLiveBroadcastItems: List<LiveBroadcastItem>) : BaseAdapter() {
@@ -109,21 +84,29 @@ class LiveEventsListFragment : Fragment(), SignInConnectDelegate {
         }
 
         override fun getView(position: Int, convertView: View?, container: ViewGroup): View {
+            val broadcastItem = mLiveBroadcastItems[position]
             val view: View = convertView ?: LayoutInflater.from(activity).inflate(R.layout.live_events_list_item, container, false)
-            val event = mLiveBroadcastItems[position]
+            renderGridItem(view, broadcastItem)
+            return view
+        }
+
+        private fun renderGridItem(view: View, broadcastItem: LiveBroadcastItem) {
             val titleTextView = view.title as TextView
-            titleTextView.text = event.title
+            titleTextView.text = broadcastItem.title
+            val createdAtTextView = view.createdAt as TextView
+            createdAtTextView.text = "Created: ${broadcastItem.publishedAt}"
+            val scheduledAtTextView = view.scheduledAt as TextView
+            scheduledAtTextView.text = "Scheduled: ${broadcastItem.publishedAt}"
             val thumbNailImageView = view.thumbnail as NetworkImageView
-            thumbNailImageView.setImageUrl(event.thumbUri, mImageLoader)
+            thumbNailImageView.setImageUrl(broadcastItem.thumbUri, mImageLoader)
             val viewModel: MainViewModel by activityViewModels()
             if (viewModel.isConnected()) {
-                (view.plus_button as PlusOneButton).initialize(event.watchUri, null)
+                (view.plus_button as PlusOneButton).initialize(broadcastItem.watchUri, null)
             }
             val backgroundView = view.main_target
             backgroundView.setOnClickListener {
-                mCallbacks!!.onEventSelected(mLiveBroadcastItems[position])
+                mFragmentDelegate!!.onEventSelected(broadcastItem)
             }
-            return view
         }
     }
 
@@ -138,10 +121,30 @@ class LiveEventsListFragment : Fragment(), SignInConnectDelegate {
         }
         setProfileInfo()
         val viewModel: MainViewModel by activityViewModels()
-        mCallbacks?.onConnected(viewModel.getAccountName())
+        mFragmentDelegate?.onConnected(viewModel.getAccountName())
     }
-}
 
-interface SignInConnectDelegate {
-    fun signedIn()
+    /**
+     * Private presenter's methods
+     */
+    private fun configureGrid(context: View) {
+        mGridView = context.findViewById<View>(R.id.grid_view) as GridView
+        val emptyView = context.findViewById<View>(R.id.empty) as TextView
+        mGridView!!.emptyView = emptyView
+    }
+
+    private fun setProfileInfo() {
+        val viewModel: MainViewModel by activityViewModels()
+        val accountName: String? = viewModel.getAccountName()
+        (view!!.findViewById<View>(R.id.avatar) as ImageView)
+            .setImageDrawable(null)
+//            if (currentPerson.hasImage()) {
+//                // Set the URL of the image that should be loaded into this view, and
+//                // specify the ImageLoader that will be used to make the request.
+//                (view!!.findViewById<View>(R.id.avatar) as NetworkImageView).setImageUrl(
+//                    currentPerson.image.url, mImageLoader
+//                )
+//            }
+        (view!!.findViewById<View>(R.id.display_name) as TextView).text = accountName
+    }
 }

@@ -13,7 +13,17 @@
  */
 package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.google.api.client.util.DateTime
 import com.google.api.services.youtube.model.LiveBroadcast
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.ISO_INSTANT
+import java.util.*
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
@@ -29,6 +39,9 @@ class LiveBroadcastItem {
     val id: String
         get() = event!!.id
 
+    val streamId: String
+        get() = event!!.contentDetails.boundStreamId
+
     val title: String
         get() = event!!.snippet.title
 
@@ -41,6 +54,16 @@ class LiveBroadcastItem {
                 url = "https:$url"
             }
             return url
+        }
+
+    val publishedAt: String
+        get() {
+            return event!!.snippet.publishedAt.toString()
+        }
+
+    val scheduledStartTime: String
+        get() {
+            return event!!.snippet.scheduledStartTime.toString()
         }
 
     val watchUri: String

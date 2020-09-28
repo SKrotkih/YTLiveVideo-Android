@@ -8,7 +8,7 @@ import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 interface MainViewModelInterface {
     fun handleActivitiesResults(requestCode: Int, resultCode: Int, data: Intent?)
     fun startSelectAccountActivity()
-    fun sighIn(context: Context, savedInstanceState: Bundle?)
+    fun signIn(context: Context, savedInstanceState: Bundle?)
     fun logOut()
     fun fetchOfAllBroadcasts()
     fun createNewBroadcast()
