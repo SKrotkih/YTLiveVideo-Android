@@ -25,7 +25,7 @@ object FetchAllLiveEvents {
                 return@withContext list
             } catch (e: IOException) {
                 Log.e(TAG, "Failed fetch all live events:", e)
-                val message = e.cause?.message ?: "Error while fetching all live events request"
+                val message = e.cause?.message ?: "Error while fetching live events with '${state.toString()}' state"
                 throw IOException(message)
             }
         }

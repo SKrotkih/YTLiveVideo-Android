@@ -133,7 +133,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
      * Fetch broadcasts by State
      */
     override fun fetchBroadcasts(state: BroadcastState) {
-        val progressDialog = ProgressDialog.create(viewDelegate, R.string.loadingEvents)
+        val progressDialog = ProgressDialog.create(viewDelegate, getProgressBarTitle(state))
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch() {
             try {
@@ -167,6 +167,17 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
                 }
             }
         }
+    }
+
+    private fun getProgressBarTitle(state: BroadcastState): String {
+        return "Downloading ${
+            when(state) {
+                BroadcastState.ALL -> "all"
+                BroadcastState.UPCOMING -> "all upcoming"
+                BroadcastState.ACTIVE -> "all active"
+                BroadcastState.COMPLETED -> "all completed"                
+            }
+        } broadcasts…"
     }
 
     /**

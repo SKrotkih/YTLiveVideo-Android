@@ -11,11 +11,15 @@ import kotlinx.android.synthetic.main.activity_progress_dialog.*
 class ProgressDialog {
     companion object {
         fun create(context: Context, resId: Int): Dialog {
+            return create(context, context.getText(resId).toString())
+        }
+
+        fun create(context: Context, title: String): Dialog {
             val dialog = Dialog(context)
             val inflate = LayoutInflater.from(context).inflate(R.layout.activity_progress_dialog, null)
             dialog.setContentView(inflate)
             dialog.setCancelable(false)
-            dialog.title.text = context.getText(resId).toString()
+            dialog.title.text = title
             dialog.window!!.setBackgroundDrawable(
                 ColorDrawable(Color.TRANSPARENT)
             )
