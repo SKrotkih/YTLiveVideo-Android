@@ -1,4 +1,4 @@
-package com.skdev.ytlivevideo.ui.mainScene.fragment
+package com.skdev.ytlivevideo.ui.mainScene.adapter
 
 import android.content.Context
 import android.view.View

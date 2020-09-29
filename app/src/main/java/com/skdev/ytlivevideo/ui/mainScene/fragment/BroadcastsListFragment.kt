@@ -16,6 +16,7 @@ package com.skdev.ytlivevideo.ui.mainScene.fragment
 import android.app.Activity
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,20 +27,23 @@ import com.android.volley.toolbox.ImageLoader
 import com.google.android.gms.plus.PlusOneButton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.R
+import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
+import com.skdev.ytlivevideo.util.Config
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_live_events_list.*
 import kotlinx.android.synthetic.main.live_events_list_item.view.*
+import java.util.Observer
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
  *
  * Left side fragment showing user's uploaded YouTube videos.
  */
-class BroadcastsListFragment : Fragment(), SignInConnectDelegate {
+class BroadcastsListFragment(private val filter: String) : Fragment(), SignInConnectDelegate {
 
     companion object {
-        fun newInstance() = BroadcastsListFragment()
+//        fun newInstance() = BroadcastsListFragment()
 //        Pass parameters into Fragment
 //        fun newInstance(tutorial: Tutorial): BroadcastsListFragment {
 //            val fragment = BroadcastsListFragment()
@@ -67,6 +71,7 @@ class BroadcastsListFragment : Fragment(), SignInConnectDelegate {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val fragmentView = inflater.inflate(R.layout.fragment_live_events_list, container, false)
         configureGrid(fragmentView)
+
         return fragmentView
     }
 
@@ -77,6 +82,33 @@ class BroadcastsListFragment : Fragment(), SignInConnectDelegate {
         }
         mFragmentDelegate = activity
         mImageLoader = mFragmentDelegate!!.onGetImageLoader()
+        subscribeOnChangeData()
+    }
+
+    private fun subscribeOnChangeData() {
+        val viewModel: MainViewModel by activityViewModels()
+        when (filter) {
+            "all" -> {
+                viewModel.allBroadcastItems.observe(this, {
+                    setEvents(it)
+                })
+            }
+            "upcoming" -> {
+                viewModel.upcomingBroadcastItems.observe(this, {
+                    setEvents(it)
+                })
+            }
+            "active" -> {
+                viewModel.activeBroadcastItems.observe(this, {
+                    setEvents(it)
+                })
+            }
+            "completed" -> {
+                viewModel.completedBroadcastItems.observe(this, {
+                    setEvents(it)
+                })
+            }
+        }
     }
 
     override fun onDetach() {
@@ -85,7 +117,8 @@ class BroadcastsListFragment : Fragment(), SignInConnectDelegate {
         mImageLoader = null
     }
 
-    fun setEvents(liveBroadcastItems: List<LiveBroadcastItem>) {
+    private fun setEvents(liveBroadcastItems: List<LiveBroadcastItem>) {
+        Log.i(Config.APP_NAME, "${filter}: broadcasts=$liveBroadcastItems")
         mGridView!!.adapter = LiveEventAdapter(liveBroadcastItems)
     }
 
@@ -132,9 +165,8 @@ class BroadcastsListFragment : Fragment(), SignInConnectDelegate {
             (mGridView!!.adapter as LiveEventAdapter)
                 .notifyDataSetChanged()
         }
-        setProfileInfo()
-        val viewModel: MainViewModel by activityViewModels()
-        mFragmentDelegate?.onConnected(viewModel.getAccountName())
+//        val viewModel: MainViewModel by activityViewModels()
+//        (activity as FragmentDelegate).onConnected(viewModel.getAccountName())
     }
 
     /**
@@ -144,18 +176,5 @@ class BroadcastsListFragment : Fragment(), SignInConnectDelegate {
         mGridView = context.findViewById<View>(R.id.grid_view) as GridView
         val emptyView = context.findViewById<View>(R.id.empty) as TextView
         mGridView!!.emptyView = emptyView
-    }
-
-    private fun setProfileInfo() {
-        val viewModel: MainViewModel by activityViewModels()
-        display_name.text = viewModel.getAccountName()
-        avatar.setImageDrawable(null)
-//            if (currentPerson.hasImage()) {
-//                // Set the URL of the image that should be loaded into this view, and
-//                // specify the ImageLoader that will be used to make the request.
-//                (view!!.findViewById<View>(R.id.avatar) as NetworkImageView).setImageUrl(
-//                    currentPerson.image.url, mImageLoader
-//                )
-//            }
     }
 }

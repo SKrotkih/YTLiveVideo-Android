@@ -19,23 +19,26 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.Window
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.viewpager.widget.ViewPager
 import com.android.volley.toolbox.ImageLoader
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.material.tabs.TabLayout
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.enteties.AccountName
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
+import com.skdev.ytlivevideo.ui.mainScene.adapter.SectionsPagerAdapter
 import com.skdev.ytlivevideo.ui.mainScene.fragment.BroadcastsListFragment
 import com.skdev.ytlivevideo.ui.mainScene.fragment.FragmentDelegate
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
 import com.skdev.ytlivevideo.util.Config
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,8 +50,6 @@ import kotlinx.coroutines.launch
  * Main activity class which handles authorization and intents.
  */
 class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner {
-    private lateinit var mBroadcastsListFragment: BroadcastsListFragment
-
     private val mImageLoader: ImageLoader? by lazy {
         NetworkSingleton.getInstance(this)?.imageLoader
     }
@@ -57,12 +58,13 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
         window.requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (savedInstanceState == null) {
-            mBroadcastsListFragment = BroadcastsListFragment.newInstance()
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, mBroadcastsListFragment)
-                .commitNow()
-        }
+
+        val viewPager: ViewPager = findViewById(R.id.view_pager)
+        setupViewPager(viewPager)
+
+        val tabs: TabLayout = findViewById(R.id.tabs)
+        tabs.setupWithViewPager(viewPager)
+
         configureViewModel()
         logInIfNeeded(savedInstanceState)
     }
@@ -79,6 +81,7 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val viewModel: MainViewModel by viewModels()
         when (item.itemId) {
+            R.id.create_event -> viewModel.createNewBroadcast()
             R.id.menu_refresh -> viewModel.fetchOfAllBroadcasts()
             R.id.menu_accounts -> {
                 viewModel.startSelectAccountActivity()
@@ -90,6 +93,18 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    /**
+     * Tab Bar
+     */
+    private fun setupViewPager(viewPager: ViewPager) {
+        val adapter = SectionsPagerAdapter(supportFragmentManager)
+        adapter.addFragment(BroadcastsListFragment("all"), "All")
+        adapter.addFragment(BroadcastsListFragment("upcoming"), "Upcoming")
+        adapter.addFragment(BroadcastsListFragment("active"), "Active")
+        adapter.addFragment(BroadcastsListFragment("completed"), "Completed")
+        viewPager.adapter = adapter
     }
 
     /**
@@ -108,6 +123,15 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
 
     override fun onConnected(connectedAccountName: String?) {
         val viewModel: MainViewModel by viewModels()
+        display_name.text = viewModel.getAccountName()
+        avatar.setImageDrawable(null)
+//            if (currentPerson.hasImage()) {
+//                // Set the URL of the image that should be loaded into this view, and
+//                // specify the ImageLoader that will be used to make the request.
+//                (view!!.findViewById<View>(R.id.avatar) as NetworkImageView).setImageUrl(
+//                    currentPerson.image.url, mImageLoader
+//                )
+//            }
         viewModel.fetchOfAllBroadcasts()
     }
 
@@ -126,17 +150,6 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
             val viewModel: MainViewModel by viewModels()
             viewModel.startStreaming(liveBroadcast)
         }
-    }
-
-    fun createEvent(context: View?) {
-        val viewModel: MainViewModel by viewModels()
-        viewModel.createNewBroadcast()
-    }
-
-    fun didfetchOfAllBroadcasts(fetchedLiveBroadcastItems: List<LiveBroadcastItem>?) {
-        if (fetchedLiveBroadcastItems == null) return
-        Log.i(Config.APP_NAME, "didfetchOfAllBroadcasts=$fetchedLiveBroadcastItems")
-        mBroadcastsListFragment.setEvents(fetchedLiveBroadcastItems)
     }
 
     fun startBroadcastStreaming(broadcastId: String, ingestionAddress: String) {
@@ -174,7 +187,6 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
 
     private fun configureViewModel() {
         val viewModel: MainViewModel by viewModels()
-        viewModel.signInConnectDelegate = mBroadcastsListFragment
         viewModel.viewDelegate = this
     }
 

@@ -21,51 +21,6 @@
     android:dividerPadding="16dp"
     android:orientation="vertical"
     android:showDividers="middle">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="16dp">
-
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/avatar"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="#1000"
-            android:contentDescription="@string/avatar"
-            android:scaleType="centerCrop" />
-
-        <TextView
-                android:id="@+id/display_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
-                android:fontFamily="sans-serif-medium"
-                android:textAppearance="?android:textAppearanceLarge" android:textSize="18sp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="8dp">
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginStart="4dip"
-                android:fontFamily="sans-serif-condensed"
-                android:text="@string/pick_one_of_your_videos_to_submit"
-                android:textAppearance="?android:textAppearanceMedium" android:textSize="14sp">
-        </TextView>
-
-    </LinearLayout>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -88,5 +43,4 @@
             android:padding="16dp"
             android:text="@string/no_videos_to_show_here_" />
     </FrameLayout>
-
 </LinearLayout>
