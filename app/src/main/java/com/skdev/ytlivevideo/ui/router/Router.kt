@@ -14,8 +14,7 @@ object Router {
 
     enum class StartActivity {
         EVENT_PREVIEW {
-            override fun run() {
-            }
+            override fun run() {}
             override fun run(params: Any) {
                 openEventPreview(params)
             }

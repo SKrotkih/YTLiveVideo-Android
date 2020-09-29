@@ -37,6 +37,7 @@ import com.skdev.ytlivevideo.ui.mainScene.adapter.SectionsPagerAdapter
 import com.skdev.ytlivevideo.ui.mainScene.fragment.BroadcastsListFragment
 import com.skdev.ytlivevideo.ui.mainScene.fragment.FragmentDelegate
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
+import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
 import com.skdev.ytlivevideo.util.Config
 import kotlinx.android.synthetic.main.activity_main.*
@@ -62,6 +63,11 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
         configureTabBar()
         configureViewModel()
         logInIfNeeded(savedInstanceState)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Router.currentContext = this
     }
 
     /**
@@ -140,8 +146,7 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
     override fun didUserSelectBroadcastItem(liveBroadcast: LiveBroadcastItem?) {
         Log.d(Config.APP_NAME, "didUserSelectBroadcastItem")
         if (liveBroadcast != null) {
-            val viewModel: MainViewModel by viewModels()
-            viewModel.startStreaming(liveBroadcast)
+            Router.StartActivity.EVENT_PREVIEW.run(liveBroadcast)
         }
     }
 

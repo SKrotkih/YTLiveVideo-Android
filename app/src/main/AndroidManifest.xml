@@ -23,6 +23,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light">
+
         <activity android:name=".ui.splashScreen.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -34,11 +35,15 @@
             android:configChanges="orientation|screenSize">
         </activity>
         <activity
+            android:name=".ui.broadcastPreview.BroadcastPreview"
+            android:configChanges="orientation|screenSize">
+        </activity>
+        <activity
             android:name=".ui.videoStreamingScene.VideoStreamingActivity"
             android:label="@string/app_name"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape">
+        </activity>
 
         <service android:name=".model.services.videoStreaming.VideoStreamingService" />
     </application>
-
 </manifest>
