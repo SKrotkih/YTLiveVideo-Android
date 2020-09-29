@@ -8,11 +8,6 @@
         android:id="@+id/create_event"
         android:icon="@mipmap/ic_mailboxes_accounts"
         android:title="@string/create_event" />
-
-    <item
-        android:id="@+id/menu_refresh"
-        android:icon="@mipmap/ic_menu_refresh"
-        android:title="@string/refresh" />
     <item
             android:id="@+id/menu_logout"
             android:icon="@mipmap/ic_menu_refresh"

@@ -82,7 +82,6 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
         val viewModel: MainViewModel by viewModels()
         when (item.itemId) {
             R.id.create_event -> viewModel.createNewBroadcast()
-            R.id.menu_refresh -> viewModel.fetchOfAllBroadcasts()
             R.id.menu_accounts -> {
                 viewModel.startSelectAccountActivity()
                 return true
@@ -121,7 +120,7 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
         AccountName.saveName(this, AccountName.getName(this), outState)
     }
 
-    override fun onConnected(connectedAccountName: String?) {
+    override fun onConnected() {
         val viewModel: MainViewModel by viewModels()
         display_name.text = viewModel.getAccountName()
         avatar.setImageDrawable(null)
@@ -132,7 +131,6 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
 //                    currentPerson.image.url, mImageLoader
 //                )
 //            }
-        viewModel.fetchOfAllBroadcasts()
     }
 
     override fun onBackPressed() {

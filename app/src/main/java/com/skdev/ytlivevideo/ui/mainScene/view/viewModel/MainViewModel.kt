@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -20,8 +19,6 @@ import com.skdev.ytlivevideo.model.googleAccount.GoogleSignInManager
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.*
-import com.skdev.ytlivevideo.ui.mainScene.fragment.FragmentDelegate
-import com.skdev.ytlivevideo.ui.mainScene.fragment.SignInConnectDelegate
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.util.ProgressDialog
 import com.skdev.ytlivevideo.util.Utils
@@ -75,7 +72,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface, GoogleSignInDelegate 
     override fun didUserGoogleSignIn() {
         accountManager.setUpGoogleAccount(signInManager.account!!)
         viewDelegate.invalidateOptionsMenu()
-        viewDelegate.onConnected(getAccountName())
+        viewDelegate.onConnected()
         fetchOfAllBroadcasts()
     }
 

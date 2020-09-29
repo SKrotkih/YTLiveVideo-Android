@@ -41,30 +41,6 @@ import java.util.Observer
  * Left side fragment showing user's uploaded YouTube videos.
  */
 class BroadcastsListFragment(private val filter: String) : Fragment(), SignInConnectDelegate {
-
-    companion object {
-//        fun newInstance() = BroadcastsListFragment()
-//        Pass parameters into Fragment
-//        fun newInstance(tutorial: Tutorial): BroadcastsListFragment {
-//            val fragment = BroadcastsListFragment()
-//            val args = Bundle()
-//            args.putParcelable(TUTORIAL_KEY, tutorial)
-//            fragment.arguments = args
-//            return fragmentHome
-//        }
-//        Tutorial.kt:
-//        @Parcelize
-//        data class Tutorial(
-//            val name: String,
-//            val url: String,
-//            val description: String) : Parcelable
-//       Somewhere in BroadcastsListFragment:
-//       val tutorial = arguments?.getParcelable(TUTORIAL_KEY) as Tutorial
-
-        private val TAG = BroadcastsListFragment::class.java.name
-    }
-
-    private var mFragmentDelegate: FragmentDelegate? = null
     private var mImageLoader: ImageLoader? = null
     private var mGridView: GridView? = null
 
@@ -80,8 +56,7 @@ class BroadcastsListFragment(private val filter: String) : Fragment(), SignInCon
         if (activity !is FragmentDelegate) {
             throw ClassCastException("Activity must implement callbacks.")
         }
-        mFragmentDelegate = activity
-        mImageLoader = mFragmentDelegate!!.onGetImageLoader()
+        mImageLoader = (activity as FragmentDelegate).onGetImageLoader()
         subscribeOnChangeData()
     }
 
@@ -113,7 +88,6 @@ class BroadcastsListFragment(private val filter: String) : Fragment(), SignInCon
 
     override fun onDetach() {
         super.onDetach()
-        mFragmentDelegate = null
         mImageLoader = null
     }
 
@@ -152,7 +126,7 @@ class BroadcastsListFragment(private val filter: String) : Fragment(), SignInCon
                 (view.plus_button as PlusOneButton).initialize(broadcastItem.watchUri, null)
             }
             view.main_target.setOnClickListener {
-                mFragmentDelegate!!.onEventSelected(broadcastItem)
+                (activity as FragmentDelegate).onEventSelected(broadcastItem)
             }
         }
     }
@@ -165,8 +139,8 @@ class BroadcastsListFragment(private val filter: String) : Fragment(), SignInCon
             (mGridView!!.adapter as LiveEventAdapter)
                 .notifyDataSetChanged()
         }
-//        val viewModel: MainViewModel by activityViewModels()
-//        (activity as FragmentDelegate).onConnected(viewModel.getAccountName())
+        val viewModel: MainViewModel by activityViewModels()
+        viewModel.fetchOfAllBroadcasts()
     }
 
     /**
@@ -176,5 +150,9 @@ class BroadcastsListFragment(private val filter: String) : Fragment(), SignInCon
         mGridView = context.findViewById<View>(R.id.grid_view) as GridView
         val emptyView = context.findViewById<View>(R.id.empty) as TextView
         mGridView!!.emptyView = emptyView
+    }
+
+    companion object {
+        private val TAG = BroadcastsListFragment::class.java.name
     }
 }
