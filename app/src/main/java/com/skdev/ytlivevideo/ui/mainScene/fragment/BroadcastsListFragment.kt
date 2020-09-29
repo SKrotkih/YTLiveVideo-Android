@@ -27,6 +27,7 @@ import com.android.volley.toolbox.ImageLoader
 import com.google.android.gms.plus.PlusOneButton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.R
+import com.skdev.ytlivevideo.model.googleAccount.GoogleSignInManager
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.util.Config
@@ -40,15 +41,22 @@ import java.util.Observer
  *
  * Left side fragment showing user's uploaded YouTube videos.
  */
-class BroadcastsListFragment(private val filter: String) : Fragment(), SignInConnectDelegate {
+class BroadcastsListFragment(private val filter: String) : Fragment() {
     private var mImageLoader: ImageLoader? = null
     private var mGridView: GridView? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val fragmentView = inflater.inflate(R.layout.fragment_live_events_list, container, false)
         configureGrid(fragmentView)
-
+        subscribeOnSignIn()
         return fragmentView
+    }
+
+    private fun subscribeOnSignIn() {
+        val viewModel: MainViewModel by activityViewModels()
+        viewModel.signInManager.didUserSignIn.observe(this, {
+            signedIn()
+        })
     }
 
     override fun onAttach(activity: Activity) {
@@ -58,6 +66,15 @@ class BroadcastsListFragment(private val filter: String) : Fragment(), SignInCon
         }
         mImageLoader = (activity as FragmentDelegate).onGetImageLoader()
         subscribeOnChangeData()
+    }
+
+    private fun signedIn() {
+        if (mGridView?.adapter != null) {
+            (mGridView!!.adapter as LiveEventAdapter)
+                .notifyDataSetChanged()
+        }
+        val viewModel: MainViewModel by activityViewModels()
+        viewModel.fetchBroadcasts(filter)
     }
 
     private fun subscribeOnChangeData() {
@@ -126,21 +143,9 @@ class BroadcastsListFragment(private val filter: String) : Fragment(), SignInCon
                 (view.plus_button as PlusOneButton).initialize(broadcastItem.watchUri, null)
             }
             view.main_target.setOnClickListener {
-                (activity as FragmentDelegate).onEventSelected(broadcastItem)
+                (activity as FragmentDelegate).didUserSelectBroadcastItem(broadcastItem)
             }
         }
-    }
-
-    /**
-     *  SignInConnectDelegate
-     */
-    override fun signedIn() {
-        if (mGridView?.adapter != null) {
-            (mGridView!!.adapter as LiveEventAdapter)
-                .notifyDataSetChanged()
-        }
-        val viewModel: MainViewModel by activityViewModels()
-        viewModel.fetchOfAllBroadcasts()
     }
 
     /**

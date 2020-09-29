@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
 
-class MainViewModel : ViewModel(), MainViewModelInterface, GoogleSignInDelegate {
+class MainViewModel : ViewModel(), MainViewModelInterface {
 
     var allBroadcastItems: MutableLiveData<List<LiveBroadcastItem>> = MutableLiveData()
     var upcomingBroadcastItems: MutableLiveData<List<LiveBroadcastItem>> = MutableLiveData()
@@ -38,8 +38,12 @@ class MainViewModel : ViewModel(), MainViewModelInterface, GoogleSignInDelegate 
     private val accountManager = GoogleAccountManager()
     lateinit var viewDelegate: MainActivity
 
-    private val signInManager: GoogleSignInManager by lazy {
-        GoogleSignInManager(viewDelegate, this)
+    val signInManager: GoogleSignInManager by lazy {
+        val fld = GoogleSignInManager(viewDelegate)
+        fld.didUserSignIn.observe(viewDelegate, {
+            if (it) didUserGoogleSignIn()
+        })
+        return@lazy fld
     }
 
     override fun handleActivitiesResults(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -69,13 +73,6 @@ class MainViewModel : ViewModel(), MainViewModelInterface, GoogleSignInDelegate 
         viewDelegate.startAccountPicker(accountManager.credential!!.newChooseAccountIntent())
     }
 
-    override fun didUserGoogleSignIn() {
-        accountManager.setUpGoogleAccount(signInManager.account!!)
-        viewDelegate.invalidateOptionsMenu()
-        viewDelegate.onConnected()
-        fetchOfAllBroadcasts()
-    }
-
     override fun signIn(context: Context, savedInstanceState: Bundle?) {
         if (accountManager.signIn(context, savedInstanceState)) {
             signInManager.googleSignIn()
@@ -83,6 +80,12 @@ class MainViewModel : ViewModel(), MainViewModelInterface, GoogleSignInDelegate 
             val message = viewDelegate.resources.getText(R.string.oauth2_credentials_are_empty).toString()
             Utils.showError(viewDelegate, message)
         }
+    }
+
+    private fun didUserGoogleSignIn() {
+        accountManager.setUpGoogleAccount(signInManager.account!!)
+        viewDelegate.invalidateOptionsMenu()
+        viewDelegate.renderView()
     }
 
     override fun logOut() {
@@ -94,23 +97,34 @@ class MainViewModel : ViewModel(), MainViewModelInterface, GoogleSignInDelegate 
      */
     override fun onCleared() {
         super.onCleared()
-
     }
 
     /**
-     * Fetch all broadcasts
+     * Fetch broadcasts by State
      */
-    override fun fetchOfAllBroadcasts() {
-        Log.d(TAG, "fetchOfAllBroadcasts")
+    override fun fetchBroadcasts(state: String) {
         val progressDialog = ProgressDialog.create(viewDelegate, R.string.loadingEvents)
         progressDialog.show()
 
         CoroutineScope(Dispatchers.IO).launch() {
             try {
-                val list = FetchAllLiveEvents.runAsync(viewDelegate, accountManager.credential!!)
+                val list = FetchAllLiveEvents.runAsync(viewDelegate, accountManager.credential!!, state)
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
-                    allBroadcastItems.value = list
+                    when (state) {
+                        "all" -> {
+                            allBroadcastItems.value = list
+                        }
+                        "upcoming" -> {
+                            upcomingBroadcastItems.value = list
+                        }
+                        "active" -> {
+                            activeBroadcastItems.value = list
+                        }
+                        "completed" -> {
+                            completedBroadcastItems.value = list
+                        }
+                    }
                 }
             } catch (e: UserRecoverableAuthIOException) {
                 launch(Dispatchers.Main) {
@@ -143,7 +157,6 @@ class MainViewModel : ViewModel(), MainViewModelInterface, GoogleSignInDelegate 
                 CreateLiveEvent.runAsync(viewDelegate, accountManager.credential!!, name, description).await()
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
-                    fetchOfAllBroadcasts()
                 }
             } catch (e: UserRecoverableAuthIOException) {
                 launch(Dispatchers.Main) {
@@ -268,8 +281,4 @@ class MainViewModel : ViewModel(), MainViewModelInterface, GoogleSignInDelegate 
         const val REQUEST_AUTHORIZATION = 3
         const val REQUEST_STREAMER = 4
     }
-}
-
-interface GoogleSignInDelegate {
-    fun didUserGoogleSignIn()
 }

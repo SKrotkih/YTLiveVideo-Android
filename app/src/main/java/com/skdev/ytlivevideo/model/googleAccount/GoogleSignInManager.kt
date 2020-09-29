@@ -3,15 +3,16 @@ package com.skdev.ytlivevideo.model.googleAccount
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.GoogleSignInDelegate
 
-class GoogleSignInManager(val context: Activity, private val delegate: GoogleSignInDelegate) {
+class GoogleSignInManager(val context: Activity) {
+    var didUserSignIn: MutableLiveData<Boolean> = MutableLiveData()
     private var mAccount: GoogleSignInAccount? = null
     private var mGoogleSignInClient: GoogleSignInClient? = null
 
@@ -63,7 +64,7 @@ class GoogleSignInManager(val context: Activity, private val delegate: GoogleSig
             mAccount = completedTask.getResult(ApiException::class.java)
             if (mAccount != null) {
                 Log.d(TAG,"The User is authenticated '${mAccount!!.getDisplayName()}' ${mAccount!!.grantedScopes} has done!")
-                delegate.didUserGoogleSignIn()
+                didUserSignIn.value = true
             }
         } catch (e: ApiException) {
             Log.w(TAG, "signInResult:failed code=" + e.statusCode)

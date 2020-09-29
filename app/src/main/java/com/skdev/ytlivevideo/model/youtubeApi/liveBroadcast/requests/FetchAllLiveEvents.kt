@@ -16,7 +16,7 @@ import java.io.IOException
 
 object FetchAllLiveEvents {
 
-     suspend fun runAsync(context: Activity, credential: GoogleAccountCredential) : List<LiveBroadcastItem>? =
+     suspend fun runAsync(context: Activity, credential: GoogleAccountCredential, state: String) : List<LiveBroadcastItem>? =
         withContext(Dispatchers.IO) {
             try {
                 val list = fetchAllLiveEvents(credential)

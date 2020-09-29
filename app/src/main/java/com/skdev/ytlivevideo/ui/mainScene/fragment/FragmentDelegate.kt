@@ -5,6 +5,6 @@ import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 
 interface FragmentDelegate {
     fun onGetImageLoader(): ImageLoader?
-    fun onEventSelected(liveBroadcastItem: LiveBroadcastItem?)
-    fun onConnected()
+    fun didUserSelectBroadcastItem(liveBroadcastItem: LiveBroadcastItem?)
+    fun renderView()
 }

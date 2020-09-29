@@ -10,7 +10,7 @@ interface MainViewModelInterface {
     fun startSelectAccountActivity()
     fun signIn(context: Context, savedInstanceState: Bundle?)
     fun logOut()
-    fun fetchOfAllBroadcasts()
+    fun fetchBroadcasts(state: String)
     fun createNewBroadcast()
     fun startStreaming(liveBroadcastItem: LiveBroadcastItem)
 }

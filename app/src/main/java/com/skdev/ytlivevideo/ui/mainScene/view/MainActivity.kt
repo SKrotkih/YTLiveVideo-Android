@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
         AccountName.saveName(this, AccountName.getName(this), outState)
     }
 
-    override fun onConnected() {
+    override fun renderView() {
         val viewModel: MainViewModel by viewModels()
         display_name.text = viewModel.getAccountName()
         avatar.setImageDrawable(null)
@@ -142,8 +142,8 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
         return mImageLoader
     }
 
-    override fun onEventSelected(liveBroadcast: LiveBroadcastItem?) {
-        Log.d(Config.APP_NAME, "onEventSelected")
+    override fun didUserSelectBroadcastItem(liveBroadcast: LiveBroadcastItem?) {
+        Log.d(Config.APP_NAME, "didUserSelectBroadcastItem")
         if (liveBroadcast != null) {
             val viewModel: MainViewModel by viewModels()
             viewModel.startStreaming(liveBroadcast)
