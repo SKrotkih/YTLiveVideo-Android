@@ -41,7 +41,10 @@ import java.util.Observer
  *
  * Left side fragment showing user's uploaded YouTube videos.
  */
-class BroadcastsListFragment(private val filter: String) : Fragment() {
+class BroadcastsListFragment(val filter: String) : Fragment() {
+
+    var selected = false
+
     private var mImageLoader: ImageLoader? = null
     private var mGridView: GridView? = null
 
@@ -73,8 +76,10 @@ class BroadcastsListFragment(private val filter: String) : Fragment() {
             (mGridView!!.adapter as LiveEventAdapter)
                 .notifyDataSetChanged()
         }
-        val viewModel: MainViewModel by activityViewModels()
-        viewModel.fetchBroadcasts(filter)
+        if (selected) {
+            val viewModel: MainViewModel by activityViewModels()
+            viewModel.fetchBroadcasts(filter)
+        }
     }
 
     private fun subscribeOnChangeData() {

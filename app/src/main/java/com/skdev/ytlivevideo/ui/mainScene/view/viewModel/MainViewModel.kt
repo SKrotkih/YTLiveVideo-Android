@@ -105,7 +105,6 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
     override fun fetchBroadcasts(state: String) {
         val progressDialog = ProgressDialog.create(viewDelegate, R.string.loadingEvents)
         progressDialog.show()
-
         CoroutineScope(Dispatchers.IO).launch() {
             try {
                 val list = FetchAllLiveEvents.runAsync(viewDelegate, accountManager.credential!!, state)

@@ -22,6 +22,7 @@ import android.view.MenuItem
 import android.view.Window
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewpager.widget.ViewPager
 import com.android.volley.toolbox.ImageLoader
@@ -104,6 +105,21 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
         adapter.addFragment(BroadcastsListFragment("active"), "Active")
         adapter.addFragment(BroadcastsListFragment("completed"), "Completed")
         viewPager.adapter = adapter
+        (adapter.getItem(0) as BroadcastsListFragment).selected = true
+        viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageSelected(position: Int) {
+                for (i in 0 until adapter.count) {
+                    val fragment = adapter.getItem(i) as BroadcastsListFragment
+                    if (i == position) {
+                        fragment.selected = true
+                        val viewModel: MainViewModel by viewModels()
+                        viewModel.fetchBroadcasts(fragment.filter)
+                    } else {
+                        fragment.selected = false
+                    }
+                }
+            }
+        })
     }
 
     /**
