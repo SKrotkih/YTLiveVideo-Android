@@ -155,21 +155,33 @@ object YouTubeLiveBroadcastRequest {
             }
             return resultList
         } catch (e: IOException) {
-            Log.e(Config.APP_NAME, "Error while get broadcasts list request (see 'Caused by'):", e)
+            Log.e(Config.APP_NAME, "Failed getting broadcasts list (see 'Caused by'):", e)
             throw e
         }
     }
 
     @Throws(IOException::class)
-    fun startEvent(youtube: YouTube, broadcastId: String?) {
+    fun transitionToLiveState(youtube: YouTube, broadcastId: String?) {
+        try {
+            val transitionRequest = youtube.liveBroadcasts().transition(
+                "live", broadcastId, "status"
+            )
+            transitionRequest.execute()
+        } catch (e: IOException) {
+            transitionToTestingState(youtube, broadcastId)
+        }
+    }
+
+    @Throws(IOException::class)
+    fun transitionToTestingState(youtube: YouTube, broadcastId: String?) {
         val transitionRequest = youtube.liveBroadcasts().transition(
-            "live", broadcastId, "status"
+            "testing", broadcastId, "status"
         )
         transitionRequest.execute()
     }
 
     @Throws(IOException::class)
-    fun endEvent(youtube: YouTube, broadcastId: String?) {
+    fun transitionToCompletedState(youtube: YouTube, broadcastId: String?) {
         val transitionRequest = youtube.liveBroadcasts().transition(
             "completed", broadcastId, "status"
         )

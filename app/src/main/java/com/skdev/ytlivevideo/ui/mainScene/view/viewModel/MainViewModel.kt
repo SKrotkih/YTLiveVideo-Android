@@ -156,7 +156,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface, GoogleSignInDelegate 
     }
 
     /**
-     * Start live video
+     * Transit broadcast to live (or testing) state from active state
      */
     override fun startStreaming(liveBroadcastItem: LiveBroadcastItem) {
         Log.d(TAG, "startStreaming")
@@ -166,7 +166,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface, GoogleSignInDelegate 
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val isBroadcastingStarted = StartLiveEvent.runAsync(accountManager.credential!!, streamId).await()
+                val isBroadcastingStarted = StartLiveEvent.runAsync(accountManager.credential!!, streamId, broadcastId).await()
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
                     if (isBroadcastingStarted) viewDelegate.startBroadcastStreaming(broadcastId, liveBroadcastItem.ingestionAddress!!)
@@ -185,7 +185,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface, GoogleSignInDelegate 
         }
     }
     /**
-     * Finish Live Video
+     * Transit broadcast to completed state
      */
     private fun didSelectBroadcast(intent: Intent) {
         val broadcastId = intent.getStringExtra(YouTubeLiveBroadcastRequest.BROADCAST_ID_KEY)
@@ -193,7 +193,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface, GoogleSignInDelegate 
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                EndLiveEvent.runAsync(viewDelegate, accountManager.credential!!, broadcastId).await()
+                EndLiveEvent.runAsync(accountManager.credential!!, broadcastId).await()
                 Log.d(TAG, "The Broadcast is finished")
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()

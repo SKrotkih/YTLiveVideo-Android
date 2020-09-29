@@ -16,14 +16,14 @@ import java.lang.Thread.sleep
 
 object StartLiveEvent {
 
-    fun runAsync(credential: GoogleAccountCredential, streamId: String?) : Deferred<Boolean> =
+    fun runAsync(credential: GoogleAccountCredential, streamId: String?, broadcastId: String?) : Deferred<Boolean> =
         CoroutineScope(Dispatchers.IO).async() {
             try {
-                if (streamId.isNullOrBlank()) {
+                if (streamId.isNullOrBlank() || broadcastId.isNullOrBlank()) {
                     throw IllegalArgumentException("The Stream ID is not presented")
                 }
-                delay(10000)
-                val result = checkAndStartStreaming(credential, streamId)
+                // delay(10000)
+                val result = checkAndStartStreaming(credential, streamId, broadcastId)
                 return@async result
             } catch (e: IOException) {
                 Log.e(TAG, "Failed start broadcasting:", e)
@@ -32,7 +32,7 @@ object StartLiveEvent {
             }
         }
 
-    private fun checkAndStartStreaming(credential: GoogleAccountCredential, streamId: String) : Boolean {
+    private fun checkAndStartStreaming(credential: GoogleAccountCredential, streamId: String, broadcastId: String) : Boolean {
         Log.d(TAG, "startLiveEvent")
         val transport: HttpTransport = NetHttpTransport()
         val jsonFactory: JsonFactory = GsonFactory()
@@ -48,7 +48,7 @@ object StartLiveEvent {
             Log.v(TAG, "the current stream status is : " + stream.status.streamStatus)
             if (stream.status.streamStatus == "active") {
                 Log.v(TAG, "start broadcasting now")
-                YouTubeLiveBroadcastRequest.startEvent(youtube, streamId)
+                YouTubeLiveBroadcastRequest.transitionToLiveState(youtube, broadcastId)
                 return true
             } else {
                 throw IOException("The Stream is not in Active state. It's in ${stream.status.streamStatus} state.")
