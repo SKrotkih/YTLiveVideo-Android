@@ -41,7 +41,7 @@ import java.util.Observer
  *
  * Left side fragment showing user's uploaded YouTube videos.
  */
-class BroadcastsListFragment(val filter: String) : Fragment() {
+class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
 
     var selected = false
 
@@ -78,29 +78,29 @@ class BroadcastsListFragment(val filter: String) : Fragment() {
         }
         if (selected) {
             val viewModel: MainViewModel by activityViewModels()
-            viewModel.fetchBroadcasts(filter)
+            viewModel.fetchBroadcasts(state)
         }
     }
 
     private fun subscribeOnChangeData() {
         val viewModel: MainViewModel by activityViewModels()
-        when (filter) {
-            "all" -> {
+        when (state) {
+            BroadcastState.ALL -> {
                 viewModel.allBroadcastItems.observe(this, {
                     setEvents(it)
                 })
             }
-            "upcoming" -> {
+            BroadcastState.UPCOMING -> {
                 viewModel.upcomingBroadcastItems.observe(this, {
                     setEvents(it)
                 })
             }
-            "active" -> {
+            BroadcastState.ACTIVE -> {
                 viewModel.activeBroadcastItems.observe(this, {
                     setEvents(it)
                 })
             }
-            "completed" -> {
+            BroadcastState.COMPLETED -> {
                 viewModel.completedBroadcastItems.observe(this, {
                     setEvents(it)
                 })
@@ -114,7 +114,6 @@ class BroadcastsListFragment(val filter: String) : Fragment() {
     }
 
     private fun setEvents(liveBroadcastItems: List<LiveBroadcastItem>) {
-        Log.i(Config.APP_NAME, "${filter}: broadcasts=$liveBroadcastItems")
         mGridView!!.adapter = LiveEventAdapter(liveBroadcastItems)
     }
 
@@ -166,3 +165,8 @@ class BroadcastsListFragment(val filter: String) : Fragment() {
         private val TAG = BroadcastsListFragment::class.java.name
     }
 }
+
+enum class BroadcastState {
+    ALL, UPCOMING, ACTIVE, COMPLETED
+}
+

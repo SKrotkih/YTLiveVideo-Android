@@ -59,13 +59,7 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
         window.requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val viewPager: ViewPager = findViewById(R.id.view_pager)
-        setupViewPager(viewPager)
-
-        val tabs: TabLayout = findViewById(R.id.tabs)
-        tabs.setupWithViewPager(viewPager)
-
+        configureTabBar()
         configureViewModel()
         logInIfNeeded(savedInstanceState)
     }
@@ -98,28 +92,13 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
     /**
      * Tab Bar
      */
-    private fun setupViewPager(viewPager: ViewPager) {
+    private fun configureTabBar() {
+        val viewPager: ViewPager = findViewById(R.id.view_pager)
         val adapter = SectionsPagerAdapter(supportFragmentManager)
-        adapter.addFragment(BroadcastsListFragment("all"), "All")
-        adapter.addFragment(BroadcastsListFragment("upcoming"), "Upcoming")
-        adapter.addFragment(BroadcastsListFragment("active"), "Active")
-        adapter.addFragment(BroadcastsListFragment("completed"), "Completed")
-        viewPager.adapter = adapter
-        (adapter.getItem(0) as BroadcastsListFragment).selected = true
-        viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
-            override fun onPageSelected(position: Int) {
-                for (i in 0 until adapter.count) {
-                    val fragment = adapter.getItem(i) as BroadcastsListFragment
-                    if (i == position) {
-                        fragment.selected = true
-                        val viewModel: MainViewModel by viewModels()
-                        viewModel.fetchBroadcasts(fragment.filter)
-                    } else {
-                        fragment.selected = false
-                    }
-                }
-            }
-        })
+        val viewModel: MainViewModel by viewModels()
+        viewModel.setupViewPager(viewPager, adapter)
+        val tabs: TabLayout = findViewById(R.id.tabs)
+        tabs.setupWithViewPager(viewPager)
     }
 
     /**

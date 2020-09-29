@@ -7,8 +7,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
@@ -19,6 +21,9 @@ import com.skdev.ytlivevideo.model.googleAccount.GoogleSignInManager
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.*
+import com.skdev.ytlivevideo.ui.mainScene.adapter.SectionsPagerAdapter
+import com.skdev.ytlivevideo.ui.mainScene.fragment.BroadcastState
+import com.skdev.ytlivevideo.ui.mainScene.fragment.BroadcastsListFragment
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.util.ProgressDialog
 import com.skdev.ytlivevideo.util.Utils
@@ -100,27 +105,52 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
     }
 
     /**
+     *  Tab Bar
+     */
+    fun setupViewPager(viewPager: ViewPager, adapter: SectionsPagerAdapter) {
+        adapter.addFragment(BroadcastsListFragment(BroadcastState.ALL), "All")
+        adapter.addFragment(BroadcastsListFragment(BroadcastState.UPCOMING), "Upcoming")
+        adapter.addFragment(BroadcastsListFragment(BroadcastState.ACTIVE), "Active")
+        adapter.addFragment(BroadcastsListFragment(BroadcastState.COMPLETED), "Completed")
+        viewPager.adapter = adapter
+        (adapter.getItem(0) as BroadcastsListFragment).selected = true
+        viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageSelected(position: Int) {
+                for (i in 0 until adapter.count) {
+                    val fragment = adapter.getItem(i) as BroadcastsListFragment
+                    if (i == position) {
+                        fragment.selected = true
+                        fetchBroadcasts(fragment.state)
+                    } else {
+                        fragment.selected = false
+                    }
+                }
+            }
+        })
+    }
+
+    /**
      * Fetch broadcasts by State
      */
-    override fun fetchBroadcasts(state: String) {
+    override fun fetchBroadcasts(state: BroadcastState) {
         val progressDialog = ProgressDialog.create(viewDelegate, R.string.loadingEvents)
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch() {
             try {
-                val list = FetchAllLiveEvents.runAsync(viewDelegate, accountManager.credential!!, state)
+                val list = FetchAllLiveEvents.runAsync(accountManager.credential!!, state)
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
                     when (state) {
-                        "all" -> {
+                        BroadcastState.ALL -> {
                             allBroadcastItems.value = list
                         }
-                        "upcoming" -> {
+                        BroadcastState.UPCOMING -> {
                             upcomingBroadcastItems.value = list
                         }
-                        "active" -> {
+                        BroadcastState.ACTIVE -> {
                             activeBroadcastItems.value = list
                         }
-                        "completed" -> {
+                        BroadcastState.COMPLETED -> {
                             completedBroadcastItems.value = list
                         }
                     }
