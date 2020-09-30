@@ -9,7 +9,7 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.youtube.YouTubeScopes
 
-class GoogleAccountManager {
+object GoogleAccountManager {
 
     private var mCredential: GoogleAccountCredential? = null
 
@@ -42,7 +42,5 @@ class GoogleAccountManager {
         }
     }
 
-    companion object {
-        private val TAG = GoogleAccountManager::class.java.name
-    }
+    private val TAG = GoogleAccountManager::class.java.name
 }

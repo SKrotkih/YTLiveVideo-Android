@@ -130,11 +130,12 @@ object YouTubeLiveBroadcastRequest {
 
     // TODO: Catch those exceptions and handle them here.
     @Throws(IOException::class)
-    fun getLiveEvents(youtube: YouTube, state: BroadcastState): List<LiveBroadcastItem> {
+    fun getLiveEvents(youtube: YouTube, state: BroadcastState?, broadcastId: String?): List<LiveBroadcastItem> {
         Log.d(Config.APP_NAME, "Requesting live events.")
-        val liveBroadcastRequest = youtube.liveBroadcasts().list("id,snippet,contentDetails")
+        val liveBroadcastRequest = youtube.liveBroadcasts().list("id,snippet,contentDetails,status")
         //liveBroadcastRequest.setMine(true);
-        liveBroadcastRequest.broadcastStatus = state.value()
+        if (state != null) liveBroadcastRequest.broadcastStatus = state.value()
+        if (broadcastId != null) liveBroadcastRequest.id = broadcastId
         try {
             // List request is executed and list of broadcasts are returned
             val returnedListResponse = liveBroadcastRequest.execute()

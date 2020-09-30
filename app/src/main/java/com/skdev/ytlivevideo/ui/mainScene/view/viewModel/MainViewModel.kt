@@ -37,7 +37,6 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
     var activeBroadcastItems: MutableLiveData<List<LiveBroadcastItem>> = MutableLiveData()
     var completedBroadcastItems: MutableLiveData<List<LiveBroadcastItem>> = MutableLiveData()
 
-    private val accountManager = GoogleAccountManager()
     lateinit var viewDelegate: MainActivity
 
     val signInManager: GoogleSignInManager by lazy {
@@ -69,11 +68,11 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
 
     override fun startSelectAccountActivity() {
         Log.d(TAG, "startSelectAccountActivity")
-        viewDelegate.startAccountPicker(accountManager.credential!!.newChooseAccountIntent())
+        viewDelegate.startAccountPicker(GoogleAccountManager.credential!!.newChooseAccountIntent())
     }
 
     override fun signIn(context: Context, savedInstanceState: Bundle?) {
-        if (accountManager.signIn(context, savedInstanceState)) {
+        if (GoogleAccountManager.signIn(context, savedInstanceState)) {
             signInManager.googleSignIn()
         } else {
             val message = viewDelegate.resources.getText(R.string.oauth2_credentials_are_empty).toString()
@@ -82,7 +81,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
     }
 
     private fun didUserGoogleSignIn() {
-        accountManager.setUpGoogleAccount(signInManager.account!!)
+        GoogleAccountManager.setUpGoogleAccount(signInManager.account!!)
         viewDelegate.invalidateOptionsMenu()
         viewDelegate.renderView()
     }
@@ -131,7 +130,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch() {
             try {
-                val list = FetchAllLiveEvents.runAsync(accountManager.credential!!, state)
+                val list = FetchAllLiveEvents.runAsync(GoogleAccountManager.credential!!, state)
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
                     when (state) {
@@ -188,7 +187,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                CreateLiveEvent.runAsync(viewDelegate, accountManager.credential!!, name, description).await()
+                CreateLiveEvent.runAsync(viewDelegate, GoogleAccountManager.credential!!, name, description).await()
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
                 }
@@ -226,7 +225,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
     private fun didCheckGooglePlayServices() {
         Log.d(TAG, "didCheckGooglePlayServices")
         // check if there is already an account selected
-        if (accountManager.credential?.selectedAccountName == null) {
+        if (GoogleAccountManager.credential?.selectedAccountName == null) {
             // ask user to choose account
             startSelectAccountActivity()
         }
@@ -234,7 +233,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
 
     private fun didSelectAccount(intent: Intent) {
         val accountName = intent.extras!!.getString(AccountManager.KEY_ACCOUNT_NAME)
-        accountManager.credential!!.selectedAccountName = accountName
+        GoogleAccountManager.credential!!.selectedAccountName = accountName
         AccountName.saveName(viewDelegate, accountName)
     }
 

@@ -35,6 +35,9 @@ class LiveBroadcastItem {
     val title: String
         get() = event!!.snippet.title
 
+    val description: String
+        get() = event!!.snippet.description
+
     // if protocol is not defined, pick https
     val thumbUri: String
         get() {

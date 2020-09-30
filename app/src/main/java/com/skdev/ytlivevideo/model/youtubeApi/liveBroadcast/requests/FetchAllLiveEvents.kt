@@ -15,10 +15,10 @@ import java.io.IOException
 
 object FetchAllLiveEvents {
 
-     suspend fun runAsync(credential: GoogleAccountCredential, state: BroadcastState) : List<LiveBroadcastItem>? =
+     suspend fun runAsync(credential: GoogleAccountCredential, state: BroadcastState?, broadcastId: String? = null) : List<LiveBroadcastItem>? =
         withContext(Dispatchers.IO) {
             try {
-                val list = fetchAllLiveEvents(credential, state)
+                val list = fetchAllLiveEvents(credential, state, broadcastId)
                 list?.forEach{it.state = state}
                 Log.d(TAG, list.toString())
                 return@withContext list
@@ -29,14 +29,14 @@ object FetchAllLiveEvents {
             }
         }
 
-    private fun fetchAllLiveEvents(credential: GoogleAccountCredential, state: BroadcastState) : List<LiveBroadcastItem>? {
+    private fun fetchAllLiveEvents(credential: GoogleAccountCredential, state: BroadcastState?, broadcastId: String?) : List<LiveBroadcastItem>? {
         Log.d(TAG, "getLiveEventRequest")
         val transport: HttpTransport = NetHttpTransport()
         val jsonFactory: JsonFactory = GsonFactory()
         val youtube = YouTube.Builder(transport, jsonFactory, credential)
             .setApplicationName(Config.APP_NAME)
             .build()
-        val listItems = YouTubeLiveBroadcastRequest.getLiveEvents(youtube, state)
+        val listItems = YouTubeLiveBroadcastRequest.getLiveEvents(youtube, state, broadcastId)
         Log.d(TAG, "My current list broadcasts: $listItems")
         return listItems
     }
