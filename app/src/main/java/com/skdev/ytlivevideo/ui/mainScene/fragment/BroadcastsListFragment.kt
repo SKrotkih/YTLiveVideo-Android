@@ -15,8 +15,6 @@ package com.skdev.ytlivevideo.ui.mainScene.fragment
 
 import android.app.Activity
 import android.os.Bundle
-import android.os.Parcelable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,14 +25,9 @@ import com.android.volley.toolbox.ImageLoader
 import com.google.android.gms.plus.PlusOneButton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.R
-import com.skdev.ytlivevideo.model.googleAccount.GoogleSignInManager
-import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.BroadcastState
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
-import com.skdev.ytlivevideo.util.Config
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.fragment_live_events_list.*
 import kotlinx.android.synthetic.main.live_events_list_item.view.*
-import java.util.Observer
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
@@ -165,8 +158,3 @@ class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
         private val TAG = BroadcastsListFragment::class.java.name
     }
 }
-
-enum class BroadcastState {
-    ALL, UPCOMING, ACTIVE, COMPLETED
-}
-

@@ -14,13 +14,11 @@
 package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast
 
 import android.util.Log
-import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.google.api.client.util.DateTime
 import com.google.api.services.youtube.YouTube
 import com.google.api.services.youtube.model.*
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.CreateLiveEvent
-import com.skdev.ytlivevideo.ui.mainScene.fragment.BroadcastState
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.BroadcastState
 import com.skdev.ytlivevideo.util.Config
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -136,12 +134,7 @@ object YouTubeLiveBroadcastRequest {
         Log.d(Config.APP_NAME, "Requesting live events.")
         val liveBroadcastRequest = youtube.liveBroadcasts().list("id,snippet,contentDetails")
         //liveBroadcastRequest.setMine(true);
-        liveBroadcastRequest.broadcastStatus = when (state) {
-            BroadcastState.ALL -> "all"
-            BroadcastState.UPCOMING -> "upcoming"
-            BroadcastState.ACTIVE -> "active"
-            BroadcastState.COMPLETED -> "completed"
-        }
+        liveBroadcastRequest.broadcastStatus = state.value()
         try {
             // List request is executed and list of broadcasts are returned
             val returnedListResponse = liveBroadcastRequest.execute()

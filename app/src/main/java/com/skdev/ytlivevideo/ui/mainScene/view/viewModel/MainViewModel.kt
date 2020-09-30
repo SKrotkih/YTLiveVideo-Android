@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.viewpager.widget.ViewPager
@@ -19,10 +18,8 @@ import com.skdev.ytlivevideo.model.enteties.AccountName
 import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
 import com.skdev.ytlivevideo.model.googleAccount.GoogleSignInManager
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.*
 import com.skdev.ytlivevideo.ui.mainScene.adapter.SectionsPagerAdapter
-import com.skdev.ytlivevideo.ui.mainScene.fragment.BroadcastState
 import com.skdev.ytlivevideo.ui.mainScene.fragment.BroadcastsListFragment
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.util.ProgressDialog
@@ -65,9 +62,6 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
             }
             REQUEST_ACCOUNT_PICKER -> if (resultCode == Activity.RESULT_OK && data?.extras != null) {
                 didSelectAccount(data)
-            }
-            REQUEST_STREAMER -> if (resultCode == Activity.RESULT_OK && data?.extras != null) {
-                didSelectBroadcast(data)
             }
         }
         signInManager.onActivityResult(requestCode, resultCode, data)
@@ -195,63 +189,6 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 CreateLiveEvent.runAsync(viewDelegate, accountManager.credential!!, name, description).await()
-                launch(Dispatchers.Main) {
-                    progressDialog.dismiss()
-                }
-            } catch (e: UserRecoverableAuthIOException) {
-                launch(Dispatchers.Main) {
-                    progressDialog.dismiss()
-                    viewDelegate.startAuthorization(e.intent)
-                }
-            } catch (e: IOException) {
-                launch(Dispatchers.Main) {
-                    progressDialog.dismiss()
-                    Toast.makeText(viewDelegate, e.localizedMessage, Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-    }
-
-    /**
-     * Transit broadcast to live (or testing) state from active state
-     */
-    override fun startStreaming(liveBroadcastItem: LiveBroadcastItem) {
-        Log.d(TAG, "startStreaming")
-        val broadcastId: String = liveBroadcastItem.id
-        val streamId = liveBroadcastItem.streamId
-        val progressDialog = ProgressDialog.create(viewDelegate, R.string.startStreaming)
-        progressDialog.show()
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val isBroadcastingStarted = StartLiveEvent.runAsync(accountManager.credential!!, streamId, broadcastId).await()
-                launch(Dispatchers.Main) {
-                    progressDialog.dismiss()
-                    if (isBroadcastingStarted) viewDelegate.startBroadcastStreaming(broadcastId, liveBroadcastItem.ingestionAddress!!)
-                }
-            } catch (e: UserRecoverableAuthIOException) {
-                launch(Dispatchers.Main) {
-                    progressDialog.dismiss()
-                    viewDelegate.startAuthorization(e.intent)
-                }
-            } catch (e: IOException) {
-                launch(Dispatchers.Main) {
-                    progressDialog.dismiss()
-                    Toast.makeText(viewDelegate, e.localizedMessage, Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-    }
-    /**
-     * Transit broadcast to completed state
-     */
-    private fun didSelectBroadcast(intent: Intent) {
-        val broadcastId = intent.getStringExtra(YouTubeLiveBroadcastRequest.BROADCAST_ID_KEY)
-        val progressDialog = ProgressDialog.create(viewDelegate, R.string.startStreaming)
-        progressDialog.show()
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                EndLiveEvent.runAsync(accountManager.credential!!, broadcastId).await()
-                Log.d(TAG, "The Broadcast is finished")
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
                 }

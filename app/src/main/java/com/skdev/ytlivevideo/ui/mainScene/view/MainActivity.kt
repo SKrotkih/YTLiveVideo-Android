@@ -22,7 +22,6 @@ import android.view.MenuItem
 import android.view.Window
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewpager.widget.ViewPager
 import com.android.volley.toolbox.ImageLoader
@@ -32,13 +31,10 @@ import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.enteties.AccountName
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
 import com.skdev.ytlivevideo.ui.mainScene.adapter.SectionsPagerAdapter
-import com.skdev.ytlivevideo.ui.mainScene.fragment.BroadcastsListFragment
 import com.skdev.ytlivevideo.ui.mainScene.fragment.FragmentDelegate
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.ui.router.Router
-import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
 import com.skdev.ytlivevideo.util.Config
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
@@ -148,16 +144,6 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
         if (liveBroadcast != null) {
             Router.StartActivity.EVENT_PREVIEW.run(liveBroadcast)
         }
-    }
-
-    fun startBroadcastStreaming(broadcastId: String, ingestionAddress: String) {
-        val intent = Intent(
-            applicationContext,
-            VideoStreamingActivity::class.java
-        )
-        intent.putExtra(YouTubeLiveBroadcastRequest.RTMP_URL_KEY, ingestionAddress)
-        intent.putExtra(YouTubeLiveBroadcastRequest.BROADCAST_ID_KEY, broadcastId)
-        startActivityForResult(intent, MainViewModel.REQUEST_STREAMER)
     }
 
     fun startAuthorization(intent: Intent) {

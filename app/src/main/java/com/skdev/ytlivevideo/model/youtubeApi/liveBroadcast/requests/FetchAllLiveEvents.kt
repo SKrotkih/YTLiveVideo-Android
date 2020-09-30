@@ -1,6 +1,5 @@
 package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests
 
-import android.app.Activity
 import android.util.Log
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.http.HttpTransport
@@ -10,7 +9,6 @@ import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.youtube.YouTube
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
-import com.skdev.ytlivevideo.ui.mainScene.fragment.BroadcastState
 import com.skdev.ytlivevideo.util.Config
 import kotlinx.coroutines.*
 import java.io.IOException
@@ -21,6 +19,7 @@ object FetchAllLiveEvents {
         withContext(Dispatchers.IO) {
             try {
                 val list = fetchAllLiveEvents(credential, state)
+                list?.forEach{it.state = state}
                 Log.d(TAG, list.toString())
                 return@withContext list
             } catch (e: IOException) {

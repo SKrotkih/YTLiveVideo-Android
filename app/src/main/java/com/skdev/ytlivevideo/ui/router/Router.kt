@@ -44,6 +44,7 @@ object Router {
         if (broadcastItem != null) {
             val intent = Intent(currentContext!!, BroadcastPreview::class.java)
             intent.putExtra("broadcastId", broadcastItem.id)
+            intent.putExtra("state", broadcastItem.state!!.value())
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             currentContext!!.startActivity(intent)
         }

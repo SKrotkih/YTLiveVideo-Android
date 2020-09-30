@@ -15,6 +15,7 @@
 package com.skdev.ytlivevideo.util
 
 import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.Camera
 import android.hardware.Camera.CameraInfo
@@ -23,6 +24,9 @@ import android.widget.Toast
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.R
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Class containing some static utility methods.
@@ -95,17 +99,19 @@ object Utils {
      * @param activity activity
      * @param message  message to show or `null` for none
      */
-    fun showError(activity: Activity, message: String?) {
-        val errorMessage = getErrorMessage(activity, message)
-        showErrorInternal(activity, errorMessage)
+    fun showError(context: Context, message: String?) {
+        val errorMessage = getErrorMessage(context, message)
+        showErrorInternal(context, errorMessage)
     }
 
-    private fun showErrorInternal(activity: Activity, errorMessage: String) {
-        activity.runOnUiThread { Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show() }
+    private fun showErrorInternal(context: Context, errorMessage: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+        }
     }
 
-    private fun getErrorMessage(activity: Activity, message: String?): String {
-        val resources = activity.resources
+    private fun getErrorMessage(context: Context, message: String?): String {
+        val resources = context.resources
         return if (message == null) {
             resources.getString(R.string.error)
         } else resources.getString(R.string.error_format, message)

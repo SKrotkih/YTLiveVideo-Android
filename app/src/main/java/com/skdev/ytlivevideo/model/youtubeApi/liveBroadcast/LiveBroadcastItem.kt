@@ -12,18 +12,8 @@
  * the License.
  */
 package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast
-
-import android.os.Build
-import androidx.annotation.RequiresApi
-import com.google.api.client.util.DateTime
 import com.google.api.services.youtube.model.LiveBroadcast
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatter.ISO_INSTANT
-import java.util.*
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.BroadcastState
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
@@ -68,4 +58,6 @@ class LiveBroadcastItem {
 
     val watchUri: String
         get() = "http://www.youtube.com/watch?v=$id"
+
+    var state: BroadcastState? = null
 }
