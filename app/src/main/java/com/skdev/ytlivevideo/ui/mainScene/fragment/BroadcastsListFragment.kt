@@ -24,11 +24,15 @@ import androidx.fragment.app.activityViewModels
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.toolbox.ImageLoader
 import com.google.android.gms.plus.PlusOneButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.BroadcastState
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
+import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.util.Utils
+import com.skdev.ytlivevideo.util.Utils.setSafeOnClickListener
+import kotlinx.android.synthetic.main.fragment_live_events_list.*
 import kotlinx.android.synthetic.main.live_events_list_item.view.*
 
 /**
@@ -49,12 +53,13 @@ class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
         configureGrid(fragmentView)
         subscribeOnSignIn()
         configureRefreshController(fragmentView)
+        configureActionButton(fragmentView)
         return fragmentView
     }
 
     private fun subscribeOnSignIn() {
         val viewModel: MainViewModel by activityViewModels()
-        viewModel.signInManager.didUserSignIn.observe(this, {
+        viewModel.signInManager.didUserSignIn.observe(viewLifecycleOwner, {
             signedIn()
         })
     }
@@ -116,6 +121,13 @@ class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
         mSwipeRefresh?.setOnRefreshListener {
             val viewModel: MainViewModel by activityViewModels()
             viewModel.fetchBroadcasts(state)
+        }
+    }
+
+    private fun configureActionButton(context: View) {
+        val addNewBroadcast = context.findViewById<View>(R.id.addNewBroadcast) as FloatingActionButton
+        addNewBroadcast.setSafeOnClickListener {
+            Router.StartActivity.CREATE_BROADCAST.run()
         }
     }
 

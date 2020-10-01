@@ -32,5 +32,17 @@
             android:gravity="center"
             android:padding="16dp"
             android:text="@string/no_videos_to_show_here_" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addNewBroadcast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:background="@color/colorPrimary"
+            android:tint="#FEFEFE"
+            android:src="@drawable/ic_add_contact"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="35dp"
+            android:layout_marginEnd="25dp" />
     </FrameLayout>
 </LinearLayout>

@@ -19,7 +19,9 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.Camera
 import android.hardware.Camera.CameraInfo
+import android.os.SystemClock
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.skdev.ytlivevideo.R
@@ -120,6 +122,27 @@ object Utils {
         return if (message == null) {
             resources.getString(R.string.error)
         } else resources.getString(R.string.error_format, message)
+    }
+
+    class SafeClickListener(
+        private var defaultInterval: Int = 1000,
+        private val onSafeCLick: (View) -> Unit
+    ) : View.OnClickListener {
+        private var lastTimeClicked: Long = 0
+        override fun onClick(v: View) {
+            if (SystemClock.elapsedRealtime() - lastTimeClicked < defaultInterval) {
+                return
+            }
+            lastTimeClicked = SystemClock.elapsedRealtime()
+            onSafeCLick(v)
+        }
+    }
+
+    fun View.setSafeOnClickListener(onSafeClick: (View) -> Unit) {
+        val safeClickListener = SafeClickListener {
+            onSafeClick(it)
+        }
+        setOnClickListener(safeClickListener)
     }
 
     /**
