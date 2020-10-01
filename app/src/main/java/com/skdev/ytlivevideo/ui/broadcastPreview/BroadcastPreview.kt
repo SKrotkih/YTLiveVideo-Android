@@ -7,14 +7,17 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.android.volley.toolbox.ImageLoader
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
+import com.skdev.ytlivevideo.model.network.NetworkSingleton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.EndLiveEvent
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.FetchAllLiveEvents
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.StartLiveEvent
+import com.skdev.ytlivevideo.ui.mainScene.fragment.FragmentDelegate
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
@@ -30,6 +33,10 @@ import java.io.IOException
 class BroadcastPreview: AppCompatActivity() {
 
     private var broadcastItem: LiveBroadcastItem? = null
+    private val mImageLoader: ImageLoader? by lazy {
+        NetworkSingleton.getInstance(this)?.imageLoader
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +45,7 @@ class BroadcastPreview: AppCompatActivity() {
         val state = intent.getStringExtra("state")
         val broadcastId = intent.getStringExtra("broadcastId")
         downloadEventData(broadcastId)
-        broadcast_title.text = "$state Broadcast"
+        broadcast_title.text = "$state broadcast"
         renderView()
     }
 
@@ -53,6 +60,7 @@ class BroadcastPreview: AppCompatActivity() {
             broadcast_description.text = broadcastItem!!.description
             broadcast_created.text = broadcastItem!!.publishedAt
             broadcast_scheduled.text = broadcastItem!!.publishedAt
+            thumbnail.setImageUrl(broadcastItem!!.thumbUri, mImageLoader)
         }
     }
 
