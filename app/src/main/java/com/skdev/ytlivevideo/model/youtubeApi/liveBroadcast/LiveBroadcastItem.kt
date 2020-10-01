@@ -62,5 +62,7 @@ class LiveBroadcastItem {
     val watchUri: String
         get() = "http://www.youtube.com/watch?v=$id"
 
+    val lifeCycleStatus: String
+        get() = event!!.status.lifeCycleStatus
     var state: BroadcastState? = null
 }

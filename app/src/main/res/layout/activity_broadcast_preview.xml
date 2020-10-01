@@ -165,7 +165,7 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
-                android:paddingBottom="25dp">
+                android:paddingBottom="15dp">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -180,7 +180,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
                         android:gravity="start"
-                        android:text="scheduled at"
+                        android:text="Scheduled at"
                         android:textAppearance="?android:textAppearanceLarge"
                         android:textColor="#736C6D"
                         android:textSize="14sp" />
@@ -192,17 +192,52 @@
                         android:fontFamily="sans-serif-medium"
                         android:layout_weight="0.75"
                         android:gravity="left"
-                        android:text="12:13:14:222233333"
+                        android:text=""
                         android:textAppearance="?android:textAppearanceLarge"
                         android:textSize="14sp" />
 
                 </LinearLayout>
             </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:paddingBottom="25dp">
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.00"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/broadcast_lifeCycleStatus_label"
+                        android:layout_weight="0.25"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="start"
+                        android:text="State"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textColor="#736C6D"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/broadcast_lifeCycleStatus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:layout_weight="0.75"
+                        android:gravity="left"
+                        android:text=""
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+            </TableRow>
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="125dp"
-                android:paddingBottom="85dp">
+                android:paddingBottom="25dp">
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

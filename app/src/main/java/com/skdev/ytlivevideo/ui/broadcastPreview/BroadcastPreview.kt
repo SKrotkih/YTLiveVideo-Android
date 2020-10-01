@@ -2,6 +2,7 @@ package com.skdev.ytlivevideo.ui.broadcastPreview
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -29,8 +30,9 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 
 class BroadcastPreview: AppCompatActivity() {
-
     private var broadcastItem: LiveBroadcastItem? = null
+    private var state: String? = null
+    private var broadcastId: String? = null
     private val mImageLoader: ImageLoader? by lazy {
         NetworkSingleton.getInstance(this)?.imageLoader
     }
@@ -38,15 +40,19 @@ class BroadcastPreview: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_broadcast_preview)
+        extractParams()
         configureViewModel()
-        val state = intent.getStringExtra("state")
-        val broadcastId = intent.getStringExtra("broadcastId")
-        downloadEventData(broadcastId)
-        broadcast_title.text = "$state broadcast"
+        downloadEventData()
         renderView()
     }
 
+    private fun extractParams() {
+        state = intent.getStringExtra("state")
+        broadcastId = intent.getStringExtra("broadcastId")
+    }
+
     private fun renderView() {
+        broadcast_title.text = "$state broadcast"
         if (broadcastItem == null) {
             broadcast_name.text = ""
             broadcast_description.text  = ""
@@ -55,9 +61,15 @@ class BroadcastPreview: AppCompatActivity() {
         } else {
             broadcast_name.text = broadcastItem!!.title
             broadcast_description.text = broadcastItem!!.description
-            broadcast_created.text = broadcastItem!!.publishedAt
-            broadcast_scheduled.text = broadcastItem!!.publishedAt
+            broadcast_created.text = Utils.timeAgo(broadcastItem!!.publishedAt)
+            broadcast_scheduled.text = Utils.timeAgo(broadcastItem!!.publishedAt)
+            broadcast_lifeCycleStatus.text = broadcastItem!!.lifeCycleStatus
             thumbnail.setImageUrl(broadcastItem!!.thumbUri, mImageLoader)
+            if (canWatchVideo) {
+                start_streaming.text = "Watch video"
+            } else {
+                start_streaming.text = "Start Streaming"
+            }
         }
     }
 
@@ -65,7 +77,7 @@ class BroadcastPreview: AppCompatActivity() {
         val viewModel: ViewModel by viewModels()
     }
 
-    private fun downloadEventData(broadcastId: String?) {
+    private fun downloadEventData() {
         val progressDialog = ProgressDialog.create(this, "Downloading broadcast data...")
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch() {
@@ -110,10 +122,27 @@ class BroadcastPreview: AppCompatActivity() {
         }
     }
 
+    private val canWatchVideo: Boolean
+        get() {
+            if (broadcastItem == null) {
+                return false
+            }
+            return broadcastItem!!.lifeCycleStatus == "complete" &&  !broadcastItem!!.watchUri.isNullOrEmpty()
+        }
+
     fun onStartStreaming(view: View) {
         if (broadcastItem == null) {
             return
         }
+        if (canWatchVideo) {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(broadcastItem!!.watchUri))
+            startActivity(browserIntent)
+        } else {
+            startStreaming()
+        }
+    }
+
+    private fun startStreaming() {
         Log.d(TAG, "startStreaming")
         val broadcastId = broadcastItem!!.id
         val streamId = broadcastItem!!.streamId
@@ -121,7 +150,11 @@ class BroadcastPreview: AppCompatActivity() {
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val isBroadcastingStarted = StartLiveEvent.runAsync(GoogleAccountManager.credential!!, streamId, broadcastId).await()
+                val isBroadcastingStarted = StartLiveEvent.runAsync(
+                    GoogleAccountManager.credential!!,
+                    streamId,
+                    broadcastId
+                ).await()
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
                     if (isBroadcastingStarted) startBroadcastStreaming()
