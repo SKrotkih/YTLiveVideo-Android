@@ -14,11 +14,17 @@
 package com.skdev.ytlivevideo.model.network
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.AsyncTask
+import android.widget.ImageView
+import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.Volley
 import com.skdev.ytlivevideo.util.LruBitmapCache
+import java.net.URL
 
 class NetworkSingleton private constructor(private var mCtx: Context) {
     private var mRequestQueue: RequestQueue?
@@ -60,5 +66,28 @@ class NetworkSingleton private constructor(private var mCtx: Context) {
             mRequestQueue,
             LruBitmapCache(mCtx)
         )
+    }
+}
+
+// Class to download an image from url and display it into an image view
+class DownLoadImageTask(private val imageView: ImageView) : AsyncTask<String, Void, Bitmap?>() {
+    override fun doInBackground(vararg urls: String): Bitmap? {
+        val urlOfImage = urls[0]
+        return try {
+            val inputStream = URL(urlOfImage).openStream()
+            BitmapFactory.decodeStream(inputStream)
+        } catch (e: Exception) { // Catch the download exception
+            e.printStackTrace()
+            null
+        }
+    }
+    override fun onPostExecute(result: Bitmap?) {
+        if(result!=null){
+            // Display the downloaded image into image view
+            Toast.makeText(imageView.context,"download success",Toast.LENGTH_SHORT).show()
+            imageView.setImageBitmap(result)
+        }else{
+            Toast.makeText(imageView.context,"Error downloading",Toast.LENGTH_SHORT).show()
+        }
     }
 }

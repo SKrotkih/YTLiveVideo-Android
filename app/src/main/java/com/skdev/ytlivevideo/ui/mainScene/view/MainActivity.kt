@@ -29,6 +29,7 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.tabs.TabLayout
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.enteties.AccountName
+import com.skdev.ytlivevideo.model.network.DownLoadImageTask
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.ui.mainScene.adapter.SectionsPagerAdapter
@@ -37,6 +38,7 @@ import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.util.Config
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.live_events_list_item.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -122,14 +124,12 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
     override fun renderView() {
         val viewModel: MainViewModel by viewModels()
         display_name.text = viewModel.getAccountName()
-        avatar.setImageDrawable(null)
-//            if (currentPerson.hasImage()) {
-//                // Set the URL of the image that should be loaded into this view, and
-//                // specify the ImageLoader that will be used to make the request.
-//                (view!!.findViewById<View>(R.id.avatar) as NetworkImageView).setImageUrl(
-//                    currentPerson.image.url, mImageLoader
-//                )
-//            }
+        val photoUri = viewModel.getPhotoUrl()
+        if (photoUri == null) {
+            avatar.setImageDrawable(null)
+        } else {
+            DownLoadImageTask(avatar).execute(photoUri.toString())
+        }
     }
 
     override fun onBackPressed() {

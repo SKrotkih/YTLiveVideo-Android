@@ -4,6 +4,7 @@ import android.accounts.AccountManager
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -28,7 +29,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
-import java.util.*
 
 class MainViewModel : ViewModel(), MainViewModelInterface {
 
@@ -215,6 +215,10 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
 
     fun getAccountName() : String {
         return signInManager.accountName
+    }
+
+    fun getPhotoUrl() : Uri? {
+        return signInManager.account?.photoUrl
     }
 
     companion object {
