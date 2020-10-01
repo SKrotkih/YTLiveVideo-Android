@@ -174,38 +174,6 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
     }
 
     /**
-     * Create a new Broadcast
-     */
-    override fun createNewBroadcast() {
-        Log.d(TAG, "createEvent")
-
-        val date = Date().toString()
-        val description = "Event - $date"
-        val name = "A live streaming event - $date"
-
-        val progressDialog = ProgressDialog.create(viewDelegate, R.string.creatingEvent)
-        progressDialog.show()
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                CreateLiveEvent.runAsync(viewDelegate, GoogleAccountManager.credential!!, name, description).await()
-                launch(Dispatchers.Main) {
-                    progressDialog.dismiss()
-                }
-            } catch (e: UserRecoverableAuthIOException) {
-                launch(Dispatchers.Main) {
-                    progressDialog.dismiss()
-                    viewDelegate.startAuthorization(e.intent)
-                }
-            } catch (e: IOException) {
-                launch(Dispatchers.Main) {
-                    progressDialog.dismiss()
-                    Toast.makeText(viewDelegate, e.localizedMessage, Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-    }
-
-    /**
      * Private Methods
      */
 

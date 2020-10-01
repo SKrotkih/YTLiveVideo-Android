@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:focusable="true"
+    android:clickable="true"
+    android:background="@android:color/white">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="25dp"
+        android:orientation="vertical">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <!-- Title -->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:paddingBottom="35dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/broadcast_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center_horizontal"
+                        android:text="New Broadcast"
+                        android:textColor="#151515"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+            </TableRow>
+            <!-- Name -->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:paddingBottom="15dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.00"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/broadcast_name_label"
+                        android:layout_weight="0.25"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="start"
+                        android:text="Name"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textColor="#736C6D"
+                        android:textSize="14sp" />
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.75"
+                        android:hint="@string/enter_broadcast_name"
+                        android:id="@+id/broadcast_name"
+                        android:autofillHints="Enter Broadcast Description"
+                        android:inputType="text" />
+                </LinearLayout>
+            </TableRow>
+            <!-- Description -->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:paddingBottom="55dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.00"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/broadcast_description_label"
+                        android:layout_weight="0.25"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="start"
+                        android:text="Description"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textColor="#736C6D"
+                        android:textSize="14sp" />
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.75"
+                        android:hint="@string/enter_broadcast_description"
+                        android:id="@+id/broadcast_description"
+                        android:autofillHints="Enter Broadcast Description"
+                        android:inputType="text" />
+                </LinearLayout>
+            </TableRow>
+            <!-- Button -->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="25dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.00"
+                    android:orientation="horizontal">
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <Button
+                        android:id="@+id/start_streaming"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:onClick="onCreateBroadcast"
+                        android:text="Create Broadcast"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textSize="14sp" />
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -78,7 +78,9 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val viewModel: MainViewModel by viewModels()
         when (item.itemId) {
-            R.id.create_event -> viewModel.createNewBroadcast()
+            R.id.create_event -> {
+                Router.StartActivity.CREATE_BROADCAST.run()
+            }
             R.id.menu_accounts -> {
                 viewModel.startSelectAccountActivity()
                 return true

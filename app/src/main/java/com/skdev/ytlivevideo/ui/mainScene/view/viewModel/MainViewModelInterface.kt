@@ -11,5 +11,4 @@ interface MainViewModelInterface {
     fun signIn(context: Context, savedInstanceState: Bundle?)
     fun logOut()
     fun fetchBroadcasts(state: BroadcastState)
-    fun createNewBroadcast()
 }

@@ -39,6 +39,11 @@
             android:configChanges="orientation|screenSize">
         </activity>
         <activity
+            android:name=".ui.createBroadcast.CreateNewBroadcast"
+            android:parentActivityName=".ui.mainScene.view.MainActivity"
+            android:configChanges="orientation|screenSize">
+        </activity>
+        <activity
             android:name=".ui.videoStreamingScene.VideoStreamingActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape">
