@@ -17,14 +17,12 @@ import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcast
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.EndLiveEvent
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.FetchAllLiveEvents
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.StartLiveEvent
-import com.skdev.ytlivevideo.ui.mainScene.fragment.FragmentDelegate
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
 import com.skdev.ytlivevideo.util.ProgressDialog
 import com.skdev.ytlivevideo.util.Utils
 import kotlinx.android.synthetic.main.activity_broadcast_preview.*
-import kotlinx.android.synthetic.main.live_events_list_item.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,7 +34,6 @@ class BroadcastPreview: AppCompatActivity() {
     private val mImageLoader: ImageLoader? by lazy {
         NetworkSingleton.getInstance(this)?.imageLoader
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
