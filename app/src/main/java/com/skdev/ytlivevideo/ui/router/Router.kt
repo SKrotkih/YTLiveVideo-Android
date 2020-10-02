@@ -3,7 +3,7 @@ package com.skdev.ytlivevideo.ui.router
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.ui.broadcastPreview.BroadcastPreview
 import com.skdev.ytlivevideo.ui.createBroadcast.CreateNewBroadcast
 

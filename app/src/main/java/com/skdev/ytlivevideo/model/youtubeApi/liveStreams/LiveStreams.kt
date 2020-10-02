@@ -1,19 +1,20 @@
-package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests
+package com.skdev.ytlivevideo.model.youtubeApi.liveStreams
 
 import android.util.Log
 import com.google.api.services.youtube.model.LiveStream
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveStreamingInteractor
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.IOException
 
-object FetchLiveStream {
-     suspend fun runAsync(streamId: String?) : LiveStream? =
+object LiveStreams {
+
+    suspend fun getLiveStreamsListItemAsync(streamId: String?) : LiveStream? =
         withContext(Dispatchers.IO) {
             try {
                 if (streamId.isNullOrBlank()) {
                     throw IllegalArgumentException("The Stream ID is not presented")
                 }
-                val list = LiveStreamingInteractor.getLiveStreamsListItem(streamId)
+                val list = LiveStreamsInteractor.getLiveStreamsListItem(streamId)
                 Log.d(TAG, list.toString())
                 return@withContext list
             } catch (e: IOException) {
@@ -23,5 +24,5 @@ object FetchLiveStream {
             }
         }
 
-    private val TAG: String = FetchBroadcasts::class.java.name
+    private val TAG: String = LiveStreams::class.java.name
 }

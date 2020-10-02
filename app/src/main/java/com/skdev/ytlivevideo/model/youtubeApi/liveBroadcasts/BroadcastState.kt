@@ -1,4 +1,4 @@
-package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests
+package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

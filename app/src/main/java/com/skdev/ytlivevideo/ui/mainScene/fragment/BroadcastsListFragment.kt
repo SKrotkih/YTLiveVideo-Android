@@ -25,9 +25,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.toolbox.ImageLoader
 import com.google.android.gms.plus.PlusOneButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.R
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.BroadcastState
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastState
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.util.Utils

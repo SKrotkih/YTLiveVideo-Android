@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 
 /**
  * TODO: Move from Fragment

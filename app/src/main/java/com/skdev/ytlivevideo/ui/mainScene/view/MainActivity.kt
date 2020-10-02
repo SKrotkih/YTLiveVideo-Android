@@ -31,14 +31,13 @@ import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.enteties.AccountName
 import com.skdev.ytlivevideo.model.network.DownLoadImageTask
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.ui.mainScene.adapter.SectionsPagerAdapter
 import com.skdev.ytlivevideo.ui.mainScene.fragment.FragmentDelegate
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.util.Config
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.live_events_list_item.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

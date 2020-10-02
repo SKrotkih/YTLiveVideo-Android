@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast
+package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts
 
 import android.util.Log
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
@@ -23,13 +23,13 @@ import com.google.api.client.util.DateTime
 import com.google.api.services.youtube.YouTube
 import com.google.api.services.youtube.model.*
 import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.BroadcastState
+import com.skdev.ytlivevideo.model.youtubeApi.liveStreams.LiveStreamsInteractor
 import com.skdev.ytlivevideo.util.Config
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-object LiveStreamingInteractor {
+object LiveBroadcastsInteractor {
     const val RTMP_URL_KEY = "rtmpUrl"
     const val BROADCAST_ID_KEY = "broadcastId"
     private const val FUTURE_DATE_OFFSET_MILLIS = 5 * 1000
@@ -161,7 +161,7 @@ object LiveStreamingInteractor {
                 liveBroadcastItem.event = broadcast
                 val streamId = broadcast.contentDetails.boundStreamId
                 if (streamId != null) {
-                    val ingestionAddress = getLiveStreamingIngestionAddress(streamId)
+                    val ingestionAddress = LiveStreamsInteractor.getLiveStreamingIngestionAddress(streamId)
                     liveBroadcastItem.ingestionAddress = ingestionAddress
                 }
                 resultList.add(liveBroadcastItem)
@@ -200,40 +200,4 @@ object LiveStreamingInteractor {
         )
         transitionRequest.execute()
     }
-
-    private fun getLiveStreamingIngestionAddress(streamId: String?): String {
-        val youtube = buildYoutube()
-        val liveStreamRequest = youtube
-            .liveStreams()
-            .list("cdn")
-        liveStreamRequest.id = streamId
-        val returnedStream = liveStreamRequest.execute()
-        val streamList = returnedStream.items
-        if (streamList.isEmpty()) {
-            return ""
-        }
-        val ingestionInfo = streamList[0].cdn.ingestionInfo
-        return (ingestionInfo.ingestionAddress + "/"
-                + ingestionInfo.streamName)
-    }
-
-    fun getLiveStreamsListItem(streamId: String): LiveStream? {
-        Log.d(Config.APP_NAME, "Requesting stream $streamId...")
-        val youtube = buildYoutube()
-        val livestreamRequest = youtube.liveStreams().list("status")
-        livestreamRequest.id = streamId
-        try {
-            val liveStreamsResponse = livestreamRequest.execute()
-            val liveStreams = liveStreamsResponse.items
-            if (liveStreams.size == 1) {
-                val stream = liveStreams[0]
-                return stream
-            }
-        } catch (e: IOException) {
-            Log.e(Config.APP_NAME, "Failed getting live streams list (see 'Caused by'):", e)
-            throw e
-        }
-        return null
-    }
-
 }

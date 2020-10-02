@@ -6,15 +6,13 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.skdev.ytlivevideo.R
-import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.CreateLiveEvent
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.requests.LiveBroadcasts
 import com.skdev.ytlivevideo.util.ProgressDialog
 import com.skdev.ytlivevideo.util.Utils
 import kotlinx.android.synthetic.main.activity_create_broadcast.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.*
 
@@ -43,7 +41,7 @@ class CreateNewBroadcast: AppCompatActivity() {
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                CreateLiveEvent.runAsync(name, description).await()
+                LiveBroadcasts.createNewBroadcastAsync(name, description).await()
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
                     completion()

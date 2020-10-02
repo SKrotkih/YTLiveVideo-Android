@@ -11,9 +11,8 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast
+package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts
 import com.google.api.services.youtube.model.LiveBroadcast
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.BroadcastState
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>

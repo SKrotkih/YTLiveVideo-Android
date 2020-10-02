@@ -18,8 +18,9 @@ import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.enteties.AccountName
 import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
 import com.skdev.ytlivevideo.model.googleAccount.GoogleSignInManager
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.*
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastState
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.requests.*
 import com.skdev.ytlivevideo.ui.mainScene.adapter.SectionsPagerAdapter
 import com.skdev.ytlivevideo.ui.mainScene.fragment.BroadcastsListFragment
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
@@ -130,7 +131,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch() {
             try {
-                val list = FetchBroadcasts.runAsync(state)
+                val list = LiveBroadcasts.getLiveBroadcastsAsync(state)
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
                     when (state) {
