@@ -42,88 +42,20 @@ object LiveBroadcastsInteractor {
             .build()
     }
 
-    fun liveBroadcastsInsert(description: String?, name: String?) {
-        // We need a date that's in the proper ISO format and is in the future,
-        // since the API won't
-        // create events that start in the past.
-        val dateFormat = SimpleDateFormat(
-            "yyyy-MM-dd'T'HH:mm:ss'Z'"
-        )
-        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
-        val futureDateMillis = (System.currentTimeMillis()
-                + FUTURE_DATE_OFFSET_MILLIS)
-        val futureDate = Date()
-        futureDate.time = futureDateMillis
-        val date = dateFormat.format(futureDate)
-        Log.d(
-            Config.APP_NAME, String.format(
-                "Creating event: name='%s', description='%s', date='%s'.",
-                name, description, date
-            )
-        )
+    fun createNewBroadcast(description: String?, name: String?) {
         try {
             val youtube = buildYoutube()
-            val broadcastSnippet = LiveBroadcastSnippet()
-            broadcastSnippet.title = name
-            broadcastSnippet.scheduledStartTime = DateTime(futureDate)
-            val contentDetails = LiveBroadcastContentDetails()
-            val monitorStream = MonitorStreamInfo()
-            monitorStream.enableMonitorStream = false
-            contentDetails.monitorStream = monitorStream
-
-            // Create LiveBroadcastStatus with privacy status.
-            val status = LiveBroadcastStatus()
-            status.privacyStatus = "unlisted"
-            val broadcast = LiveBroadcast()
-            broadcast.kind = "youtube#liveBroadcast"
-            broadcast.snippet = broadcastSnippet
-            broadcast.status = status
-            broadcast.contentDetails = contentDetails
-
-            // Create the insert request
-            val liveBroadcastInsert = youtube
-                .liveBroadcasts()
-                .insert(
-                    "snippet,status,contentDetails",
-                    broadcast
-                )
-
-            // Request is executed and inserted broadcast is returned
-            val returnedBroadcast = liveBroadcastInsert.execute()
-
-            // Create a snippet with title.
-            val streamSnippet = LiveStreamSnippet()
-            streamSnippet.title = name
-
-            // Create content distribution network with format and ingestion
-            // type.
-            val cdn = CdnSettings()
-            cdn.format = "240p"
-            cdn.ingestionType = "rtmp"
-            val stream = LiveStream()
-            stream.kind = "youtube#liveStream"
-            stream.snippet = streamSnippet
-            stream.cdn = cdn
-
-            // Create the insert request
-            val liveStreamInsert = youtube
-                .liveStreams()
-                .insert("snippet,cdn", stream)
-
-            // Request is executed and inserted stream is returned
-            val returnedStream = liveStreamInsert.execute()
-
+            val liveBroadcast = liveBroadcastInsert(name, description)
+            val liveStream = LiveStreamsInteractor.liveStreamInsert(name)
             // Create the bind request
             val liveBroadcastBind = youtube
                 .liveBroadcasts()
                 .bind(
-                    returnedBroadcast.id,
+                    liveBroadcast.id,
                     "id,contentDetails"
                 )
-
             // Set stream id to bind
-            liveBroadcastBind.streamId = returnedStream.id
-
+            liveBroadcastBind.streamId = liveStream.id
             // Request is executed and bound broadcast is returned
             liveBroadcastBind.execute()
         } catch (e: GoogleJsonResponseException) {
@@ -140,6 +72,52 @@ object LiveBroadcastsInteractor {
             System.err.println("Throwable: " + t.stackTrace)
             t.printStackTrace()
         }
+    }
+
+    private fun liveBroadcastInsert(name: String?, description: String?) : LiveBroadcast {
+        // We need a date that's in the proper ISO format and is in the future,
+        // since the API won't
+        // create events that start in the past.
+        val dateFormat = SimpleDateFormat(
+            "yyyy-MM-dd'T'HH:mm:ss'Z'"
+        )
+        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+        val futureDateMillis = (System.currentTimeMillis()
+                + FUTURE_DATE_OFFSET_MILLIS)
+        val futureDate = Date()
+        futureDate.time = futureDateMillis
+        val date = dateFormat.format(futureDate)
+
+        Log.d(Config.APP_NAME, String.format("Creating event: name='%s', description='%s', date='%s'.", name, description, date))
+
+        val youtube = buildYoutube()
+        val broadcastSnippet = LiveBroadcastSnippet()
+        broadcastSnippet.title = name
+        broadcastSnippet.scheduledStartTime = DateTime(futureDate)
+        val contentDetails = LiveBroadcastContentDetails()
+        val monitorStream = MonitorStreamInfo()
+        monitorStream.enableMonitorStream = false
+        contentDetails.monitorStream = monitorStream
+
+        // Create LiveBroadcastStatus with privacy status.
+        val status = LiveBroadcastStatus()
+        status.privacyStatus = "unlisted"
+        val broadcast = LiveBroadcast()
+        broadcast.kind = "youtube#liveBroadcast"
+        broadcast.snippet = broadcastSnippet
+        broadcast.status = status
+        broadcast.contentDetails = contentDetails
+
+        // Create the insert request
+        val liveBroadcastInsert = youtube
+            .liveBroadcasts()
+            .insert(
+                "snippet,status,contentDetails",
+                broadcast
+            )
+
+        // Request is executed and inserted broadcast is returned
+        return liveBroadcastInsert.execute()
     }
 
     fun getLiveBroadcastsList(state: BroadcastState?, broadcastId: String?): List<LiveBroadcastItem> {
@@ -173,6 +151,9 @@ object LiveBroadcastsInteractor {
         }
     }
 
+    /**
+     * Transition State methods
+     */
      fun transitionLiveBroadcastsToLive(broadcastId: String?) {
         val youtube = buildYoutube()
         try {

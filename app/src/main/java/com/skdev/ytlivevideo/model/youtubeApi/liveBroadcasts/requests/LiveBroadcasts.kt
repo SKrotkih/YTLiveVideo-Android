@@ -12,7 +12,7 @@ object LiveBroadcasts  {
     fun createNewBroadcastAsync(name: String, description: String) : Deferred<Unit> =
         CoroutineScope(Dispatchers.IO).async() {
             try {
-                LiveBroadcastsInteractor.liveBroadcastsInsert(description, name)
+                LiveBroadcastsInteractor.createNewBroadcast(description, name)
             } catch (e: IOException) {
                 Log.e(TAG, "Error while creating a new event request:", e)
                 val message = e.cause?.message ?: "Error while creating a new event request"
@@ -34,6 +34,9 @@ object LiveBroadcasts  {
             }
         }
 
+    /**
+     * Transitions
+     */
     fun transitionLiveBroadcastsToLiveAsync(broadcastId: String?) : Deferred<Boolean> =
         CoroutineScope(Dispatchers.IO).async() {
             try {

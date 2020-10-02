@@ -21,6 +21,33 @@ object LiveStreamsInteractor {
             .build()
     }
 
+    /**
+     * Create New LiveStream
+     */
+    fun liveStreamInsert(name: String?) : LiveStream {
+        // Create a snippet with title.
+        val streamSnippet = LiveStreamSnippet()
+        streamSnippet.title = name
+
+        // Create content distribution network with format and ingestion
+        // type.
+        val cdn = CdnSettings()
+        cdn.format = "240p"
+        cdn.ingestionType = "rtmp"
+        val stream = LiveStream()
+        stream.kind = "youtube#liveStream"
+        stream.snippet = streamSnippet
+        stream.cdn = cdn
+
+        // Create the insert request
+        val liveStreamInsert = buildYoutube()
+            .liveStreams()
+            .insert("snippet,cdn", stream)
+
+        // Request is executed and inserted stream is returned
+        return liveStreamInsert.execute()
+    }
+
     fun getLiveStreamingIngestionAddress(streamId: String?): String {
         val youtube = buildYoutube()
         val liveStreamRequest = youtube

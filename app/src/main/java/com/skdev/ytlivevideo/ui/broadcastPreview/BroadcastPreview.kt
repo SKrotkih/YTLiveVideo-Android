@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.android.volley.toolbox.ImageLoader
@@ -44,7 +43,6 @@ class BroadcastPreview: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_broadcast_preview)
         extractParams()
-        configureViewModel()
         downloadEventData()
         renderView()
     }
@@ -84,10 +82,6 @@ class BroadcastPreview: AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun configureViewModel() {
-        val viewModel: ViewModel by viewModels()
     }
 
     private fun downloadEventData() {
@@ -185,6 +179,18 @@ class BroadcastPreview: AppCompatActivity() {
         }
     }
 
+    private fun startBroadcastStreaming() {
+        val broadcastId = broadcastItem!!.id
+        val ingestionAddress = broadcastItem!!.ingestionAddress!!
+        val intent = Intent(
+            applicationContext,
+            VideoStreamingActivity::class.java
+        )
+        intent.putExtra(LiveBroadcastsInteractor.RTMP_URL_KEY, ingestionAddress)
+        intent.putExtra(LiveBroadcastsInteractor.BROADCAST_ID_KEY, broadcastId)
+        startActivityForResult(intent, MainViewModel.REQUEST_STREAMER)
+    }
+
     /**
      * Transit broadcast to completed state
      */
@@ -212,18 +218,6 @@ class BroadcastPreview: AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun startBroadcastStreaming() {
-        val broadcastId = broadcastItem!!.id
-        val ingestionAddress = broadcastItem!!.ingestionAddress!!
-        val intent = Intent(
-            applicationContext,
-            VideoStreamingActivity::class.java
-        )
-        intent.putExtra(LiveBroadcastsInteractor.RTMP_URL_KEY, ingestionAddress)
-        intent.putExtra(LiveBroadcastsInteractor.BROADCAST_ID_KEY, broadcastId)
-        startActivityForResult(intent, MainViewModel.REQUEST_STREAMER)
     }
 
     private fun startAuthorization(intent: Intent) {
