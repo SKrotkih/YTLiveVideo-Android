@@ -43,7 +43,7 @@ class CreateNewBroadcast: AppCompatActivity() {
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                CreateLiveEvent.runAsync(GoogleAccountManager.credential!!, name, description).await()
+                CreateLiveEvent.runAsync(name, description).await()
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
                     completion()

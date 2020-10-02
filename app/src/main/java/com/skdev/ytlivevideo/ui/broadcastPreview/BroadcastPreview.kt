@@ -14,10 +14,9 @@ import com.android.volley.toolbox.ImageLoader
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.google.api.services.youtube.model.LiveStream
 import com.skdev.ytlivevideo.R
-import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveStreamingInteractor
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.EndLiveEvent
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.FetchBroadcasts
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.FetchLiveStream
@@ -98,12 +97,11 @@ class BroadcastPreview: AppCompatActivity() {
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch() {
             try {
-                val credential = GoogleAccountManager.credential
-                val list = FetchBroadcasts.runAsync(credential!!, null, broadcastId)
+                val list = FetchBroadcasts.runAsync(null, broadcastId)
                 if (list!!.count() > 0) {
                     broadcastItem = list[0]
                     val streamId = broadcastItem!!.streamId
-                    streamItem = FetchLiveStream.runAsync(credential, streamId)
+                    streamItem = FetchLiveStream.runAsync(streamId)
                     launch(Dispatchers.Main) {
                         progressDialog.dismiss()
                         renderView()
@@ -169,10 +167,7 @@ class BroadcastPreview: AppCompatActivity() {
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val isBroadcastingStarted = TransitionBroadcastToLiveState.runAsync(
-                    GoogleAccountManager.credential!!,
-                    broadcastId
-                ).await()
+                val isBroadcastingStarted = TransitionBroadcastToLiveState.runAsync(broadcastId).await()
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
                     if (isBroadcastingStarted) startBroadcastStreaming()
@@ -196,12 +191,12 @@ class BroadcastPreview: AppCompatActivity() {
      * Transit broadcast to completed state
      */
     private fun finalizeStreaming(intent: Intent) {
-        val broadcastId = intent.getStringExtra(YouTubeLiveBroadcastRequest.BROADCAST_ID_KEY)
+        val broadcastId = intent.getStringExtra(LiveStreamingInteractor.BROADCAST_ID_KEY)
         val progressDialog = ProgressDialog.create(this, R.string.startStreaming)
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                EndLiveEvent.runAsync(GoogleAccountManager.credential!!, broadcastId).await()
+                EndLiveEvent.runAsync(broadcastId).await()
                 Log.d(TAG, "The Broadcast is finished")
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
@@ -228,8 +223,8 @@ class BroadcastPreview: AppCompatActivity() {
             applicationContext,
             VideoStreamingActivity::class.java
         )
-        intent.putExtra(YouTubeLiveBroadcastRequest.RTMP_URL_KEY, ingestionAddress)
-        intent.putExtra(YouTubeLiveBroadcastRequest.BROADCAST_ID_KEY, broadcastId)
+        intent.putExtra(LiveStreamingInteractor.RTMP_URL_KEY, ingestionAddress)
+        intent.putExtra(LiveStreamingInteractor.BROADCAST_ID_KEY, broadcastId)
         startActivityForResult(intent, MainViewModel.REQUEST_STREAMER)
     }
 

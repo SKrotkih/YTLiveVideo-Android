@@ -15,21 +15,34 @@ package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast
 
 import android.util.Log
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
+import com.google.api.client.http.HttpTransport
+import com.google.api.client.http.javanet.NetHttpTransport
+import com.google.api.client.json.JsonFactory
+import com.google.api.client.json.gson.GsonFactory
 import com.google.api.client.util.DateTime
 import com.google.api.services.youtube.YouTube
 import com.google.api.services.youtube.model.*
+import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.BroadcastState
 import com.skdev.ytlivevideo.util.Config
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-object YouTubeLiveBroadcastRequest {
+object LiveStreamingInteractor {
     const val RTMP_URL_KEY = "rtmpUrl"
     const val BROADCAST_ID_KEY = "broadcastId"
     private const val FUTURE_DATE_OFFSET_MILLIS = 5 * 1000
 
-    fun createLiveEvent(youtube: YouTube, description: String?, name: String?) {
+    private fun buildYoutube() : YouTube {
+        val transport: HttpTransport = NetHttpTransport()
+        val jsonFactory: JsonFactory = GsonFactory()
+        return YouTube.Builder(transport, jsonFactory, GoogleAccountManager.credential!!)
+            .setApplicationName(Config.APP_NAME)
+            .build()
+    }
+
+    fun liveBroadcastsInsert(description: String?, name: String?) {
         // We need a date that's in the proper ISO format and is in the future,
         // since the API won't
         // create events that start in the past.
@@ -49,6 +62,7 @@ object YouTubeLiveBroadcastRequest {
             )
         )
         try {
+            val youtube = buildYoutube()
             val broadcastSnippet = LiveBroadcastSnippet()
             broadcastSnippet.title = name
             broadcastSnippet.scheduledStartTime = DateTime(futureDate)
@@ -128,29 +142,9 @@ object YouTubeLiveBroadcastRequest {
         }
     }
 
-    @Throws(IOException::class)
-    fun getLiveStream(youtube: YouTube, streamId: String): LiveStream? {
-        Log.d(Config.APP_NAME, "Requesting stream $streamId...")
-        val livestreamRequest = youtube.liveStreams().list("status")
-        livestreamRequest.id = streamId
-        try {
-            val liveStreamsResponse = livestreamRequest.execute()
-            val liveStreams = liveStreamsResponse.items
-            if (liveStreams.size == 1) {
-                val stream = liveStreams[0]
-                return stream
-            }
-        } catch (e: IOException) {
-            Log.e(Config.APP_NAME, "Failed getting live streams list (see 'Caused by'):", e)
-            throw e
-        }
-        return null
-    }
-
-    // TODO: Catch those exceptions and handle them here.
-    @Throws(IOException::class)
-    fun getLiveBroadcasts(youtube: YouTube, state: BroadcastState?, broadcastId: String?): List<LiveBroadcastItem> {
+    fun getLiveBroadcastsList(state: BroadcastState?, broadcastId: String?): List<LiveBroadcastItem> {
         Log.d(Config.APP_NAME, "Requesting live events.")
+        val youtube = buildYoutube()
         val liveBroadcastRequest = youtube.liveBroadcasts().list("id,snippet,contentDetails,status")
         //liveBroadcastRequest.setMine(true);
         if (state != null) liveBroadcastRequest.broadcastStatus = state.value()
@@ -167,7 +161,7 @@ object YouTubeLiveBroadcastRequest {
                 liveBroadcastItem.event = broadcast
                 val streamId = broadcast.contentDetails.boundStreamId
                 if (streamId != null) {
-                    val ingestionAddress = getIngestionAddress(youtube, streamId)
+                    val ingestionAddress = getLiveStreamingIngestionAddress(streamId)
                     liveBroadcastItem.ingestionAddress = ingestionAddress
                 }
                 resultList.add(liveBroadcastItem)
@@ -179,36 +173,36 @@ object YouTubeLiveBroadcastRequest {
         }
     }
 
-    @Throws(IOException::class)
-    fun transitionToLiveState(youtube: YouTube, broadcastId: String?) {
+     fun transitionLiveBroadcastsToLive(broadcastId: String?) {
+        val youtube = buildYoutube()
         try {
             val transitionRequest = youtube.liveBroadcasts().transition(
                 "live", broadcastId, "status"
             )
             transitionRequest.execute()
         } catch (e: IOException) {
-            transitionToTestingState(youtube, broadcastId)
+            transitionLiveBroadcastsToTesting(broadcastId)
         }
     }
 
-    @Throws(IOException::class)
-    fun transitionToTestingState(youtube: YouTube, broadcastId: String?) {
+    private fun transitionLiveBroadcastsToTesting(broadcastId: String?) {
+        val youtube = buildYoutube()
         val transitionRequest = youtube.liveBroadcasts().transition(
             "testing", broadcastId, "status"
         )
         transitionRequest.execute()
     }
 
-    @Throws(IOException::class)
-    fun transitionToCompletedState(youtube: YouTube, broadcastId: String?) {
+    fun transitionLiveBroadcastsToCompleted(broadcastId: String?) {
+        val youtube = buildYoutube()
         val transitionRequest = youtube.liveBroadcasts().transition(
             "completed", broadcastId, "status"
         )
         transitionRequest.execute()
     }
 
-    @Throws(IOException::class)
-    fun getIngestionAddress(youtube: YouTube, streamId: String?): String {
+    private fun getLiveStreamingIngestionAddress(streamId: String?): String {
+        val youtube = buildYoutube()
         val liveStreamRequest = youtube
             .liveStreams()
             .list("cdn")
@@ -222,4 +216,24 @@ object YouTubeLiveBroadcastRequest {
         return (ingestionInfo.ingestionAddress + "/"
                 + ingestionInfo.streamName)
     }
+
+    fun getLiveStreamsListItem(streamId: String): LiveStream? {
+        Log.d(Config.APP_NAME, "Requesting stream $streamId...")
+        val youtube = buildYoutube()
+        val livestreamRequest = youtube.liveStreams().list("status")
+        livestreamRequest.id = streamId
+        try {
+            val liveStreamsResponse = livestreamRequest.execute()
+            val liveStreams = liveStreamsResponse.items
+            if (liveStreams.size == 1) {
+                val stream = liveStreams[0]
+                return stream
+            }
+        } catch (e: IOException) {
+            Log.e(Config.APP_NAME, "Failed getting live streams list (see 'Caused by'):", e)
+            throw e
+        }
+        return null
+    }
+
 }

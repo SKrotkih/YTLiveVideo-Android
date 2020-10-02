@@ -130,7 +130,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch() {
             try {
-                val list = FetchBroadcasts.runAsync(GoogleAccountManager.credential!!, state)
+                val list = FetchBroadcasts.runAsync(state)
                 launch(Dispatchers.Main) {
                     progressDialog.dismiss()
                     when (state) {
