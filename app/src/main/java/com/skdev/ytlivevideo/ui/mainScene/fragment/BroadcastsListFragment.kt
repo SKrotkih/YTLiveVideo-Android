@@ -32,7 +32,6 @@ import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.util.Utils
 import com.skdev.ytlivevideo.util.Utils.setSafeOnClickListener
-import kotlinx.android.synthetic.main.fragment_live_events_list.*
 import kotlinx.android.synthetic.main.live_events_list_item.view.*
 
 /**

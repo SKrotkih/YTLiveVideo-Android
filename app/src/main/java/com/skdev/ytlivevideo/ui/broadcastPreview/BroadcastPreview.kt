@@ -2,22 +2,26 @@ package com.skdev.ytlivevideo.ui.broadcastPreview
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.android.volley.toolbox.ImageLoader
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
+import com.google.api.services.youtube.model.LiveStream
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcastRequest
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.EndLiveEvent
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.FetchAllLiveEvents
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.StartLiveEvent
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.FetchBroadcasts
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.FetchLiveStream
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests.TransitionBroadcastToLiveState
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
@@ -31,6 +35,8 @@ import java.io.IOException
 
 class BroadcastPreview: AppCompatActivity() {
     private var broadcastItem: LiveBroadcastItem? = null
+    private var streamItem: LiveStream? = null
+
     private var state: String? = null
     private var broadcastId: String? = null
     private val mImageLoader: ImageLoader? by lazy {
@@ -64,11 +70,21 @@ class BroadcastPreview: AppCompatActivity() {
             broadcast_created.text = Utils.timeAgo(broadcastItem!!.publishedAt)
             broadcast_scheduled.text = Utils.timeAgo(broadcastItem!!.publishedAt)
             broadcast_lifeCycleStatus.text = broadcastItem!!.lifeCycleStatus
+            broadcast_streamStatus.text = streamItem?.status?.streamStatus ?: "-"
             thumbnail.setImageUrl(broadcastItem!!.thumbUri, mImageLoader)
-            if (canWatchVideo) {
-                start_streaming.text = "Watch video"
-            } else {
-                start_streaming.text = "Start Streaming"
+            start_streaming.isVisible = true
+            when {
+                canWatchVideo -> {
+                    broadcast_streamStatus.setTextColor(Color.BLACK)
+                    start_streaming.text = "Watch video"
+                }
+                streamItem?.status?.streamStatus == "active" -> {
+                    broadcast_streamStatus.setTextColor(Color.GREEN)
+                    start_streaming.text = "Start Streaming"
+                }
+                else -> {
+                    start_streaming.isVisible = false
+                }
             }
         }
     }
@@ -82,11 +98,14 @@ class BroadcastPreview: AppCompatActivity() {
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch() {
             try {
-                val list = FetchAllLiveEvents.runAsync(GoogleAccountManager.credential!!, null, broadcastId)
-                launch(Dispatchers.Main) {
-                    progressDialog.dismiss()
-                    if (list!!.count() > 0) {
-                        broadcastItem = list[0]
+                val credential = GoogleAccountManager.credential
+                val list = FetchBroadcasts.runAsync(credential!!, null, broadcastId)
+                if (list!!.count() > 0) {
+                    broadcastItem = list[0]
+                    val streamId = broadcastItem!!.streamId
+                    streamItem = FetchLiveStream.runAsync(credential, streamId)
+                    launch(Dispatchers.Main) {
+                        progressDialog.dismiss()
                         renderView()
                     }
                 }
@@ -130,15 +149,15 @@ class BroadcastPreview: AppCompatActivity() {
             return broadcastItem!!.lifeCycleStatus == "complete" &&  !broadcastItem!!.watchUri.isNullOrEmpty()
         }
 
-    fun onStartStreaming(view: View) {
-        if (broadcastItem == null) {
-            return
-        }
-        if (canWatchVideo) {
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(broadcastItem!!.watchUri))
-            startActivity(browserIntent)
-        } else {
-            startStreaming()
+    fun onButtonPress(view: View) {
+        when {
+            broadcastItem == null -> return
+            canWatchVideo -> {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(broadcastItem!!.watchUri))
+                startActivity(browserIntent)
+            }
+            streamItem?.status?.streamStatus == "active" -> startStreaming()
+            else -> return
         }
     }
 
@@ -150,9 +169,8 @@ class BroadcastPreview: AppCompatActivity() {
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val isBroadcastingStarted = StartLiveEvent.runAsync(
+                val isBroadcastingStarted = TransitionBroadcastToLiveState.runAsync(
                     GoogleAccountManager.credential!!,
-                    streamId,
                     broadcastId
                 ).await()
                 launch(Dispatchers.Main) {

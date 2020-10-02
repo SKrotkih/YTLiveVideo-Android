@@ -64,5 +64,10 @@ class LiveBroadcastItem {
 
     val lifeCycleStatus: String
         get() = event!!.status.lifeCycleStatus
+
+//    val streamStatus: String
+//        get() = event!!.status.streamStatus
+
     var state: BroadcastState? = null
+
 }

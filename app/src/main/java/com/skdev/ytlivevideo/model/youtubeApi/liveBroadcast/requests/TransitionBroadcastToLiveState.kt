@@ -1,6 +1,5 @@
 package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.requests
 
-import android.app.Activity
 import android.util.Log
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.http.HttpTransport
@@ -12,18 +11,17 @@ import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcast.YouTubeLiveBroadcast
 import com.skdev.ytlivevideo.util.Config
 import kotlinx.coroutines.*
 import java.io.IOException
-import java.lang.Thread.sleep
 
-object StartLiveEvent {
+object TransitionBroadcastToLiveState {
 
-    fun runAsync(credential: GoogleAccountCredential, streamId: String?, broadcastId: String?) : Deferred<Boolean> =
+    fun runAsync(credential: GoogleAccountCredential, broadcastId: String?) : Deferred<Boolean> =
         CoroutineScope(Dispatchers.IO).async() {
             try {
-                if (streamId.isNullOrBlank() || broadcastId.isNullOrBlank()) {
+                if (broadcastId.isNullOrBlank()) {
                     throw IllegalArgumentException("The Stream ID is not presented")
                 }
                 // delay(10000)
-                val result = checkAndStartStreaming(credential, streamId, broadcastId)
+                val result = transitionBroadcastToLiveState(credential, broadcastId)
                 return@async result
             } catch (e: IOException) {
                 Log.e(TAG, "Failed start broadcasting:", e)
@@ -32,32 +30,22 @@ object StartLiveEvent {
             }
         }
 
-    private fun checkAndStartStreaming(credential: GoogleAccountCredential, streamId: String, broadcastId: String) : Boolean {
-        Log.d(TAG, "startLiveEvent")
+    private fun transitionBroadcastToLiveState(credential: GoogleAccountCredential, broadcastId: String) : Boolean {
+        Log.d(TAG, "checkAndStartStreaming")
         val transport: HttpTransport = NetHttpTransport()
         val jsonFactory: JsonFactory = GsonFactory()
         val youtube = YouTube.Builder(transport, jsonFactory, credential)
             .setApplicationName(Config.APP_NAME)
             .build()
-        val livestreamRequest = youtube.liveStreams().list("status")
-        livestreamRequest.id = streamId
-        val returnedListResponse = livestreamRequest.execute()
-        val returnedList = returnedListResponse.items
-        if (returnedList.size == 1) {
-            val stream = returnedList[0]
-            Log.v(TAG, "the current stream status is : " + stream.status.streamStatus)
-            if (stream.status.streamStatus == "active") {
-                Log.v(TAG, "start broadcasting now")
-                YouTubeLiveBroadcastRequest.transitionToLiveState(youtube, broadcastId)
-                return true
-            } else {
-                throw IOException("The Stream is not in Active state. It's in ${stream.status.streamStatus} state.")
-            }
+        try {
+            YouTubeLiveBroadcastRequest.transitionToLiveState(youtube, broadcastId)
+            return true
+        } catch (e: IOException) {
+            throw e
         }
-        return false
     }
 
-    private val TAG: String = StartLiveEvent::class.java.name
+    private val TAG: String = TransitionBroadcastToLiveState::class.java.name
 }
 
 /**

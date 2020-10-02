@@ -128,9 +128,28 @@ object YouTubeLiveBroadcastRequest {
         }
     }
 
+    @Throws(IOException::class)
+    fun getLiveStream(youtube: YouTube, streamId: String): LiveStream? {
+        Log.d(Config.APP_NAME, "Requesting stream $streamId...")
+        val livestreamRequest = youtube.liveStreams().list("status")
+        livestreamRequest.id = streamId
+        try {
+            val liveStreamsResponse = livestreamRequest.execute()
+            val liveStreams = liveStreamsResponse.items
+            if (liveStreams.size == 1) {
+                val stream = liveStreams[0]
+                return stream
+            }
+        } catch (e: IOException) {
+            Log.e(Config.APP_NAME, "Failed getting live streams list (see 'Caused by'):", e)
+            throw e
+        }
+        return null
+    }
+
     // TODO: Catch those exceptions and handle them here.
     @Throws(IOException::class)
-    fun getLiveEvents(youtube: YouTube, state: BroadcastState?, broadcastId: String?): List<LiveBroadcastItem> {
+    fun getLiveBroadcasts(youtube: YouTube, state: BroadcastState?, broadcastId: String?): List<LiveBroadcastItem> {
         Log.d(Config.APP_NAME, "Requesting live events.")
         val liveBroadcastRequest = youtube.liveBroadcasts().list("id,snippet,contentDetails,status")
         //liveBroadcastRequest.setMine(true);
