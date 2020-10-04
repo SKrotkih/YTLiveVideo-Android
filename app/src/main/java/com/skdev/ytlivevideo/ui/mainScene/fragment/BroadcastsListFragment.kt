@@ -20,7 +20,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.toolbox.ImageLoader
 import com.google.android.gms.plus.PlusOneButton
@@ -41,13 +41,11 @@ class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
 
     var selected = false
 
-    private lateinit var viewModel: MainViewModel
     private var mImageLoader: ImageLoader? = null
     private var mGridView: GridView? = null
     private var mSwipeRefresh: SwipeRefreshLayout? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         val fragmentView = inflater.inflate(R.layout.fragment_live_events_list, container, false)
         configureGrid(fragmentView)
         subscribeOnSignIn()
@@ -57,7 +55,7 @@ class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
     }
 
     private fun subscribeOnSignIn() {
-        // val viewModel: MainViewModel by activityViewModels()
+        val viewModel: MainViewModel by activityViewModels()
         viewModel.signInManager.didUserSignIn.observe(viewLifecycleOwner, {
             signedIn()
         })
@@ -78,11 +76,13 @@ class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
                 .notifyDataSetChanged()
         }
         if (selected) {
+            val viewModel: MainViewModel by activityViewModels()
             viewModel.fetchBroadcasts(state)
         }
     }
 
     private fun subscribeOnChangeData() {
+        val viewModel: MainViewModel by activityViewModels()
         when (state) {
             BroadcastState.ALL -> {
                 viewModel.allBroadcastItems.observe(this, {
@@ -116,6 +116,7 @@ class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
         mSwipeRefresh = context.findViewById<View>(R.id.swipeRefresh) as SwipeRefreshLayout
         mSwipeRefresh?.setColorSchemeResources(R.color.colorPrimary)
         mSwipeRefresh?.setOnRefreshListener {
+            val viewModel: MainViewModel by activityViewModels()
             viewModel.fetchBroadcasts(state)
         }
     }
@@ -157,6 +158,7 @@ class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
             view.createdAt.text = "Created: ${Utils.timeAgo(broadcastItem.publishedAt)}"
             view.scheduledAt.text = "Scheduled: ${Utils.timeAgo(broadcastItem.publishedAt)}"
             view.thumbnail.setImageUrl(broadcastItem.thumbUri, mImageLoader)
+            val viewModel: MainViewModel by activityViewModels()
             if (viewModel.isConnected()) {
                 (view.plus_button as PlusOneButton).initialize(broadcastItem.watchUri, null)
             }

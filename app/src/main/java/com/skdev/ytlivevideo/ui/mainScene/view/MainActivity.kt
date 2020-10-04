@@ -14,6 +14,7 @@
 package com.skdev.ytlivevideo.ui.mainScene.view
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -29,14 +30,18 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.tabs.TabLayout
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.enteties.AccountName
+import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
 import com.skdev.ytlivevideo.model.network.DownLoadImageTask
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastState
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.ui.mainScene.adapter.SectionsPagerAdapter
 import com.skdev.ytlivevideo.ui.mainScene.fragment.FragmentDelegate
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.util.Config
+import com.skdev.ytlivevideo.util.ProgressDialog
+import com.skdev.ytlivevideo.util.Utils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,6 +57,8 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
 
     lateinit var viewModel: MainViewModel
 
+    private var progressDialog: Dialog? = null
+
     private val mImageLoader: ImageLoader? by lazy {
         NetworkSingleton.getInstance(this)?.imageLoader
     }
@@ -59,10 +66,9 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         setContentView(R.layout.activity_main)
-        configureTabBar()
         configureViewModel()
+        configureTabBar()
         logInIfNeeded(savedInstanceState)
     }
 
@@ -171,10 +177,47 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
     }
 
     private fun configureViewModel() {
-        viewModel.viewDelegate = this
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel.needSendRequestAuthorization.observe(this, {
+            startAccountPicker(GoogleAccountManager.credential!!.newChooseAccountIntent())
+        })
+        viewModel.errorMessage.observe(this, {
+            Utils.showError(this, it)
+        })
+        viewModel.invalidateView.observe(this, {
+            invalidateOptionsMenu()
+            renderView()
+        })
+        viewModel.accountName.observe(this, {
+            AccountName.saveName(this, it)
+        })
+        viewModel.needToCheckGooglePlayServicesAvailable.observe(this, {
+            if (it) {
+                val googleAPI = GoogleApiAvailability.getInstance()
+                val connectionStatusCode: Int = googleAPI.isGooglePlayServicesAvailable(this)
+                if (googleAPI.isUserResolvableError(connectionStatusCode)) {
+                    showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode)
+                }
+            }
+        })
+        viewModel.errorAuthorization.observe(this, {e ->
+            startAuthorization(e.intent)
+        })
+        viewModel.startProcessing.observe(this, {
+            progressDialog = ProgressDialog.create(this, it)
+            progressDialog?.show()
+        })
+        viewModel.stopProcessing.observe(this, {
+            progressDialog?.dismiss()
+        })
     }
 
     private fun logInIfNeeded(savedInstanceState: Bundle?) {
-        viewModel.signIn(applicationContext, savedInstanceState)
+        if (GoogleAccountManager.signIn(this, savedInstanceState)) {
+            viewModel.viewDelegate = this
+            viewModel.signInManager.googleSignIn()
+        } else {
+            Utils.showError(this, "OAUTH2 credentials are not presented")
+        }
     }
 }

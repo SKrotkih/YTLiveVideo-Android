@@ -2,20 +2,14 @@ package com.skdev.ytlivevideo.ui.mainScene.view.viewModel
 
 import android.accounts.AccountManager
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.common.GoogleApiAvailability
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
-import com.skdev.ytlivevideo.R
-import com.skdev.ytlivevideo.model.enteties.AccountName
 import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
 import com.skdev.ytlivevideo.model.googleAccount.GoogleSignInManager
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastState
@@ -25,8 +19,6 @@ import com.skdev.ytlivevideo.ui.mainScene.adapter.SectionsPagerAdapter
 import com.skdev.ytlivevideo.ui.mainScene.fragment.BroadcastsListFragment
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.util.Config
-import com.skdev.ytlivevideo.util.ProgressDialog
-import com.skdev.ytlivevideo.util.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,17 +26,31 @@ import java.io.IOException
 
 class MainViewModel : ViewModel(), MainViewModelInterface {
 
+    // Data Source
     var allBroadcastItems: MutableLiveData<List<LiveBroadcastItem>> = MutableLiveData()
     var upcomingBroadcastItems: MutableLiveData<List<LiveBroadcastItem>> = MutableLiveData()
     var activeBroadcastItems: MutableLiveData<List<LiveBroadcastItem>> = MutableLiveData()
     var completedBroadcastItems: MutableLiveData<List<LiveBroadcastItem>> = MutableLiveData()
+
+    // State changes
+    var needToCheckGooglePlayServicesAvailable: MutableLiveData<Boolean> = MutableLiveData()
+    var needSendRequestAuthorization: MutableLiveData<Boolean> = MutableLiveData()
+    var errorAuthorization: MutableLiveData<UserRecoverableAuthIOException> = MutableLiveData()
+    var errorMessage: MutableLiveData<String> = MutableLiveData()
+    var invalidateView: MutableLiveData<Boolean> = MutableLiveData()
+    var startProcessing: MutableLiveData<String> = MutableLiveData()
+    var stopProcessing: MutableLiveData<Boolean> = MutableLiveData()
+    var accountName: MutableLiveData<String> = MutableLiveData()
 
     lateinit var viewDelegate: MainActivity
 
     val signInManager: GoogleSignInManager by lazy {
         val fld = GoogleSignInManager(viewDelegate)
         fld.didUserSignIn.observe(viewDelegate, {
-            if (it) didUserGoogleSignIn()
+            if (it) {
+                GoogleAccountManager.setUpGoogleAccount(signInManager.account!!)
+                invalidateView.value = true
+            }
         })
         return@lazy fld
     }
@@ -56,7 +62,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
             Config.REQUEST_GOOGLE_PLAY_SERVICES -> if (resultCode == Activity.RESULT_OK) {
                 didCheckGooglePlayServices()
             } else {
-                checkGooglePlayServicesAvailable()
+                needToCheckGooglePlayServicesAvailable.value = true
             }
             Config.REQUEST_AUTHORIZATION -> if (resultCode != Activity.RESULT_OK) {
                 startSelectAccountActivity()
@@ -70,22 +76,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
 
     override fun startSelectAccountActivity() {
         Log.d(TAG, "startSelectAccountActivity")
-        viewDelegate.startAccountPicker(GoogleAccountManager.credential!!.newChooseAccountIntent())
-    }
-
-    override fun signIn(context: Context, savedInstanceState: Bundle?) {
-        if (GoogleAccountManager.signIn(context, savedInstanceState)) {
-            signInManager.googleSignIn()
-        } else {
-            val message = viewDelegate.resources.getText(R.string.oauth2_credentials_are_empty).toString()
-            Utils.showError(viewDelegate, message)
-        }
-    }
-
-    private fun didUserGoogleSignIn() {
-        GoogleAccountManager.setUpGoogleAccount(signInManager.account!!)
-        viewDelegate.invalidateOptionsMenu()
-        viewDelegate.renderView()
+        needSendRequestAuthorization.value = true
     }
 
     override fun logOut() {
@@ -128,13 +119,12 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
      * Fetch broadcasts by State
      */
     override fun fetchBroadcasts(state: BroadcastState) {
-        val progressDialog = ProgressDialog.create(viewDelegate, getProgressBarTitle(state))
-        progressDialog.show()
+        startProcessing(getProgressBarTitle(state))
         CoroutineScope(Dispatchers.IO).launch() {
             try {
                 val list = LiveBroadcasts.getLiveBroadcastsAsync(state)
                 launch(Dispatchers.Main) {
-                    progressDialog.dismiss()
+                    stopProcessing()
                     when (state) {
                         BroadcastState.ALL -> {
                             allBroadcastItems.value = list
@@ -152,16 +142,27 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
                 }
             } catch (e: UserRecoverableAuthIOException) {
                 launch(Dispatchers.Main) {
-                    progressDialog.dismiss()
-                    viewDelegate.startAuthorization(e.intent)
+                    stopProcessing()
+                    errorAuthorization.value = e
                 }
             } catch (e: IOException) {
                 launch(Dispatchers.Main) {
-                    progressDialog.dismiss()
-                    Toast.makeText(viewDelegate, e.localizedMessage, Toast.LENGTH_LONG).show()
+                    stopProcessing()
+                    errorMessage.value = e.localizedMessage
                 }
             }
         }
+    }
+
+    /**
+     * Progress Indicator
+     */
+    private fun startProcessing(title: String) {
+        startProcessing.value = title
+    }
+
+    private fun stopProcessing() {
+        stopProcessing.value = true
     }
 
     private fun getProgressBarTitle(state: BroadcastState): String {
@@ -178,20 +179,6 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
     /**
      * Private Methods
      */
-
-    /**
-     * Check that Google Play services APK is installed and up to date.
-     */
-    private fun checkGooglePlayServicesAvailable(): Boolean {
-        val googleAPI = GoogleApiAvailability.getInstance()
-        val connectionStatusCode: Int = googleAPI.isGooglePlayServicesAvailable(viewDelegate)
-        if (googleAPI.isUserResolvableError(connectionStatusCode)) {
-            viewDelegate.showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode)
-            return false
-        }
-        return true
-    }
-
     private fun didCheckGooglePlayServices() {
         Log.d(TAG, "didCheckGooglePlayServices")
         // check if there is already an account selected
@@ -202,9 +189,9 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
     }
 
     private fun didSelectAccount(intent: Intent) {
-        val accountName = intent.extras!!.getString(AccountManager.KEY_ACCOUNT_NAME)
-        GoogleAccountManager.credential!!.selectedAccountName = accountName
-        AccountName.saveName(viewDelegate, accountName)
+        val selectedAccountName = intent.extras!!.getString(AccountManager.KEY_ACCOUNT_NAME)
+        GoogleAccountManager.credential!!.selectedAccountName = selectedAccountName
+        accountName.value = selectedAccountName
     }
 
     fun getLastSignedInAccount(): GoogleSignInAccount? {
