@@ -5,8 +5,6 @@ class ViewModel : ViewModel() {
 
     var broadcastId: String? = null
 
-
-
     companion object {
         private val TAG = ViewModel::class.java.name
     }

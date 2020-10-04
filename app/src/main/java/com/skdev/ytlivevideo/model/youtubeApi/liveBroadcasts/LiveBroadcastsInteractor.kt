@@ -34,17 +34,17 @@ object LiveBroadcastsInteractor {
     const val BROADCAST_ID_KEY = "broadcastId"
     private const val FUTURE_DATE_OFFSET_MILLIS = 5 * 1000
 
-    private fun buildYoutube() : YouTube {
-        val transport: HttpTransport = NetHttpTransport()
-        val jsonFactory: JsonFactory = GsonFactory()
-        return YouTube.Builder(transport, jsonFactory, GoogleAccountManager.credential!!)
-            .setApplicationName(Config.APP_NAME)
-            .build()
-    }
+    private val youtube: YouTube
+        get() {
+            val transport: HttpTransport = NetHttpTransport()
+            val jsonFactory: JsonFactory = GsonFactory()
+            return YouTube.Builder(transport, jsonFactory, GoogleAccountManager.credential!!)
+                .setApplicationName(Config.APP_NAME)
+                .build()
+        }
 
     fun createNewBroadcast(description: String?, name: String?) {
         try {
-            val youtube = buildYoutube()
             val liveBroadcast = liveBroadcastInsert(name, description)
             val liveStream = LiveStreamsInteractor.liveStreamInsert(name)
             // Create the bind request
@@ -90,7 +90,6 @@ object LiveBroadcastsInteractor {
 
         Log.d(Config.APP_NAME, String.format("Creating event: name='%s', description='%s', date='%s'.", name, description, date))
 
-        val youtube = buildYoutube()
         val broadcastSnippet = LiveBroadcastSnippet()
         broadcastSnippet.title = name
         broadcastSnippet.scheduledStartTime = DateTime(futureDate)
@@ -112,7 +111,7 @@ object LiveBroadcastsInteractor {
         val liveBroadcastInsert = youtube
             .liveBroadcasts()
             .insert(
-                "snippet,status,contentDetails",
+                "id,snippet,contentDetails,status",
                 broadcast
             )
 
@@ -122,7 +121,6 @@ object LiveBroadcastsInteractor {
 
     fun getLiveBroadcastsList(state: BroadcastState?, broadcastId: String?): List<LiveBroadcastItem> {
         Log.d(Config.APP_NAME, "Requesting live events.")
-        val youtube = buildYoutube()
         val liveBroadcastRequest = youtube.liveBroadcasts().list("id,snippet,contentDetails,status")
         //liveBroadcastRequest.setMine(true);
         if (state != null) liveBroadcastRequest.broadcastStatus = state.value()
@@ -151,34 +149,31 @@ object LiveBroadcastsInteractor {
         }
     }
 
+    fun deleteBroadcast(broadcastId: String?) {
+        youtube.liveBroadcasts().delete(broadcastId)
+    }
+
     /**
      * Transition State methods
      */
      fun transitionLiveBroadcastsToLive(broadcastId: String?) {
-        val youtube = buildYoutube()
         try {
-            val transitionRequest = youtube.liveBroadcasts().transition(
-                "live", broadcastId, "status"
-            )
-            transitionRequest.execute()
+            transitionToStatus("live", broadcastId)
         } catch (e: IOException) {
             transitionLiveBroadcastsToTesting(broadcastId)
         }
     }
 
     private fun transitionLiveBroadcastsToTesting(broadcastId: String?) {
-        val youtube = buildYoutube()
-        val transitionRequest = youtube.liveBroadcasts().transition(
-            "testing", broadcastId, "status"
-        )
-        transitionRequest.execute()
+        transitionToStatus("testing", broadcastId)
     }
 
     fun transitionLiveBroadcastsToCompleted(broadcastId: String?) {
-        val youtube = buildYoutube()
-        val transitionRequest = youtube.liveBroadcasts().transition(
-            "completed", broadcastId, "status"
-        )
-        transitionRequest.execute()
+        transitionToStatus("completed", broadcastId)
     }
+
+    private fun transitionToStatus(status: String, broadcastId: String?) {
+        youtube.liveBroadcasts().transition(status, broadcastId, "status").execute()
+    }
+
 }

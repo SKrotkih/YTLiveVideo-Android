@@ -20,8 +20,8 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.Window
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewpager.widget.ViewPager
 import com.android.volley.toolbox.ImageLoader
@@ -49,6 +49,9 @@ import kotlinx.coroutines.launch
  * Main activity class which handles authorization and intents.
  */
 class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner {
+
+    lateinit var viewModel: MainViewModel
+
     private val mImageLoader: ImageLoader? by lazy {
         NetworkSingleton.getInstance(this)?.imageLoader
     }
@@ -56,6 +59,7 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         setContentView(R.layout.activity_main)
         configureTabBar()
         configureViewModel()
@@ -77,7 +81,6 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val viewModel: MainViewModel by viewModels()
         when (item.itemId) {
             R.id.create_event -> {
                 Router.StartActivity.CREATE_BROADCAST.run()
@@ -100,7 +103,6 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
     private fun configureTabBar() {
         val viewPager: ViewPager = findViewById(R.id.view_pager)
         val adapter = SectionsPagerAdapter(supportFragmentManager)
-        val viewModel: MainViewModel by viewModels()
         viewModel.setupViewPager(viewPager, adapter)
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
@@ -111,7 +113,6 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val viewModel: MainViewModel by viewModels()
         viewModel.handleActivitiesResults(requestCode, resultCode, data)
     }
 
@@ -121,7 +122,6 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
     }
 
     override fun renderView() {
-        val viewModel: MainViewModel by viewModels()
         display_name.text = viewModel.getAccountName()
         val photoUri = viewModel.getPhotoUrl()
         if (photoUri == null) {
@@ -148,11 +148,11 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
     }
 
     fun startAuthorization(intent: Intent) {
-        startActivityForResult(intent, MainViewModel.REQUEST_AUTHORIZATION)
+        startActivityForResult(intent, Config.REQUEST_AUTHORIZATION)
     }
 
     fun startAccountPicker(intent: Intent) {
-        startActivityForResult(intent, MainViewModel.REQUEST_ACCOUNT_PICKER)
+        startActivityForResult(intent, Config.REQUEST_ACCOUNT_PICKER)
     }
 
     /**
@@ -164,19 +164,17 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
             val dialog: Dialog = googleAPI.getErrorDialog(
                 this@MainActivity,
                 connectionStatusCode,
-                MainViewModel.REQUEST_GOOGLE_PLAY_SERVICES
+                Config.REQUEST_GOOGLE_PLAY_SERVICES
             )
             dialog.show()
         }
     }
 
     private fun configureViewModel() {
-        val viewModel: MainViewModel by viewModels()
         viewModel.viewDelegate = this
     }
 
     private fun logInIfNeeded(savedInstanceState: Bundle?) {
-        val viewModel: MainViewModel by viewModels()
         viewModel.signIn(applicationContext, savedInstanceState)
     }
 }

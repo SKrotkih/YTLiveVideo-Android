@@ -18,9 +18,9 @@ import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastsInteractor
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.requests.*
 import com.skdev.ytlivevideo.model.youtubeApi.liveStreams.LiveStreams
-import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
+import com.skdev.ytlivevideo.util.Config
 import com.skdev.ytlivevideo.util.ProgressDialog
 import com.skdev.ytlivevideo.util.Utils
 import kotlinx.android.synthetic.main.activity_broadcast_preview.*
@@ -125,7 +125,7 @@ class BroadcastPreview: AppCompatActivity() {
 
     private fun handleActivitiesResults(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            MainViewModel.REQUEST_STREAMER -> if (resultCode == Activity.RESULT_OK && data?.extras != null) {
+            Config.REQUEST_STREAMER -> if (resultCode == Activity.RESULT_OK && data?.extras != null) {
                 finalizeStreaming(data)
             }
         }
@@ -188,7 +188,7 @@ class BroadcastPreview: AppCompatActivity() {
         )
         intent.putExtra(LiveBroadcastsInteractor.RTMP_URL_KEY, ingestionAddress)
         intent.putExtra(LiveBroadcastsInteractor.BROADCAST_ID_KEY, broadcastId)
-        startActivityForResult(intent, MainViewModel.REQUEST_STREAMER)
+        startActivityForResult(intent, Config.REQUEST_STREAMER)
     }
 
     /**
@@ -221,7 +221,7 @@ class BroadcastPreview: AppCompatActivity() {
     }
 
     private fun startAuthorization(intent: Intent) {
-        startActivityForResult(intent, MainViewModel.REQUEST_AUTHORIZATION)
+        startActivityForResult(intent, Config.REQUEST_AUTHORIZATION)
     }
 
     companion object {

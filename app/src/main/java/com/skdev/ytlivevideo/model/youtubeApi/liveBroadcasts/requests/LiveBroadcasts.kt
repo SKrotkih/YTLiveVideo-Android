@@ -34,6 +34,20 @@ object LiveBroadcasts  {
             }
         }
 
+    fun deleteBroadcasts(broadcastIDs: List<String>): Deferred<Unit> =
+        CoroutineScope(Dispatchers.IO).async() {
+            try {
+                broadcastIDs.forEach {
+                    LiveBroadcastsInteractor.deleteBroadcast(it)
+                }
+                return@async
+            } catch (e: IOException) {
+                Log.e(TAG, "Error while deleting broadcasts:", e)
+                val message = e.cause?.message ?: "Error while deleting broadcasts"
+                throw IOException(message)
+            }
+        }
+
     /**
      * Transitions
      */

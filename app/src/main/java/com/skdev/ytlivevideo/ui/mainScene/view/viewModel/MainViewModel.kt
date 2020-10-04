@@ -24,6 +24,7 @@ import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.requests.*
 import com.skdev.ytlivevideo.ui.mainScene.adapter.SectionsPagerAdapter
 import com.skdev.ytlivevideo.ui.mainScene.fragment.BroadcastsListFragment
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
+import com.skdev.ytlivevideo.util.Config
 import com.skdev.ytlivevideo.util.ProgressDialog
 import com.skdev.ytlivevideo.util.Utils
 import kotlinx.coroutines.CoroutineScope
@@ -50,17 +51,17 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
 
     override fun handleActivitiesResults(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            REQUEST_GMS_ERROR_DIALOG -> {
+            Config.REQUEST_GMS_ERROR_DIALOG -> {
             }
-            REQUEST_GOOGLE_PLAY_SERVICES -> if (resultCode == Activity.RESULT_OK) {
+            Config.REQUEST_GOOGLE_PLAY_SERVICES -> if (resultCode == Activity.RESULT_OK) {
                 didCheckGooglePlayServices()
             } else {
                 checkGooglePlayServicesAvailable()
             }
-            REQUEST_AUTHORIZATION -> if (resultCode != Activity.RESULT_OK) {
+            Config.REQUEST_AUTHORIZATION -> if (resultCode != Activity.RESULT_OK) {
                 startSelectAccountActivity()
             }
-            REQUEST_ACCOUNT_PICKER -> if (resultCode == Activity.RESULT_OK && data?.extras != null) {
+            Config.REQUEST_ACCOUNT_PICKER -> if (resultCode == Activity.RESULT_OK && data?.extras != null) {
                 didSelectAccount(data)
             }
         }
@@ -224,10 +225,5 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
 
     companion object {
         private val TAG = MainViewModel::class.java.name
-        const val REQUEST_GOOGLE_PLAY_SERVICES = 0
-        const val REQUEST_GMS_ERROR_DIALOG = 1
-        const val REQUEST_ACCOUNT_PICKER = 2
-        const val REQUEST_AUTHORIZATION = 3
-        const val REQUEST_STREAMER = 4
     }
 }

@@ -13,13 +13,14 @@ import java.io.IOException
 
 object LiveStreamsInteractor {
 
-    private fun buildYoutube() : YouTube {
-        val transport: HttpTransport = NetHttpTransport()
-        val jsonFactory: JsonFactory = GsonFactory()
-        return YouTube.Builder(transport, jsonFactory, GoogleAccountManager.credential!!)
-            .setApplicationName(Config.APP_NAME)
-            .build()
-    }
+    private val youtube: YouTube
+        get() {
+            val transport: HttpTransport = NetHttpTransport()
+            val jsonFactory: JsonFactory = GsonFactory()
+            return YouTube.Builder(transport, jsonFactory, GoogleAccountManager.credential!!)
+                .setApplicationName(Config.APP_NAME)
+                .build()
+        }
 
     /**
      * Create New LiveStream
@@ -40,7 +41,7 @@ object LiveStreamsInteractor {
         stream.cdn = cdn
 
         // Create the insert request
-        val liveStreamInsert = buildYoutube()
+        val liveStreamInsert = youtube
             .liveStreams()
             .insert("snippet,cdn", stream)
 
@@ -49,7 +50,6 @@ object LiveStreamsInteractor {
     }
 
     fun getLiveStreamingIngestionAddress(streamId: String?): String {
-        val youtube = buildYoutube()
         val liveStreamRequest = youtube
             .liveStreams()
             .list("cdn")
@@ -66,7 +66,6 @@ object LiveStreamsInteractor {
 
     fun getLiveStreamsListItem(streamId: String): LiveStream? {
         Log.d(Config.APP_NAME, "Requesting stream $streamId...")
-        val youtube = buildYoutube()
         val livestreamRequest = youtube.liveStreams().list("status")
         livestreamRequest.id = streamId
         try {
