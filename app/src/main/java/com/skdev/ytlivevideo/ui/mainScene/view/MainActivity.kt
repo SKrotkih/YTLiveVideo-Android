@@ -31,6 +31,7 @@ import com.google.android.material.tabs.TabLayout
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.enteties.AccountName
 import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
+import com.skdev.ytlivevideo.model.googleAccount.GoogleSignInManager
 import com.skdev.ytlivevideo.model.network.DownLoadImageTask
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastState
@@ -214,7 +215,14 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
 
     private fun logInIfNeeded(savedInstanceState: Bundle?) {
         if (GoogleAccountManager.signIn(this, savedInstanceState)) {
-            viewModel.viewDelegate = this
+            viewModel.signInManager = GoogleSignInManager(this)
+            viewModel.signInManager.didUserSignIn.observe(this, {
+                if (it) {
+                    GoogleAccountManager.setUpGoogleAccount(viewModel.signInManager.account!!)
+                    invalidateOptionsMenu()
+                    renderView()
+                }
+            })
             viewModel.signInManager.googleSignIn()
         } else {
             Utils.showError(this, "OAUTH2 credentials are not presented")

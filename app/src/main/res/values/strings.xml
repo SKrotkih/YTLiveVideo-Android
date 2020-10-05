@@ -33,7 +33,7 @@
     <string name="activeStreamingStatus">Currently streaming video.</string>
     <string name="activeStreamingLabel">Watch Me is streaming!</string>
     <string name="loadingEvents">Downloading all your broadcasts…</string>
-    <string name="creatingEvent">Creating new live video on your account. Please wait…</string>
+    <string name="creatingEvent">Creating a new live video on your YouTube account…</string>
     <string name="startStreaming">Starting broadcast. Please wait…</string>
     <string name="streamingOn">STREAMING</string>
     <string name="streamingOff">PAUSED</string>

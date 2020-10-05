@@ -30,6 +30,10 @@ class CreateNewBroadcast: AppCompatActivity() {
     fun onCreateBroadcast(view: View) {
         val name = broadcast_name.text.toString()
         val description = broadcast_description.text.toString()
+        if (name.isEmpty() || description.isEmpty()) {
+            Utils.showError(this, "Please enter new broadcast's name and description")
+            return
+        }
         val progressDialog = ProgressDialog.create(this, R.string.creatingEvent)
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {

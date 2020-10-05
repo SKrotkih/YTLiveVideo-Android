@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object LiveBroadcastsInteractor {
+    const val TAG = "BroadcastIterator"
     const val RTMP_URL_KEY = "rtmpUrl"
     const val BROADCAST_ID_KEY = "broadcastId"
     private const val FUTURE_DATE_OFFSET_MILLIS = 5 * 1000
@@ -50,13 +51,11 @@ object LiveBroadcastsInteractor {
             // Create the bind request
             val liveBroadcastBind = youtube
                 .liveBroadcasts()
-                .bind(
-                    liveBroadcast.id,
-                    "id,contentDetails"
-                )
+                .bind(liveBroadcast.id,"id,contentDetails")
             // Set stream id to bind
             liveBroadcastBind.streamId = liveStream.id
             // Request is executed and bound broadcast is returned
+            Log.d(TAG, "The request to create a new broadcast has been sent")
             liveBroadcastBind.execute()
         } catch (e: GoogleJsonResponseException) {
             System.err.println(

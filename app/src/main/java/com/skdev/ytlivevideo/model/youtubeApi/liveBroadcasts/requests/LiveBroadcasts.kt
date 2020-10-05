@@ -6,6 +6,8 @@ import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastsInteractor
 import kotlinx.coroutines.*
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 object LiveBroadcasts  {
 
@@ -13,6 +15,15 @@ object LiveBroadcasts  {
         CoroutineScope(Dispatchers.IO).async() {
             try {
                 LiveBroadcastsInteractor.createNewBroadcast(description, name)
+
+                Log.d(TAG, "TODO: Implement waiting result of the creating a new broadcast request [${SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(
+                    Date()
+                )}]")
+                delay(5000)
+                Log.d(TAG, "TODO: The status is ... [${SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(
+                    Date()
+                )}]")
+
             } catch (e: IOException) {
                 Log.e(TAG, "Error while creating a new event request:", e)
                 val message = e.cause?.message ?: "Error while creating a new event request"

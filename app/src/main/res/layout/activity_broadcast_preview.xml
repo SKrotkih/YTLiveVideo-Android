@@ -325,7 +325,8 @@
                             android:onClick="onButtonPress"
                             android:text="Start Streaming"
                             android:textAppearance="?android:textAppearanceLarge"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:visibility="gone" />
 
                         <Space
                             android:layout_width="wrap_content"

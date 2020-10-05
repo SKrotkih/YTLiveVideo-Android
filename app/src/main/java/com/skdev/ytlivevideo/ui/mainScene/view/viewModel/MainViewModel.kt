@@ -42,18 +42,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
     var stopProcessing: MutableLiveData<Boolean> = MutableLiveData()
     var accountName: MutableLiveData<String> = MutableLiveData()
 
-    lateinit var viewDelegate: MainActivity
-
-    val signInManager: GoogleSignInManager by lazy {
-        val fld = GoogleSignInManager(viewDelegate)
-        fld.didUserSignIn.observe(viewDelegate, {
-            if (it) {
-                GoogleAccountManager.setUpGoogleAccount(signInManager.account!!)
-                invalidateView.value = true
-            }
-        })
-        return@lazy fld
-    }
+    lateinit var signInManager: GoogleSignInManager
 
     override fun handleActivitiesResults(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
