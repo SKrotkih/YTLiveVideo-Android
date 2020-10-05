@@ -1,9 +1,13 @@
 package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.requests
 
 import android.util.Log
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastPreviewData
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastState
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastsInteractor
+import com.skdev.ytlivevideo.model.youtubeApi.liveStreams.LiveStreams
+import com.skdev.ytlivevideo.util.Utils
+import kotlinx.android.synthetic.main.activity_broadcast_preview.*
 import kotlinx.coroutines.*
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -14,20 +18,39 @@ object LiveBroadcasts  {
     fun createNewBroadcastAsync(name: String, description: String) : Deferred<Unit> =
         CoroutineScope(Dispatchers.IO).async() {
             try {
-                LiveBroadcastsInteractor.createNewBroadcast(description, name)
+                val broadcastId = LiveBroadcastsInteractor.createNewBroadcast(description, name)
 
-                Log.d(TAG, "TODO: Implement waiting result of the creating a new broadcast request [${SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(
-                    Date()
-                )}]")
                 delay(5000)
-                Log.d(TAG, "TODO: The status is ... [${SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(
-                    Date()
-                )}]")
+                val data: BroadcastPreviewData? = getBroadcastPreviewData(broadcastId!!).await()
+                Log.d(TAG, "The new stream has '${data?.streamStatus ?: "-"}' status")
 
             } catch (e: IOException) {
                 Log.e(TAG, "Error while creating a new event request:", e)
                 val message = e.cause?.message ?: "Error while creating a new event request"
                 throw IOException(message)
+            }
+        }
+
+    fun getBroadcastPreviewData(broadcastId: String) : Deferred<(BroadcastPreviewData?)> =
+        CoroutineScope(Dispatchers.IO).async() {
+            val list = getLiveBroadcastsAsync(null, broadcastId)
+            if (list!!.count() > 0) {
+                val broadcast = list[0]
+                val streamId = broadcast.streamId
+                val stream = LiveStreams.getLiveStreamsListItemAsync(streamId)
+                val data = BroadcastPreviewData(
+                    broadcastId,
+                    streamId,
+                    broadcast.title,
+                    broadcast.description,
+                    broadcast.publishedAt,
+                    broadcast.publishedAt,
+                    broadcast.lifeCycleStatus,
+                    stream?.status?.streamStatus ?: "-",
+                    broadcast.thumbUri)
+                return@async data
+            } else {
+                return@async null
             }
         }
 

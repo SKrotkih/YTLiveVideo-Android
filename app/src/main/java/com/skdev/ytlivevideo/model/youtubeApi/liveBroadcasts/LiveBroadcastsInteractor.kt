@@ -44,7 +44,7 @@ object LiveBroadcastsInteractor {
                 .build()
         }
 
-    fun createNewBroadcast(description: String?, name: String?) {
+    fun createNewBroadcast(description: String?, name: String?) : String? {
         try {
             val liveBroadcast = liveBroadcastInsert(name, description)
             val liveStream = LiveStreamsInteractor.liveStreamInsert(name)
@@ -57,6 +57,7 @@ object LiveBroadcastsInteractor {
             // Request is executed and bound broadcast is returned
             Log.d(TAG, "The request to create a new broadcast has been sent")
             liveBroadcastBind.execute()
+            return liveBroadcast.id
         } catch (e: GoogleJsonResponseException) {
             System.err.println(
                 "GoogleJsonResponseException code: "
@@ -71,6 +72,7 @@ object LiveBroadcastsInteractor {
             System.err.println("Throwable: " + t.stackTrace)
             t.printStackTrace()
         }
+        return null
     }
 
     private fun liveBroadcastInsert(name: String?, description: String?) : LiveBroadcast {

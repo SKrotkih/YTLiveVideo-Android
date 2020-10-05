@@ -186,7 +186,15 @@ object Utils {
         return date
     }
 
-    fun timeAgo(serverFormattedDate: String) : String {
+    val currentDate : String
+        get() {
+            return SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(Date())
+        }
+
+    fun timeAgo(serverFormattedDate: String?) : String {
+        if (serverFormattedDate == null) {
+            return "-"
+        }
         val eventDate = serverFormattedDate.parseStringToDate()
         val date1 = Date().time
         val date2 = eventDate.time

@@ -28,8 +28,8 @@ class CreateNewBroadcast: AppCompatActivity() {
     }
 
     fun onCreateBroadcast(view: View) {
-        val name = broadcast_name.text.toString()
-        val description = broadcast_description.text.toString()
+        val name = broadcast_name.text.toString().trim()
+        val description = broadcast_description.text.toString().trim()
         if (name.isEmpty() || description.isEmpty()) {
             Utils.showError(this, "Please enter new broadcast's name and description")
             return

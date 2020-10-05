@@ -14,10 +14,10 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 import com.google.api.services.youtube.model.LiveStream
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastPreviewData
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastsInteractor
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.requests.*
-import com.skdev.ytlivevideo.model.youtubeApi.liveStreams.LiveStreams
 import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
 import com.skdev.ytlivevideo.util.Config
@@ -43,8 +43,8 @@ class BroadcastPreview: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_broadcast_preview)
         extractParams()
+        renderView(null)
         downloadEventData()
-        renderView()
     }
 
     private fun extractParams() {
@@ -52,63 +52,42 @@ class BroadcastPreview: AppCompatActivity() {
         broadcastId = intent.getStringExtra("broadcastId")
     }
 
-    private fun renderView() {
+    private fun renderView(data: BroadcastPreviewData?) {
         broadcast_title.text = "$state broadcast"
-        if (broadcastItem == null) {
-            broadcast_name.text = ""
-            broadcast_description.text  = ""
-            broadcast_created.text = ""
-            broadcast_scheduled.text = ""
-        } else {
-            broadcast_name.text = broadcastItem!!.title
-            broadcast_description.text = broadcastItem!!.description
-            broadcast_created.text = Utils.timeAgo(broadcastItem!!.publishedAt)
-            broadcast_scheduled.text = Utils.timeAgo(broadcastItem!!.publishedAt)
-            broadcast_lifeCycleStatus.text = broadcastItem!!.lifeCycleStatus
-            broadcast_streamStatus.text = streamItem?.status?.streamStatus ?: "-"
-            thumbnail.setImageUrl(broadcastItem!!.thumbUri, mImageLoader)
-            start_streaming.isVisible = true
-            when {
-                canWatchVideo -> {
-                    broadcast_streamStatus.setTextColor(Color.BLACK)
-                    start_streaming.text = "Watch video"
-                }
-                streamItem?.status?.streamStatus == "active" -> {
-                    broadcast_streamStatus.setTextColor(Color.GREEN)
-                    start_streaming.text = "Start Streaming"
-                }
-                else -> {
-                    start_streaming.isVisible = false
-                }
+        broadcast_name.text = data?.name ?: ""
+        broadcast_description.text = data?.description ?: ""
+        broadcast_created.text = Utils.timeAgo(data?.created)
+        broadcast_scheduled.text = Utils.timeAgo(data?.scheduled)
+        broadcast_lifeCycleStatus.text = data?.lifeCycleStatus ?: "-"
+        broadcast_streamStatus.text = data?.streamStatus ?: "-"
+        thumbnail.setImageUrl(data?.thumbUri, mImageLoader)
+        start_streaming.isVisible = true
+        when {
+            canWatchVideo -> {
+                broadcast_streamStatus.setTextColor(Color.BLACK)
+                start_streaming.text = "Watch video"
+            }
+            streamItem?.status?.streamStatus == "active" -> {
+                broadcast_streamStatus.setTextColor(Color.GREEN)
+                start_streaming.text = "Start Streaming"
+            }
+            else -> {
+                start_streaming.isVisible = false
             }
         }
     }
 
     private fun downloadEventData() {
+        if (broadcastId == null) {
+            return
+        }
         val progressDialog = ProgressDialog.create(this, "Downloading broadcast data...")
         progressDialog.show()
-        CoroutineScope(Dispatchers.IO).launch() {
-            try {
-                val list = LiveBroadcasts.getLiveBroadcastsAsync(null, broadcastId)
-                if (list!!.count() > 0) {
-                    broadcastItem = list[0]
-                    val streamId = broadcastItem!!.streamId
-                    streamItem = LiveStreams.getLiveStreamsListItemAsync(streamId)
-                    launch(Dispatchers.Main) {
-                        progressDialog.dismiss()
-                        renderView()
-                    }
-                }
-            } catch (e: UserRecoverableAuthIOException) {
-                launch(Dispatchers.Main) {
-                    progressDialog.dismiss()
-                }
-            } catch (e: IOException) {
-                launch(Dispatchers.Main) {
-                    progressDialog.dismiss()
-                    val context = application.applicationContext
-                    Utils.showError(context, e.localizedMessage)
-                }
+        CoroutineScope(Dispatchers.IO).launch {
+            val data: BroadcastPreviewData? = LiveBroadcasts.getBroadcastPreviewData(broadcastId!!).await()
+            launch(Dispatchers.Main) {
+                progressDialog.dismiss()
+                renderView(data)
             }
         }
     }
