@@ -6,12 +6,8 @@ import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastState
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastsInteractor
 import com.skdev.ytlivevideo.model.youtubeApi.liveStreams.LiveStreams
-import com.skdev.ytlivevideo.util.Utils
-import kotlinx.android.synthetic.main.activity_broadcast_preview.*
 import kotlinx.coroutines.*
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
 
 object LiveBroadcasts  {
 
@@ -21,7 +17,7 @@ object LiveBroadcasts  {
                 val broadcastId = LiveBroadcastsInteractor.createNewBroadcast(description, name)
 
                 delay(5000)
-                val data: BroadcastPreviewData? = getBroadcastPreviewData(broadcastId!!).await()
+                val data: BroadcastPreviewData? = getBroadcastPreviewData(broadcastId!!)
                 Log.d(TAG, "The new stream has '${data?.streamStatus ?: "-"}' status")
 
             } catch (e: IOException) {
@@ -31,7 +27,7 @@ object LiveBroadcasts  {
             }
         }
 
-    fun getBroadcastPreviewData(broadcastId: String) : Deferred<(BroadcastPreviewData?)> =
+    suspend fun getBroadcastPreviewData(broadcastId: String) : BroadcastPreviewData? =
         CoroutineScope(Dispatchers.IO).async() {
             val list = getLiveBroadcastsAsync(null, broadcastId)
             if (list!!.count() > 0) {
@@ -47,12 +43,15 @@ object LiveBroadcasts  {
                     broadcast.publishedAt,
                     broadcast.lifeCycleStatus,
                     stream?.status?.streamStatus ?: "-",
-                    broadcast.thumbUri)
+                    broadcast.thumbUri,
+                    broadcast.watchUri ?: "",
+                    broadcast.ingestionAddress ?: ""
+                )
                 return@async data
             } else {
                 return@async null
             }
-        }
+        }.await()
 
     suspend fun getLiveBroadcastsAsync(state: BroadcastState?, broadcastId: String? = null) : List<LiveBroadcastItem>? =
         withContext(Dispatchers.IO) {
@@ -85,6 +84,10 @@ object LiveBroadcasts  {
     /**
      * Transitions
      */
+
+    /**
+     * Transit to Live status
+     */
     fun transitionLiveBroadcastsToLiveAsync(broadcastId: String?) : Deferred<Boolean> =
         CoroutineScope(Dispatchers.IO).async() {
             try {
@@ -101,6 +104,9 @@ object LiveBroadcasts  {
             }
         }
 
+    /**
+     * Transit to Completed status
+     */
     fun transitionLiveBroadcastsToCompletedAsync(broadcastId: String?) : Deferred<Unit> =
         CoroutineScope(Dispatchers.IO).async() {
             try {

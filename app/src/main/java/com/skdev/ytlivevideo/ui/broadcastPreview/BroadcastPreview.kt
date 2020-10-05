@@ -11,11 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.android.volley.toolbox.ImageLoader
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
-import com.google.api.services.youtube.model.LiveStream
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastPreviewData
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastsInteractor
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.requests.*
 import com.skdev.ytlivevideo.ui.router.Router
@@ -30,9 +28,7 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 
 class BroadcastPreview: AppCompatActivity() {
-    private var broadcastItem: LiveBroadcastItem? = null
-    private var streamItem: LiveStream? = null
-
+    private var data: BroadcastPreviewData? = null
     private var state: String? = null
     private var broadcastId: String? = null
     private val mImageLoader: ImageLoader? by lazy {
@@ -43,7 +39,7 @@ class BroadcastPreview: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_broadcast_preview)
         extractParams()
-        renderView(null)
+        renderView()
         downloadEventData()
     }
 
@@ -52,7 +48,7 @@ class BroadcastPreview: AppCompatActivity() {
         broadcastId = intent.getStringExtra("broadcastId")
     }
 
-    private fun renderView(data: BroadcastPreviewData?) {
+    private fun renderView() {
         broadcast_title.text = "$state broadcast"
         broadcast_name.text = data?.name ?: ""
         broadcast_description.text = data?.description ?: ""
@@ -67,7 +63,7 @@ class BroadcastPreview: AppCompatActivity() {
                 broadcast_streamStatus.setTextColor(Color.BLACK)
                 start_streaming.text = "Watch video"
             }
-            streamItem?.status?.streamStatus == "active" -> {
+            data?.streamStatus == "active" -> {
                 broadcast_streamStatus.setTextColor(Color.GREEN)
                 start_streaming.text = "Start Streaming"
             }
@@ -84,10 +80,10 @@ class BroadcastPreview: AppCompatActivity() {
         val progressDialog = ProgressDialog.create(this, "Downloading broadcast data...")
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
-            val data: BroadcastPreviewData? = LiveBroadcasts.getBroadcastPreviewData(broadcastId!!).await()
+            data = LiveBroadcasts.getBroadcastPreviewData(broadcastId!!)
             launch(Dispatchers.Main) {
                 progressDialog.dismiss()
-                renderView(data)
+                renderView()
             }
         }
     }
@@ -112,28 +108,28 @@ class BroadcastPreview: AppCompatActivity() {
 
     private val canWatchVideo: Boolean
         get() {
-            if (broadcastItem == null) {
+            if (data == null) {
                 return false
             }
-            return broadcastItem!!.lifeCycleStatus == "complete" &&  !broadcastItem!!.watchUri.isNullOrEmpty()
+            return data!!.lifeCycleStatus == "complete" &&  !data!!.watchUri.isNullOrEmpty()
         }
 
     fun onButtonPress(view: View) {
         when {
-            broadcastItem == null -> return
+            data == null -> return
             canWatchVideo -> {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(broadcastItem!!.watchUri))
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(data!!.watchUri))
                 startActivity(browserIntent)
             }
-            streamItem?.status?.streamStatus == "active" -> startStreaming()
+            data?.streamStatus == "active" -> startStreaming()
             else -> return
         }
     }
 
     private fun startStreaming() {
         Log.d(TAG, "startStreaming")
-        val broadcastId = broadcastItem!!.id
-        val streamId = broadcastItem!!.streamId
+        val broadcastId = data!!.broadcastId
+        val streamId = data!!.streamId
         val progressDialog = ProgressDialog.create(this, R.string.startStreaming)
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {
@@ -159,8 +155,8 @@ class BroadcastPreview: AppCompatActivity() {
     }
 
     private fun startBroadcastStreaming() {
-        val broadcastId = broadcastItem!!.id
-        val ingestionAddress = broadcastItem!!.ingestionAddress!!
+        val broadcastId = data!!.broadcastId
+        val ingestionAddress = data!!.ingestionAddress!!
         val intent = Intent(
             applicationContext,
             VideoStreamingActivity::class.java

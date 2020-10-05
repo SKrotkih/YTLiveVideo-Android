@@ -25,6 +25,7 @@ import com.google.api.services.youtube.model.*
 import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
 import com.skdev.ytlivevideo.model.youtubeApi.liveStreams.LiveStreamsInteractor
 import com.skdev.ytlivevideo.util.Config
+import com.skdev.ytlivevideo.util.Utils
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -161,6 +162,7 @@ object LiveBroadcastsInteractor {
         try {
             transitionToStatus("live", broadcastId)
         } catch (e: IOException) {
+            Log.d(TAG, "Trying to transition on Test state because error ${e.localizedMessage}")
             transitionLiveBroadcastsToTesting(broadcastId)
         }
     }
@@ -174,6 +176,7 @@ object LiveBroadcastsInteractor {
     }
 
     private fun transitionToStatus(status: String, broadcastId: String?) {
+        Log.d(TAG, "Transition broadcast $broadcastId to the $status status")
         youtube.liveBroadcasts().transition(status, broadcastId, "status").execute()
     }
 
