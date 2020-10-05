@@ -121,9 +121,14 @@ class BroadcastPreview: AppCompatActivity() {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(data!!.watchUri))
                 startActivity(browserIntent)
             }
-            data?.streamStatus == "active" -> startStreaming()
+            data?.streamStatus == "active" -> playStream()
             else -> return
         }
+    }
+
+    private fun playStream() {
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(data!!.watchUri))
+        startActivity(browserIntent)
     }
 
     private fun startStreaming() {
