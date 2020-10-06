@@ -28,12 +28,6 @@ import com.skdev.ytlivevideo.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 /**
  * Class containing some static utility methods.
@@ -165,51 +159,4 @@ object Utils {
         }
         return true
     }
-
-    fun Date.formattedToServerString(): String {
-        val dateFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSz")
-        val formattedDate = dateFormat.format(this).replace("GMT", "")
-        return formattedDate
-    }
-
-    fun String.parseStringToDate(): Date {
-        val zonedDate = ZonedDateTime.parse(this)
-        val date = Date.from(zonedDate.toInstant())
-        return date
-    }
-
-    fun String.parseStringToLocalDate(): LocalDate? {
-        // 2019-01-14T06:22:23.365Z
-        val serverDateFormat: String = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        val dateFormatter = DateTimeFormatter.ofPattern(serverDateFormat)
-        val date = LocalDate.parse(this, dateFormatter)
-        return date
-    }
-
-    val currentDate : String
-        get() {
-            return SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(Date())
-        }
-
-    fun timeAgo(serverFormattedDate: String?) : String {
-        if (serverFormattedDate == null) {
-            return "-"
-        }
-        val eventDate = serverFormattedDate.parseStringToDate()
-        val date1 = Date().time
-        val date2 = eventDate.time
-        var diff = date1 - date2
-        return if (diff > 0) {
-            val diffInHours: Long = TimeUnit.MILLISECONDS.toHours(diff)
-            val diffInMin: Long = TimeUnit.MILLISECONDS.toMinutes(diff) - diffInHours * 60
-            "$diffInHours h $diffInMin m ago"
-        } else {
-            diff = date2 - date1
-            val diffInHours: Long = TimeUnit.MILLISECONDS.toHours(diff)
-            val diffInMin: Long = TimeUnit.MILLISECONDS.toMinutes(diff) - diffInHours * 60
-            "after $diffInHours h $diffInMin m"
-        }
-    }
-
-
 }

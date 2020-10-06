@@ -18,9 +18,7 @@ import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastsInter
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.requests.*
 import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
-import com.skdev.ytlivevideo.util.Config
-import com.skdev.ytlivevideo.util.ProgressDialog
-import com.skdev.ytlivevideo.util.Utils
+import com.skdev.ytlivevideo.util.*
 import kotlinx.android.synthetic.main.activity_broadcast_preview.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,8 +50,8 @@ class BroadcastPreview: AppCompatActivity() {
         broadcast_title.text = "$state broadcast"
         broadcast_name.text = data?.name ?: ""
         broadcast_description.text = data?.description ?: ""
-        broadcast_created.text = Utils.timeAgo(data?.created)
-        broadcast_scheduled.text = Utils.timeAgo(data?.scheduled)
+        broadcast_created.text = data?.created?.timeAgo() ?: ""
+        broadcast_scheduled.text = data?.scheduled?.timeAgo() ?: ""
         broadcast_lifeCycleStatus.text = data?.lifeCycleStatus ?: "-"
         broadcast_streamStatus.text = data?.streamStatus ?: "-"
         thumbnail.setImageUrl(data?.thumbUri, mImageLoader)
@@ -108,27 +106,20 @@ class BroadcastPreview: AppCompatActivity() {
 
     private val canWatchVideo: Boolean
         get() {
-            if (data == null) {
-                return false
-            }
-            return data!!.lifeCycleStatus == "complete" &&  !data!!.watchUri.isNullOrEmpty()
+            return (data?.lifeCycleStatus ?: "") == "complete" &&  (data?.watchUri?.asUri != null)
         }
 
     fun onButtonPress(view: View) {
         when {
-            data == null -> return
-            canWatchVideo -> {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(data!!.watchUri))
-                startActivity(browserIntent)
-            }
-            data?.streamStatus == "active" -> playStream()
+            (data?.streamStatus ?: "") == "active" -> playStream()
+            (data?.lifeCycleStatus ?: "") == "complete" -> playStream()
             else -> return
         }
     }
 
     private fun playStream() {
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(data!!.watchUri))
-        startActivity(browserIntent)
+        val watchUri = data?.watchUri?.asUri
+        if (watchUri != null) startActivity(Intent(Intent.ACTION_VIEW, watchUri))
     }
 
     private fun startStreaming() {

@@ -14,8 +14,14 @@ To use this application,
 
 1. [Enable YouTube Live Streaming for your channel](https://support.google.com/youtube/answer/2474026?hl=en).
 1. In your [Google Developers Console](https://console.developers.google.com),
- 1. Enable the YouTube Data API v3 and Google+ API.
+ 1. Enable the YouTube Data API v3 (from Library)
+ 
+![Screen Shot 2020-10-06 at 8 48 27 AM](https://user-images.githubusercontent.com/2775621/95163961-b6a7fb00-07b1-11eb-9b06-42fef871cb2f.png) 
+
  1. Create a client ID for Android, using your SHA1 and package name.
+ 
+![Screen Shot 2020-10-06 at 8 45 37 AM](https://user-images.githubusercontent.com/2775621/95163944-abed6600-07b1-11eb-8e4e-c9cd1693e4a6.png)
+![Screen Shot 2020-10-06 at 8 52 25 AM](https://user-images.githubusercontent.com/2775621/95163976-bc9ddc00-07b1-11eb-96ee-5540d0ab3d34.png)
 
 Demo  video
 
