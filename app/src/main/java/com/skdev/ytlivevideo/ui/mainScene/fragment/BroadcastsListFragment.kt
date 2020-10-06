@@ -57,8 +57,8 @@ class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
 
     private fun subscribeOnSignIn() {
         val viewModel: MainViewModel by activityViewModels()
-        viewModel.signInManager.didUserSignIn.observe(viewLifecycleOwner, {
-            signedIn()
+        viewModel.signInManager.googleApiReadyToUse.observe(viewLifecycleOwner, { event ->
+            event?.getContentIfNotHandledOrReturnNull()?.let {fetchData()}
         })
     }
 
@@ -71,7 +71,7 @@ class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
         subscribeOnChangeData()
     }
 
-    private fun signedIn() {
+    private fun fetchData() {
         if (mGridView?.adapter != null) {
             (mGridView!!.adapter as LiveEventAdapter)
                 .notifyDataSetChanged()
@@ -86,24 +86,28 @@ class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
         val viewModel: MainViewModel by activityViewModels()
         when (state) {
             BroadcastState.ALL -> {
-                viewModel.allBroadcastItems.observe(this, {
-                    setEvents(it)
-                })
+                viewModel.allBroadcastItems.observe(this, { event ->
+                    event?.getContentIfNotHandledOrReturnNull()?.let {
+                        setEvents(it)
+                    }})
             }
             BroadcastState.UPCOMING -> {
-                viewModel.upcomingBroadcastItems.observe(this, {
-                    setEvents(it)
-                })
+                viewModel.upcomingBroadcastItems.observe(this, { event ->
+                    event?.getContentIfNotHandledOrReturnNull()?.let {
+                        setEvents(it)
+                    }})
             }
             BroadcastState.ACTIVE -> {
-                viewModel.activeBroadcastItems.observe(this, {
-                    setEvents(it)
-                })
+                viewModel.activeBroadcastItems.observe(this, { event ->
+                    event?.getContentIfNotHandledOrReturnNull()?.let {
+                        setEvents(it)
+                    }})
             }
             BroadcastState.COMPLETED -> {
-                viewModel.completedBroadcastItems.observe(this, {
-                    setEvents(it)
-                })
+                viewModel.completedBroadcastItems.observe(this, { event ->
+                    event?.getContentIfNotHandledOrReturnNull()?.let {
+                        setEvents(it)
+                    }})
             }
         }
     }

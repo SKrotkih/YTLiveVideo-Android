@@ -53,7 +53,7 @@ object LiveBroadcasts  {
             }
         }.await()
 
-    suspend fun getLiveBroadcastsAsync(state: BroadcastState?, broadcastId: String? = null) : List<LiveBroadcastItem>? =
+    suspend fun getLiveBroadcastsAsync(state: BroadcastState?, broadcastId: String? = null) : List<LiveBroadcastItem> =
         withContext(Dispatchers.IO) {
             try {
                 val list = LiveBroadcastsInteractor.getLiveBroadcastsList(state, broadcastId)

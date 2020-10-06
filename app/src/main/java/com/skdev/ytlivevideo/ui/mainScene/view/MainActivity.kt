@@ -179,50 +179,59 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
 
     private fun configureViewModel() {
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel.needSendRequestAuthorization.observe(this, {
-            startAccountPicker(GoogleAccountManager.credential!!.newChooseAccountIntent())
-        })
-        viewModel.errorMessage.observe(this, {
-            Utils.showError(this, it)
-        })
-        viewModel.invalidateView.observe(this, {
-            invalidateOptionsMenu()
-            renderView()
-        })
-        viewModel.accountName.observe(this, {
-            AccountName.saveName(this, it)
-        })
-        viewModel.needToCheckGooglePlayServicesAvailable.observe(this, {
+        viewModel.needSendRequestAuthorization.observe(this, { event ->
+            event?.getContentIfNotHandledOrReturnNull()?.let {
+                startAccountPicker(GoogleAccountManager.credential!!.newChooseAccountIntent())
+            }})
+        viewModel.errorMessage.observe(this, { event ->
+            event?.getContentIfNotHandledOrReturnNull()?.let {
+                Utils.showError(this, it)
+            }})
+        viewModel.invalidateView.observe(this, { event ->
+            event?.getContentIfNotHandledOrReturnNull()?.let {
+                invalidateOptionsMenu()
+                renderView()
+            }})
+        viewModel.accountName.observe(this, { event ->
+            event?.getContentIfNotHandledOrReturnNull()?.let {
+                AccountName.saveName(this, it)
+            }})
+        viewModel.needToCheckGooglePlayServicesAvailable.observe(this, { event ->
+            event?.getContentIfNotHandledOrReturnNull()?.let {
             if (it) {
                 val googleAPI = GoogleApiAvailability.getInstance()
                 val connectionStatusCode: Int = googleAPI.isGooglePlayServicesAvailable(this)
                 if (googleAPI.isUserResolvableError(connectionStatusCode)) {
                     showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode)
                 }
-            }
+            }}
         })
-        viewModel.errorAuthorization.observe(this, {e ->
-            startAuthorization(e.intent)
-        })
-        viewModel.startProcessing.observe(this, {
-            progressDialog = ProgressDialog.create(this, it)
-            progressDialog?.show()
-        })
-        viewModel.stopProcessing.observe(this, {
+        viewModel.errorAuthorization.observe(this, { event ->
+            event?.getContentIfNotHandledOrReturnNull()?.let {
+                startAuthorization(it.intent)
+            }})
+        viewModel.startProcessing.observe(this, { event ->
+            event?.getContentIfNotHandledOrReturnNull()?.let {
+                progressDialog = ProgressDialog.create(this, it)
+                progressDialog?.show()
+            }})
+        viewModel.stopProcessing.observe(this, { event ->
+            event?.getContentIfNotHandledOrReturnNull()?.let {
             progressDialog?.dismiss()
-        })
+        }})
     }
 
     private fun logInIfNeeded(savedInstanceState: Bundle?) {
         if (GoogleAccountManager.signIn(this, savedInstanceState)) {
             viewModel.signInManager = GoogleSignInManager(this)
-            viewModel.signInManager.didUserSignIn.observe(this, {
+            viewModel.signInManager.didUserSignIn.observe(this, { event ->
+                event?.getContentIfNotHandledOrReturnNull()?.let {
                 if (it) {
                     GoogleAccountManager.setUpGoogleAccount(viewModel.signInManager.account!!)
                     invalidateOptionsMenu()
                     renderView()
                 }
-            })
+            }})
             viewModel.signInManager.googleSignIn()
         } else {
             Utils.showError(this, "OAUTH2 credentials are not presented")

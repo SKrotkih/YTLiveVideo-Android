@@ -19,6 +19,7 @@ import com.skdev.ytlivevideo.ui.mainScene.adapter.SectionsPagerAdapter
 import com.skdev.ytlivevideo.ui.mainScene.fragment.BroadcastsListFragment
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.util.Config
+import com.skdev.ytlivevideo.util.Event
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,20 +28,20 @@ import java.io.IOException
 class MainViewModel : ViewModel(), MainViewModelInterface {
 
     // Data Source
-    var allBroadcastItems: MutableLiveData<List<LiveBroadcastItem>> = MutableLiveData()
-    var upcomingBroadcastItems: MutableLiveData<List<LiveBroadcastItem>> = MutableLiveData()
-    var activeBroadcastItems: MutableLiveData<List<LiveBroadcastItem>> = MutableLiveData()
-    var completedBroadcastItems: MutableLiveData<List<LiveBroadcastItem>> = MutableLiveData()
+    var allBroadcastItems: MutableLiveData<Event<List<LiveBroadcastItem>>> = MutableLiveData()
+    var upcomingBroadcastItems: MutableLiveData<Event<List<LiveBroadcastItem>>> = MutableLiveData()
+    var activeBroadcastItems: MutableLiveData<Event<List<LiveBroadcastItem>>> = MutableLiveData()
+    var completedBroadcastItems: MutableLiveData<Event<List<LiveBroadcastItem>>> = MutableLiveData()
 
     // State changes
-    var needToCheckGooglePlayServicesAvailable: MutableLiveData<Boolean> = MutableLiveData()
-    var needSendRequestAuthorization: MutableLiveData<Boolean> = MutableLiveData()
-    var errorAuthorization: MutableLiveData<UserRecoverableAuthIOException> = MutableLiveData()
-    var errorMessage: MutableLiveData<String> = MutableLiveData()
-    var invalidateView: MutableLiveData<Boolean> = MutableLiveData()
-    var startProcessing: MutableLiveData<String> = MutableLiveData()
-    var stopProcessing: MutableLiveData<Boolean> = MutableLiveData()
-    var accountName: MutableLiveData<String> = MutableLiveData()
+    var needToCheckGooglePlayServicesAvailable: MutableLiveData<Event<Boolean>> = MutableLiveData()
+    var needSendRequestAuthorization: MutableLiveData<Event<Boolean>> = MutableLiveData()
+    var errorAuthorization: MutableLiveData<Event<UserRecoverableAuthIOException>> = MutableLiveData()
+    var errorMessage: MutableLiveData<Event<String>> = MutableLiveData()
+    var invalidateView: MutableLiveData<Event<Boolean>> = MutableLiveData()
+    var startProcessing: MutableLiveData<Event<String>> = MutableLiveData()
+    var stopProcessing: MutableLiveData<Event<Boolean>> = MutableLiveData()
+    var accountName: MutableLiveData<Event<String>> = MutableLiveData()
 
     lateinit var signInManager: GoogleSignInManager
 
@@ -51,7 +52,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
             Config.REQUEST_GOOGLE_PLAY_SERVICES -> if (resultCode == Activity.RESULT_OK) {
                 didCheckGooglePlayServices()
             } else {
-                needToCheckGooglePlayServicesAvailable.value = true
+                needToCheckGooglePlayServicesAvailable.value = Event(true)
             }
             Config.REQUEST_AUTHORIZATION -> if (resultCode != Activity.RESULT_OK) {
                 startSelectAccountActivity()
@@ -65,7 +66,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
 
     override fun startSelectAccountActivity() {
         Log.d(TAG, "startSelectAccountActivity")
-        needSendRequestAuthorization.value = true
+        needSendRequestAuthorization.value = Event(true)
     }
 
     override fun logOut() {
@@ -116,28 +117,28 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
                     stopProcessing()
                     when (state) {
                         BroadcastState.ALL -> {
-                            allBroadcastItems.value = list
+                            allBroadcastItems.value = Event(list)
                         }
                         BroadcastState.UPCOMING -> {
-                            upcomingBroadcastItems.value = list
+                            upcomingBroadcastItems.value = Event(list)
                         }
                         BroadcastState.ACTIVE -> {
-                            activeBroadcastItems.value = list
+                            activeBroadcastItems.value = Event(list)
                         }
                         BroadcastState.COMPLETED -> {
-                            completedBroadcastItems.value = list
+                            completedBroadcastItems.value = Event(list)
                         }
                     }
                 }
             } catch (e: UserRecoverableAuthIOException) {
                 launch(Dispatchers.Main) {
                     stopProcessing()
-                    errorAuthorization.value = e
+                    errorAuthorization.value = Event(e)
                 }
             } catch (e: IOException) {
                 launch(Dispatchers.Main) {
                     stopProcessing()
-                    errorMessage.value = e.localizedMessage
+                    errorMessage.value = Event(e.localizedMessage)
                 }
             }
         }
@@ -147,11 +148,11 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
      * Progress Indicator
      */
     private fun startProcessing(title: String) {
-        startProcessing.value = title
+        startProcessing.value = Event(title)
     }
 
     private fun stopProcessing() {
-        stopProcessing.value = true
+        stopProcessing.value = Event(true)
     }
 
     private fun getProgressBarTitle(state: BroadcastState): String {
@@ -180,7 +181,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
     private fun didSelectAccount(intent: Intent) {
         val selectedAccountName = intent.extras!!.getString(AccountManager.KEY_ACCOUNT_NAME)
         GoogleAccountManager.credential!!.selectedAccountName = selectedAccountName
-        accountName.value = selectedAccountName
+        accountName.value = Event(selectedAccountName!!)
     }
 
     fun getLastSignedInAccount(): GoogleSignInAccount? {
