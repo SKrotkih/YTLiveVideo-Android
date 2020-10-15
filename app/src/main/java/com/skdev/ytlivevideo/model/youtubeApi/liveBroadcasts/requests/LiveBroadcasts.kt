@@ -30,24 +30,27 @@ object LiveBroadcasts  {
     suspend fun getBroadcastPreviewData(broadcastId: String) : BroadcastPreviewData? =
         CoroutineScope(Dispatchers.IO).async() {
             val list = getLiveBroadcastsAsync(null, broadcastId)
-            if (list!!.count() > 0) {
+            if (list.count() > 0) {
                 val broadcast = list[0]
                 val streamId = broadcast.streamId
-                val stream = LiveStreams.getLiveStreamsListItemAsync(streamId)
-                val data = BroadcastPreviewData(
-                    broadcastId,
-                    streamId,
-                    broadcast.title,
-                    broadcast.description,
-                    broadcast.publishedAt,
-                    broadcast.publishedAt,
-                    broadcast.lifeCycleStatus,
-                    stream?.status?.streamStatus ?: "-",
-                    broadcast.thumbUri,
-                    broadcast.watchUri ?: "",
-                    broadcast.ingestionAddress ?: ""
-                )
-                return@async data
+                if (streamId == null) {
+                    return@async null
+                } else {
+                    val stream = LiveStreams.getLiveStreamsListItemAsync(streamId)
+                    return@async BroadcastPreviewData(
+                        broadcastId,
+                        streamId,
+                        broadcast.title,
+                        broadcast.description,
+                        broadcast.publishedAt,
+                        broadcast.publishedAt,
+                        broadcast.lifeCycleStatus,
+                        stream?.status?.streamStatus ?: "-",
+                        broadcast.thumbUri,
+                        broadcast.watchUri ?: "",
+                        broadcast.ingestionAddress ?: ""
+                    )
+                }
             } else {
                 return@async null
             }

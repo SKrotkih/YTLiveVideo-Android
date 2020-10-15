@@ -28,7 +28,7 @@ class LiveBroadcastItem {
     val id: String
         get() = event!!.id
 
-    val streamId: String
+    val streamId: String?
         get() = event!!.contentDetails.boundStreamId
 
     val title: String
