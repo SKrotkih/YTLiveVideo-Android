@@ -55,6 +55,7 @@
     </string>
     <string name="oauth2_credentials_are_empty">OAUTH2 credentials are not presented</string>
     <string name="create_event">Create event</string>
+    <string name="start_streaming">Start YiuTube Live</string>
     <string name="enter_broadcast_name">Enter Broadcast Name</string>
     <string name="enter_broadcast_description">Enter Broadcast Description</string>
 

@@ -5,22 +5,20 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
-import com.google.api.services.youtube.model.LiveStream
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.requests.LiveBroadcasts
-import com.skdev.ytlivevideo.model.youtubeApi.liveStreams.LiveStreams
-import com.skdev.ytlivevideo.model.youtubeApi.liveStreams.LiveStreamsInteractor
+import com.skdev.ytlivevideo.ui.liveStream.YouTubeStreamLauncher
 import com.skdev.ytlivevideo.util.ProgressDialog
 import com.skdev.ytlivevideo.util.Utils
-import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_create_broadcast.*
 import kotlinx.coroutines.*
 import java.io.IOException
-import java.util.*
 
 class CreateNewBroadcast: AppCompatActivity() {
 
     private var job: Job? = null
+
+    private val streamLauncher = YouTubeStreamLauncher()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,10 +26,29 @@ class CreateNewBroadcast: AppCompatActivity() {
     }
 
     fun onCreateBroadcast(view: View) {
+        startYouTubeLive()
+    }
+
+    /**
+     * Create Live Stream with using YouTube App
+     */
+    private fun startYouTubeLive() {
+        val description = broadcast_description.text.toString().trim()
+        if (description.isEmpty()) {
+            Utils.showError(this, "Please enter new broadcast' description")
+            return
+        }
+        streamLauncher.start(description)
+    }
+
+    /**
+     * Create Broadcast with using YouTube API
+     */
+    private fun createBroadcastOnMyAccount() {
         val name = broadcast_name.text.toString().trim()
         val description = broadcast_description.text.toString().trim()
         if (name.isEmpty() || description.isEmpty()) {
-            Utils.showError(this, "Please enter new broadcast's name and description")
+            Utils.showError(this, "Please enter new broadcast' name and description")
             return
         }
         val progressDialog = ProgressDialog.create(this, R.string.creatingEvent)

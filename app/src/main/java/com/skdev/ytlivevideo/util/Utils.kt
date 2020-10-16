@@ -15,6 +15,7 @@
 package com.skdev.ytlivevideo.util
 
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.Camera
@@ -158,5 +159,32 @@ object Utils {
             }
         }
         return true
+    }
+
+    /**
+     * Global Application instance
+     */
+    class LaunchedApp: Application() {
+
+        init {
+            instance = this
+        }
+
+        companion object {
+            private var instance: LaunchedApp? = null
+
+            fun applicationContext() : Context {
+                return instance!!.applicationContext
+            }
+        }
+
+        override fun onCreate() {
+            super.onCreate()
+            // initialize for any
+
+            // Use ApplicationContext.
+            // example: SharedPreferences etc...
+            val context: Context = LaunchedApp.applicationContext()
+        }
     }
 }
