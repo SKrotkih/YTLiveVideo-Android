@@ -42,8 +42,9 @@ class YouTubeStreamLauncher {
       /**
        * Step 2: Launch the live stream activity
        */
-      val mobileLiveIntent = createMobileLiveIntent(context, description)
-      context.startActivity(mobileLiveIntent)
+      val intent = createMobileLiveIntent(context, description)
+      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      context.startActivity(intent)
     } else {
       Alert.showOK("Warning", "To use this ability you should install YouTube app on your device")
     }

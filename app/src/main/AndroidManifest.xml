@@ -22,7 +22,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light">
+        android:theme="@style/Theme.AppCompat.Light"
+        android:name = ".util.Utils$LaunchedApp">
 
         <activity android:name=".ui.splashScreen.SplashActivity">
             <intent-filter>

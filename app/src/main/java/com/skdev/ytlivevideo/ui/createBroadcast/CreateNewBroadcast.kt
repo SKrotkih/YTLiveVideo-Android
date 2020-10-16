@@ -23,6 +23,8 @@ class CreateNewBroadcast: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_broadcast)
+
+        create_broadcast.text = "Start Live Streaming"
     }
 
     fun onCreateBroadcast(view: View) {
