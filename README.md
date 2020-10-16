@@ -24,6 +24,11 @@ To use this application,
 ![Screen Shot 2020-10-06 at 8 45 37 AM](https://user-images.githubusercontent.com/2775621/95163944-abed6600-07b1-11eb-8e4e-c9cd1693e4a6.png)
 ![Screen Shot 2020-10-06 at 8 52 25 AM](https://user-images.githubusercontent.com/2775621/95163976-bc9ddc00-07b1-11eb-96ee-5540d0ab3d34.png)
 
+ For the YouTube Player API needed API key:   
+   1. On the Credentials page (look for on the console) copy API Key    
+   2. Open Credentials_.kt file (util folder). Replace the parameter "API Key" with Past API from the previous step. Close the file.
+   3. Rename file Credentials_.kt to Credentials.kt 
+
 Demo  video
 1. Create a new stream on your YouTube account:
 

@@ -28,7 +28,7 @@ import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayer.OnFullscreenListener
 import com.google.android.youtube.player.YouTubePlayerView
 import com.skdev.ytlivevideo.R
-import com.skdev.ytlivevideo.util.DeveloperKey
+import com.skdev.ytlivevideo.util.Credentials
 import com.skdev.ytlivevideo.youtubeapidemo.YouTubeFailureRecoveryActivity
 
 /**
@@ -61,7 +61,7 @@ internal class YouTubePlayerActivity : YouTubeFailureRecoveryActivity(), View.On
         checkbox!!.setOnCheckedChangeListener(this)
         // You can use your own button to switch to fullscreen too
         fullscreenButton!!.setOnClickListener(this)
-        playerView!!.initialize(DeveloperKey.DEVELOPER_KEY, this)
+        playerView!!.initialize(Credentials.API_KEY, this)
         doLayout()
     }
 
