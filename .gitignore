@@ -9,3 +9,4 @@ config.info
 .externalNativeBuild
 .cxx
 /local.properties
+/app/src/main/java/com/skdev/ytlivevideo/youtubeapidemo/DeveloperKey.java
