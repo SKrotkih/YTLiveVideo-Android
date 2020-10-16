@@ -50,7 +50,7 @@
             android:screenOrientation="landscape">
         </activity>
         <activity
-            android:label="YouTube full screen player"
+            android:label="YouTube Player"
             android:name=".ui.youtubePlayer.YouTubePlayerActivity"
             android:screenOrientation="sensor"
             android:configChanges="keyboardHidden|orientation|screenSize"

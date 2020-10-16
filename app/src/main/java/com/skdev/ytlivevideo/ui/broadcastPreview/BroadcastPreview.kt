@@ -3,7 +3,6 @@ package com.skdev.ytlivevideo.ui.broadcastPreview
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,7 +13,6 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastPreviewData
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastsInteractor
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.requests.*
 import com.skdev.ytlivevideo.ui.router.Router
@@ -110,6 +108,9 @@ class BroadcastPreview: AppCompatActivity() {
             return (data?.lifeCycleStatus ?: "") == "complete" &&  (data?.watchUri?.asUri != null)
         }
 
+    /**
+     * Handling on the button 'Watch broadcast' pressing
+     */
     fun onButtonPress(view: View) {
         when {
             (data?.streamStatus ?: "") == "active" -> playYouTubeVideo()
@@ -118,11 +119,17 @@ class BroadcastPreview: AppCompatActivity() {
         }
     }
 
+    /**
+     * Play Video (URL=watchUri) on the external (System default) Player
+     */
     private fun playStream() {
         val watchUri = data?.watchUri?.asUri
         if (watchUri != null) startActivity(Intent(Intent.ACTION_VIEW, watchUri))
     }
 
+    /**
+     * Play Video (id=broadcast ID, active stream or completed video) on the YouTube Android Player
+     */
     private fun playYouTubeVideo() {
         val broadcastId = data?.broadcastId
         if (broadcastId != null) {
