@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.preference.PreferenceManager
-import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.util.Config
 
 object AccountName {

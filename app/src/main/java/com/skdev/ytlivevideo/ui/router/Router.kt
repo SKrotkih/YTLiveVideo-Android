@@ -3,9 +3,11 @@ package com.skdev.ytlivevideo.ui.router
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import com.google.android.youtube.player.YouTubeBaseActivity
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.ui.broadcastPreview.BroadcastPreview
 import com.skdev.ytlivevideo.ui.createBroadcast.CreateNewBroadcast
+import com.skdev.ytlivevideo.ui.youtubePlayer.YouTubePlayerActivity
 
 @SuppressLint("StaticFieldLeak")
 object Router {
@@ -24,6 +26,13 @@ object Router {
                 createBroadcast()
             }
             override fun run(params: Any) {
+            }
+        },
+        YT_FULLSCREEN_PLAYER {
+            override fun run() {
+            }
+            override fun run(params: Any) {
+                playVideoOnYoutubePlayer(params)
             }
         };
 
@@ -61,5 +70,18 @@ object Router {
         val intent = Intent(currentContext!!, CreateNewBroadcast::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         currentContext!!.startActivity(intent)
+    }
+
+    private fun playVideoOnYoutubePlayer(params: Any) {
+        if (currentContext == null) {
+            return
+        }
+        val broadcastId = params as? String
+        if (broadcastId != null) {
+            val intent = Intent(currentContext!!, YouTubePlayerActivity::class.java)
+            intent.putExtra("broadcastId", broadcastId)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            currentContext!!.startActivity(intent)
+        }
     }
 }

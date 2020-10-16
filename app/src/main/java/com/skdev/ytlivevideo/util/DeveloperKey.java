@@ -1,6 +1,6 @@
 // Copyright 2014 Google Inc. All Rights Reserved.
 
-package com.skdev.ytlivevideo.youtubeapidemo;
+package com.skdev.ytlivevideo.util;
 
 /**
  * Static container class for holding a reference to your YouTube Developer Key.

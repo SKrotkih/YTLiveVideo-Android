@@ -14,6 +14,7 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastPreviewData
+import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastsInteractor
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.requests.*
 import com.skdev.ytlivevideo.ui.router.Router
@@ -111,8 +112,8 @@ class BroadcastPreview: AppCompatActivity() {
 
     fun onButtonPress(view: View) {
         when {
-            (data?.streamStatus ?: "") == "active" -> playStream()
-            (data?.lifeCycleStatus ?: "") == "complete" -> playStream()
+            (data?.streamStatus ?: "") == "active" -> playYouTubeVideo()
+            (data?.lifeCycleStatus ?: "") == "complete" -> playYouTubeVideo()
             else -> return
         }
     }
@@ -120,6 +121,13 @@ class BroadcastPreview: AppCompatActivity() {
     private fun playStream() {
         val watchUri = data?.watchUri?.asUri
         if (watchUri != null) startActivity(Intent(Intent.ACTION_VIEW, watchUri))
+    }
+
+    private fun playYouTubeVideo() {
+        val broadcastId = data?.broadcastId
+        if (broadcastId != null) {
+            Router.StartActivity.YT_FULLSCREEN_PLAYER.run(broadcastId)
+        }
     }
 
     private fun startStreaming() {
