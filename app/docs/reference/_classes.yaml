@@ -1,0 +1,63 @@
+
+toc:
+- title: "com.google.android.youtube.player"
+  path: reference/com/google/android/youtube/player/package-summary.html
+  section: 
+    
+  - title: "YouTubeApiServiceUtil"
+    path: reference/com/google/android/youtube/player/YouTubeApiServiceUtil.html
+    
+  - title: "YouTubeBaseActivity"
+    path: reference/com/google/android/youtube/player/YouTubeBaseActivity.html
+    
+  - title: "YouTubeInitializationResult"
+    path: reference/com/google/android/youtube/player/YouTubeInitializationResult.html
+    
+  - title: "YouTubeIntents"
+    path: reference/com/google/android/youtube/player/YouTubeIntents.html
+    
+  - title: "YouTubePlayer"
+    path: reference/com/google/android/youtube/player/YouTubePlayer.html
+    section: 
+    - title: "YouTubePlayer.ErrorReason"
+      path: reference/com/google/android/youtube/player/YouTubePlayer.ErrorReason.html
+    - title: "YouTubePlayer.OnFullscreenListener"
+      path: reference/com/google/android/youtube/player/YouTubePlayer.OnFullscreenListener.html
+    - title: "YouTubePlayer.OnInitializedListener"
+      path: reference/com/google/android/youtube/player/YouTubePlayer.OnInitializedListener.html
+    - title: "YouTubePlayer.PlaybackEventListener"
+      path: reference/com/google/android/youtube/player/YouTubePlayer.PlaybackEventListener.html
+    - title: "YouTubePlayer.PlayerStateChangeListener"
+      path: reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html
+    - title: "YouTubePlayer.PlayerStyle"
+      path: reference/com/google/android/youtube/player/YouTubePlayer.PlayerStyle.html
+    - title: "YouTubePlayer.PlaylistEventListener"
+      path: reference/com/google/android/youtube/player/YouTubePlayer.PlaylistEventListener.html
+    - title: "YouTubePlayer.Provider"
+      path: reference/com/google/android/youtube/player/YouTubePlayer.Provider.html
+    
+  - title: "YouTubePlayerFragment"
+    path: reference/com/google/android/youtube/player/YouTubePlayerFragment.html
+    
+  - title: "YouTubePlayerSupportFragment"
+    path: reference/com/google/android/youtube/player/YouTubePlayerSupportFragment.html
+    
+  - title: "YouTubePlayerView"
+    path: reference/com/google/android/youtube/player/YouTubePlayerView.html
+    
+  - title: "YouTubeStandalonePlayer"
+    path: reference/com/google/android/youtube/player/YouTubeStandalonePlayer.html
+    
+  - title: "YouTubeThumbnailLoader"
+    path: reference/com/google/android/youtube/player/YouTubeThumbnailLoader.html
+    section: 
+    - title: "YouTubeThumbnailLoader.ErrorReason"
+      path: reference/com/google/android/youtube/player/YouTubeThumbnailLoader.ErrorReason.html
+    - title: "YouTubeThumbnailLoader.OnThumbnailLoadedListener"
+      path: reference/com/google/android/youtube/player/YouTubeThumbnailLoader.OnThumbnailLoadedListener.html
+    
+  - title: "YouTubeThumbnailView"
+    path: reference/com/google/android/youtube/player/YouTubeThumbnailView.html
+    section: 
+    - title: "YouTubeThumbnailView.OnInitializedListener"
+      path: reference/com/google/android/youtube/player/YouTubeThumbnailView.OnInitializedListener.html

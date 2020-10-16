@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<link rel="shortcut icon" type="image/x-icon" href="../../../../../../favicon.ico" />
+<title>YouTubePlayer.PlayerStateChangeListener | Android Developers</title>
+
+<!-- STYLESHEETS -->
+<link rel="stylesheet"
+href="http://fonts.googleapis.com/css?family=Roboto:regular,medium,thin,italic,mediumitalic,bold" title="roboto">
+<link href="../../../../../../assets/css/default.css" rel="stylesheet" type="text/css">
+
+
+<!-- FULLSCREEN STYLESHEET -->
+<link href="../../../../../../assets/css/fullscreen.css" rel="stylesheet" class="fullscreen"
+type="text/css">
+
+
+<!-- JAVASCRIPT -->
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script src="../../../../../../assets/js/global-libraries-combined.js" type="text/javascript"></script>
+<script type="text/javascript">
+  var toRoot = "../../../../../../";
+</script>
+<script src="../../../../../../assets/js/docs.js" type="text/javascript"></script>
+
+</head>
+
+<body class="gc-documentation
+  develop" itemscope itemtype="http://schema.org/Article">
+  <div id="doc-api-level" class="" style="display:none"></div>
+  <a name="top"></a>
+
+    <!-- Header -->
+          
+    
+  
+
+  <div class="wrap clearfix" id="body-content">
+    <div class="col-4" id="side-nav" itemscope itemtype="http://schema.org/SiteNavigationElement">
+      <div id="devdoc-nav">
+      <div id="swapper">
+        <div id="nav-panels">
+          <div id="classes-nav" class="scroll-pane">
+
+
+
+            <ul>
+              
+    <li><h2>Interfaces</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html">YouTubePlayer</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.OnFullscreenListener.html">YouTubePlayer.OnFullscreenListener</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.OnInitializedListener.html">YouTubePlayer.OnInitializedListener</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlaybackEventListener.html">YouTubePlayer.PlaybackEventListener</a></li>
+          <li class="selected api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html">YouTubePlayer.PlayerStateChangeListener</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlaylistEventListener.html">YouTubePlayer.PlaylistEventListener</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.Provider.html">YouTubePlayer.Provider</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeThumbnailLoader.html">YouTubeThumbnailLoader</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeThumbnailLoader.OnThumbnailLoadedListener.html">YouTubeThumbnailLoader.OnThumbnailLoadedListener</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeThumbnailView.OnInitializedListener.html">YouTubeThumbnailView.OnInitializedListener</a></li>
+      </ul>
+    </li>
+              
+    <li><h2>Classes</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeApiServiceUtil.html">YouTubeApiServiceUtil</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeBaseActivity.html">YouTubeBaseActivity</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeIntents.html">YouTubeIntents</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayerFragment.html">YouTubePlayerFragment</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayerSupportFragment.html">YouTubePlayerSupportFragment</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayerView.html">YouTubePlayerView</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeStandalonePlayer.html">YouTubeStandalonePlayer</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeThumbnailView.html">YouTubeThumbnailView</a></li>
+      </ul>
+    </li>
+              
+    <li><h2>Enums</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeInitializationResult.html">YouTubeInitializationResult</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.ErrorReason.html">YouTubePlayer.ErrorReason</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStyle.html">YouTubePlayer.PlayerStyle</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeThumbnailLoader.ErrorReason.html">YouTubeThumbnailLoader.ErrorReason</a></li>
+      </ul>
+    </li>
+              
+              
+            </ul><br/>
+
+
+          </div><!-- end classes -->
+        </div><!-- end nav-panels -->
+        <div id="nav-tree" style="display:none" class="scroll-pane">
+          <div id="tree-list"></div>
+        </div><!-- end nav-tree -->
+      </div><!-- end swapper -->
+      <div id="nav-swap">
+      <a class="fullscreen">fullscreen</a>
+      <a href='#' onclick='swapNav();return false;'><span id='tree-link'>Use Tree Navigation</span><span id='panel-link' style='display:none'>Use Panel Navigation</span></a>
+      </div>
+    </div> <!-- end devdoc-nav -->
+    </div> <!-- end side-nav -->
+    <script type="text/javascript">
+      // init fullscreen based on user pref
+      var fullscreen = readCookie("fullscreen");
+      if (fullscreen != 0) {
+        if (fullscreen == "false") {
+          toggleFullscreen(false);
+        } else {
+          toggleFullscreen(true);
+        }
+      }
+      // init nav version for mobile
+      if (isMobile) {
+        swapNav(); // tree view should be used on mobile
+        $('#nav-swap').hide();
+      } else {
+        chooseDefaultNav();
+        if ($("#nav-tree").is(':visible')) {
+          init_default_navtree("../../../../../../");
+        }
+      }
+      // scroll the selected page into view
+      $(document).ready(function() {
+        scrollIntoView("packages-nav");
+        scrollIntoView("classes-nav");
+        });
+    </script>
+    <script>
+      $(document).ready(function() {
+        changeDocLang(getLangPref());
+        });
+    </script>
+
+
+
+<div class="col-12"  id="doc-col">
+
+<div id="api-info-block">
+
+
+
+
+<div class="sum-details-links">
+
+</div><!-- end sum-details-links -->
+<div class="api-level">
+  
+  
+  
+
+</div>
+</div><!-- end api-info-block -->
+
+
+<!-- ======== START OF CLASS DATA ======== -->
+
+<div id="jd-header">
+    public
+    static
+    
+    
+    interface
+<h1 itemprop="name">YouTubePlayer.PlayerStateChangeListener</h1>
+
+
+
+  
+  
+  
+
+
+</div><!-- end header -->
+
+<div id="naMessage"></div>
+
+<div id="jd-content" class="api apilevel-">
+<table class="jd-inheritance-table">
+
+
+    <tr>
+        
+        <td colspan="1" class="jd-inheritance-class-cell">com.google.android.youtube.player.YouTubePlayer.PlayerStateChangeListener</td>
+    </tr>
+    
+
+</table>
+
+
+
+
+
+
+
+<div class="jd-descr">
+
+
+<h2>Class Overview</h2>
+<p itemprop="articleBody">Interface definition for callbacks that are invoked when the high-level player state changes.
+</p>
+
+
+
+
+
+</div><!-- jd-descr -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="jd-descr">
+
+
+<h2>Summary</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="pubmethods" class="jd-sumtable"><tr><th colspan="12">Public Methods</th></tr>
+
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html#onAdStarted()">onAdStarted</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Called when playback of an advertisement starts.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html#onError(com.google.android.youtube.player.YouTubePlayer.ErrorReason)">onError</a></span>(<a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.ErrorReason.html">YouTubePlayer.ErrorReason</a> reason)</nobr>
+        
+        <div class="jd-descrdiv">Called when an error occurs.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html#onLoaded(java.lang.String)">onLoaded</a></span>(String videoId)</nobr>
+        
+        <div class="jd-descrdiv">Called when a video has finished loading.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html#onLoading()">onLoading</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Called when the player begins loading a video and is not ready to accept commands affecting
+ playback (such as <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> or <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#pause()">pause()</a></code>).</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html#onVideoEnded()">onVideoEnded</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Called when the video reaches its end.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html#onVideoStarted()">onVideoStarted</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Called when playback of the video starts.</div>
+  
+  </td></tr>
+
+
+
+</table>
+
+
+
+
+
+
+
+</div><!-- jd-descr (summary) -->
+
+<!-- Details -->
+
+
+
+
+
+
+
+
+<!-- XML Attributes -->
+
+
+<!-- Enum Values -->
+
+
+<!-- Constants -->
+
+
+<!-- Fields -->
+
+
+<!-- Public ctors -->
+
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<!-- Protected ctors -->
+
+
+
+<!-- ========= METHOD DETAIL ======== -->
+<!-- Public methdos -->
+
+<h2>Public Methods</h2>
+
+
+
+<A NAME="onAdStarted()"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">onAdStarted</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Called when playback of an advertisement starts. </p></div>
+
+    </div>
+</div>
+
+
+<A NAME="onError(com.google.android.youtube.player.YouTubePlayer.ErrorReason)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">onError</span>
+      <span class="normal">(<a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.ErrorReason.html">YouTubePlayer.ErrorReason</a> reason)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Called when an error occurs. This can be called from any state.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>reason</td>
+          <td>The reason for the error.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="onLoaded(java.lang.String)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">onLoaded</span>
+      <span class="normal">(String videoId)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Called when a video has finished loading.
+ <p>
+ Playback methods such as <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code>, <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#pause()">pause()</a></code> or <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#seekToMillis(int)">seekToMillis(int)</a></code> may be
+ called after this callback.
+ <p>
+ If the video was loaded through one of the <code>load</code> functions such as <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#loadVideo(java.lang.String)">loadVideo(String)</a></code>
+ this callback will typically be followed by a call to either <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html#onAdStarted()">onAdStarted()</a></code> or
+ <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html#onVideoStarted()">onVideoStarted()</a></code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>videoId</td>
+          <td>The YouTube video id of the loaded video.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="onLoading()"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">onLoading</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Called when the player begins loading a video and is not ready to accept commands affecting
+ playback (such as <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> or <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#pause()">pause()</a></code>).
+</p></div>
+
+    </div>
+</div>
+
+
+<A NAME="onVideoEnded()"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">onVideoEnded</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Called when the video reaches its end. </p></div>
+
+    </div>
+</div>
+
+
+<A NAME="onVideoStarted()"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">onVideoStarted</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Called when playback of the video starts. </p></div>
+
+    </div>
+</div>
+
+
+
+
+
+<!-- ========= METHOD DETAIL ======== -->
+
+
+
+<!-- ========= END OF CLASS DATA ========= -->
+<A NAME="navbar_top"></A>
+
+<div id="footer" class="wrap" >
+
+
+  <div id="copyright">
+    
+  Except as noted, this content is licensed under <a
+  href="http://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a>.
+  For details and restrictions, see the <a href="http://developer.android.com/license.html">
+  Content License</a>.
+  </div>
+
+
+  <div id="footerlinks">
+    
+  <p>
+    <a href="http://developer.android.com/about/index.html">About Android</a>&nbsp;&nbsp;|&nbsp;
+    <a href="http://developer.android.com/legal.html">Legal</a>&nbsp;&nbsp;|&nbsp;
+    <a href="http://developer.android.com/support.html">Support</a>
+  </p>
+  </div>
+
+</div> <!-- end footer -->
+
+</div> <!-- jd-content -->
+
+</div><!-- end doc-content -->
+
+</div> <!-- end body-content --> 
+
+
+
+
+<!-- Grid - for dev
+<script type="text/javascript">
+
+window.gOverride = {
+                gColor: '#FF0000',
+                pColor: '#EEEEEE',
+                gOpacity: 0.10,
+                pOpacity: 0.40,
+                pHeight: 16,
+                pOffset: 2,
+                gColumns:16,
+                gEnabled:false,
+                pEnabled:false
+        }
+</script>
+
+<link href="../../../../../../assets/js/grid/960.gridder.css" rel="stylesheet" type="text/css">
+<script src="../../../../../../assets/js/grid/960.gridder.js" type="text/javascript"></script>
+-->
+
+
+
+
+
+
+
+</body>
+</html>

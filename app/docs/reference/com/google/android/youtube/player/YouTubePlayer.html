@@ -1,0 +1,2992 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<link rel="shortcut icon" type="image/x-icon" href="../../../../../../favicon.ico" />
+<title>YouTubePlayer | Android Developers</title>
+
+<!-- STYLESHEETS -->
+<link rel="stylesheet"
+href="http://fonts.googleapis.com/css?family=Roboto:regular,medium,thin,italic,mediumitalic,bold" title="roboto">
+<link href="../../../../../../assets/css/default.css" rel="stylesheet" type="text/css">
+
+
+<!-- FULLSCREEN STYLESHEET -->
+<link href="../../../../../../assets/css/fullscreen.css" rel="stylesheet" class="fullscreen"
+type="text/css">
+
+
+<!-- JAVASCRIPT -->
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script src="../../../../../../assets/js/global-libraries-combined.js" type="text/javascript"></script>
+<script type="text/javascript">
+  var toRoot = "../../../../../../";
+</script>
+<script src="../../../../../../assets/js/docs.js" type="text/javascript"></script>
+
+</head>
+
+<body class="gc-documentation
+  develop" itemscope itemtype="http://schema.org/Article">
+  <div id="doc-api-level" class="" style="display:none"></div>
+  <a name="top"></a>
+
+    <!-- Header -->
+          
+    
+  
+
+  <div class="wrap clearfix" id="body-content">
+    <div class="col-4" id="side-nav" itemscope itemtype="http://schema.org/SiteNavigationElement">
+      <div id="devdoc-nav">
+      <div id="swapper">
+        <div id="nav-panels">
+          <div id="classes-nav" class="scroll-pane">
+
+
+
+            <ul>
+              
+    <li><h2>Interfaces</h2>
+      <ul>
+          <li class="selected api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html">YouTubePlayer</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.OnFullscreenListener.html">YouTubePlayer.OnFullscreenListener</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.OnInitializedListener.html">YouTubePlayer.OnInitializedListener</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlaybackEventListener.html">YouTubePlayer.PlaybackEventListener</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html">YouTubePlayer.PlayerStateChangeListener</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlaylistEventListener.html">YouTubePlayer.PlaylistEventListener</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.Provider.html">YouTubePlayer.Provider</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeThumbnailLoader.html">YouTubeThumbnailLoader</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeThumbnailLoader.OnThumbnailLoadedListener.html">YouTubeThumbnailLoader.OnThumbnailLoadedListener</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeThumbnailView.OnInitializedListener.html">YouTubeThumbnailView.OnInitializedListener</a></li>
+      </ul>
+    </li>
+              
+    <li><h2>Classes</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeApiServiceUtil.html">YouTubeApiServiceUtil</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeBaseActivity.html">YouTubeBaseActivity</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeIntents.html">YouTubeIntents</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayerFragment.html">YouTubePlayerFragment</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayerSupportFragment.html">YouTubePlayerSupportFragment</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayerView.html">YouTubePlayerView</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeStandalonePlayer.html">YouTubeStandalonePlayer</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeThumbnailView.html">YouTubeThumbnailView</a></li>
+      </ul>
+    </li>
+              
+    <li><h2>Enums</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeInitializationResult.html">YouTubeInitializationResult</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.ErrorReason.html">YouTubePlayer.ErrorReason</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStyle.html">YouTubePlayer.PlayerStyle</a></li>
+          <li class="api apilevel-"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubeThumbnailLoader.ErrorReason.html">YouTubeThumbnailLoader.ErrorReason</a></li>
+      </ul>
+    </li>
+              
+              
+            </ul><br/>
+
+
+          </div><!-- end classes -->
+        </div><!-- end nav-panels -->
+        <div id="nav-tree" style="display:none" class="scroll-pane">
+          <div id="tree-list"></div>
+        </div><!-- end nav-tree -->
+      </div><!-- end swapper -->
+      <div id="nav-swap">
+      <a class="fullscreen">fullscreen</a>
+      <a href='#' onclick='swapNav();return false;'><span id='tree-link'>Use Tree Navigation</span><span id='panel-link' style='display:none'>Use Panel Navigation</span></a>
+      </div>
+    </div> <!-- end devdoc-nav -->
+    </div> <!-- end side-nav -->
+    <script type="text/javascript">
+      // init fullscreen based on user pref
+      var fullscreen = readCookie("fullscreen");
+      if (fullscreen != 0) {
+        if (fullscreen == "false") {
+          toggleFullscreen(false);
+        } else {
+          toggleFullscreen(true);
+        }
+      }
+      // init nav version for mobile
+      if (isMobile) {
+        swapNav(); // tree view should be used on mobile
+        $('#nav-swap').hide();
+      } else {
+        chooseDefaultNav();
+        if ($("#nav-tree").is(':visible')) {
+          init_default_navtree("../../../../../../");
+        }
+      }
+      // scroll the selected page into view
+      $(document).ready(function() {
+        scrollIntoView("packages-nav");
+        scrollIntoView("classes-nav");
+        });
+    </script>
+    <script>
+      $(document).ready(function() {
+        changeDocLang(getLangPref());
+        });
+    </script>
+
+
+
+<div class="col-12"  id="doc-col">
+
+<div id="api-info-block">
+
+
+
+
+<div class="sum-details-links">
+
+</div><!-- end sum-details-links -->
+<div class="api-level">
+  
+  
+  
+
+</div>
+</div><!-- end api-info-block -->
+
+
+<!-- ======== START OF CLASS DATA ======== -->
+
+<div id="jd-header">
+    public
+    
+    
+    
+    interface
+<h1 itemprop="name">YouTubePlayer</h1>
+
+
+
+  
+  
+  
+
+
+</div><!-- end header -->
+
+<div id="naMessage"></div>
+
+<div id="jd-content" class="api apilevel-">
+<table class="jd-inheritance-table">
+
+
+    <tr>
+        
+        <td colspan="1" class="jd-inheritance-class-cell">com.google.android.youtube.player.YouTubePlayer</td>
+    </tr>
+    
+
+</table>
+
+
+
+
+
+
+
+<div class="jd-descr">
+
+
+<h2>Class Overview</h2>
+<p itemprop="articleBody">A YouTubePlayer provides methods for loading, playing and controlling YouTube video playback.
+ Get an instance of this class by calling
+ <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.Provider.html#initialize(java.lang.String, com.google.android.youtube.player.YouTubePlayer.OnInitializedListener)">initialize</a></code> on a <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.Provider.html">YouTubePlayer.Provider</a></code> such
+ as <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayerFragment.html">YouTubePlayerFragment</a></code> or <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayerView.html">YouTubePlayerView</a></code>.
+ <p>
+ Video and playlist IDs required by methods such as <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#loadVideo(java.lang.String)">loadVideo(String)</a></code> or
+ <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#cuePlaylist(java.lang.String)">cuePlaylist(String)</a></code> are provided by the YouTube Data API. To learn more about this API,
+ visit <a
+ href="https://developers.google.com/youtube/">https://developers.google.com/youtube/</a>.
+ <p>
+ The YouTubePlayer supports state saving, which is managed automatically by the <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.Provider.html">YouTubePlayer.Provider</a></code>
+ of the player. The saved state includes the loaded videos, the current playback position and
+ player configurations such as the current <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStyle.html">YouTubePlayer.PlayerStyle</a></code> or fullscreen control flags. The
+ state does not include any of the listeners that may be set on the player, so they need to be
+ set again after the player is recreated.
+ <p>
+ You should only call methods on a <code>YouTubePlayer</code> object from the <code>UI</code> thread.
+</p>
+
+
+
+
+
+</div><!-- jd-descr -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="jd-descr">
+
+
+<h2>Summary</h2>
+
+
+
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<table id="nestedclasses" class="jd-sumtable"><tr><th colspan="12">Nested Classes</th></tr>
+
+
+  
+    <tr class="alt-color api apilevel-" >
+      <td class="jd-typecol"><nobr>
+        
+        
+        
+        
+        enum</nobr></td>
+      <td class="jd-linkcol"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.ErrorReason.html">YouTubePlayer.ErrorReason</a></td>
+      <td class="jd-descrcol" width="100%">Describes the reason for an error in a <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html">YouTubePlayer</a></code>.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+      <td class="jd-typecol"><nobr>
+        
+        
+        
+        
+        interface</nobr></td>
+      <td class="jd-linkcol"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.OnFullscreenListener.html">YouTubePlayer.OnFullscreenListener</a></td>
+      <td class="jd-descrcol" width="100%">Interface definition for callbacks that are invoked when the player toggles between fullscreen
+ on or off, either due to the user clicking the fullscreen button or a call to
+ <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreen(boolean)">setFullscreen(boolean)</a></code>.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class="alt-color api apilevel-" >
+      <td class="jd-typecol"><nobr>
+        
+        
+        
+        
+        interface</nobr></td>
+      <td class="jd-linkcol"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.OnInitializedListener.html">YouTubePlayer.OnInitializedListener</a></td>
+      <td class="jd-descrcol" width="100%">Interface definition for callbacks that are invoked when player initialization succeeds or
+ fails.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+      <td class="jd-typecol"><nobr>
+        
+        
+        
+        
+        interface</nobr></td>
+      <td class="jd-linkcol"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlaybackEventListener.html">YouTubePlayer.PlaybackEventListener</a></td>
+      <td class="jd-descrcol" width="100%">Interface definition for callbacks that are invoked when video playback events occur.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class="alt-color api apilevel-" >
+      <td class="jd-typecol"><nobr>
+        
+        
+        
+        
+        interface</nobr></td>
+      <td class="jd-linkcol"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html">YouTubePlayer.PlayerStateChangeListener</a></td>
+      <td class="jd-descrcol" width="100%">Interface definition for callbacks that are invoked when the high-level player state changes.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+      <td class="jd-typecol"><nobr>
+        
+        
+        
+        
+        enum</nobr></td>
+      <td class="jd-linkcol"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStyle.html">YouTubePlayer.PlayerStyle</a></td>
+      <td class="jd-descrcol" width="100%">The different styles available for the player.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class="alt-color api apilevel-" >
+      <td class="jd-typecol"><nobr>
+        
+        
+        
+        
+        interface</nobr></td>
+      <td class="jd-linkcol"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlaylistEventListener.html">YouTubePlayer.PlaylistEventListener</a></td>
+      <td class="jd-descrcol" width="100%">Interface definition for callbacks that are invoked when events related to playlists occur.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+      <td class="jd-typecol"><nobr>
+        
+        
+        
+        
+        interface</nobr></td>
+      <td class="jd-linkcol"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.Provider.html">YouTubePlayer.Provider</a></td>
+      <td class="jd-descrcol" width="100%">A class that implements this interface can provide a <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html">YouTubePlayer</a></code> instance.&nbsp;</td>
+    </tr>
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =========== ENUM CONSTANT SUMMARY =========== -->
+<table id="constants" class="jd-sumtable"><tr><th colspan="12">Constants</th></tr>
+
+
+    
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE">FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE</a></td>
+        <td class="jd-descrcol" width="100%">Flag for <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags(int)</a></code> which causes the player to automatically
+ enter fullscreen whenever the device enters landscape orientation.</td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CONTROL_ORIENTATION">FULLSCREEN_FLAG_CONTROL_ORIENTATION</a></td>
+        <td class="jd-descrcol" width="100%">Flag for <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags(int)</a></code> to enable automatic control of the
+ orientation.</td>
+    </tr>
+    
+    
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CONTROL_SYSTEM_UI">FULLSCREEN_FLAG_CONTROL_SYSTEM_UI</a></td>
+        <td class="jd-descrcol" width="100%">Flag for <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags(int)</a></code> to enable automatic control of system UI.</td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol">int</td>
+        <td class="jd-linkcol"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CUSTOM_LAYOUT">FULLSCREEN_FLAG_CUSTOM_LAYOUT</a></td>
+        <td class="jd-descrcol" width="100%">Flag for <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags(int)</a></code> that disables the default fullscreen layout
+ handler, enabling you to control the transition to fullscreen layout manually.</td>
+    </tr>
+    
+    
+
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="pubmethods" class="jd-sumtable"><tr><th colspan="12">Public Methods</th></tr>
+
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#addFullscreenControlFlag(int)">addFullscreenControlFlag</a></span>(int controlFlag)</nobr>
+        
+        <div class="jd-descrdiv">Variant of <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags(int)</a></code> that doesn't change the already set flags,
+ but just adds the provided flag to the currently set flags.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#cuePlaylist(java.lang.String, int, int)">cuePlaylist</a></span>(String playlistId, int startIndex, int timeMillis)</nobr>
+        
+        <div class="jd-descrdiv">Cues the specified playlist, but does not download any of the video streams or start playing
+ until <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> or <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#seekToMillis(int)">seekToMillis(int)</a></code> is called.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#cuePlaylist(java.lang.String)">cuePlaylist</a></span>(String playlistId)</nobr>
+        
+        <div class="jd-descrdiv">Cues the specified playlist, but does not download any of the video streams or start playing
+ until <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> or <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#seekToMillis(int)">seekToMillis(int)</a></code> is called.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#cueVideo(java.lang.String)">cueVideo</a></span>(String videoId)</nobr>
+        
+        <div class="jd-descrdiv">Loads the specified video's thumbnail and prepares the player to play the video, but does not
+ download any of the video stream until <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> is called.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#cueVideo(java.lang.String, int)">cueVideo</a></span>(String videoId, int timeMillis)</nobr>
+        
+        <div class="jd-descrdiv">Loads the specified video's thumbnail and prepares the player to play the video, but does not
+ download any of the video stream until <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> is called.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#cueVideos(java.util.List<java.lang.String>, int, int)">cueVideos</a></span>(List&lt;String&gt; videoIds, int startIndex, int timeMillis)</nobr>
+        
+        <div class="jd-descrdiv">Cues a list of videos, but does not download any of the video streams or start playing until
+ <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> or <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#seekToMillis(int)">seekToMillis(int)</a></code> is called.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#cueVideos(java.util.List<java.lang.String>)">cueVideos</a></span>(List&lt;String&gt; videoIds)</nobr>
+        
+        <div class="jd-descrdiv">Cues a list of videos, but does not download any of the video streams or start playing until
+ <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> or <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#seekToMillis(int)">seekToMillis(int)</a></code> is called.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            int</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#getCurrentTimeMillis()">getCurrentTimeMillis</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Gets the current elapsed time of the playing video relative to its start.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            int</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#getDurationMillis()">getDurationMillis</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Gets the duration of the currently loaded video.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            int</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#getFullscreenControlFlags()">getFullscreenControlFlags</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Gets the currently set fullscreen control flags.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            boolean</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#hasNext()">hasNext</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Determines whether the currently loaded playlist has a next video.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            boolean</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#hasPrevious()">hasPrevious</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Determines whether the currently loaded playlist has a previous video.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            boolean</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#isPlaying()">isPlaying</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Determines whether the player is currently playing.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#loadPlaylist(java.lang.String)">loadPlaylist</a></span>(String playlistId)</nobr>
+        
+        <div class="jd-descrdiv">Loads and plays the specified playlist.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#loadPlaylist(java.lang.String, int, int)">loadPlaylist</a></span>(String playlistId, int startIndex, int timeMillis)</nobr>
+        
+        <div class="jd-descrdiv">Loads and plays the specified playlist.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#loadVideo(java.lang.String)">loadVideo</a></span>(String videoId)</nobr>
+        
+        <div class="jd-descrdiv">Loads and plays the specified video.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#loadVideo(java.lang.String, int)">loadVideo</a></span>(String videoId, int timeMillis)</nobr>
+        
+        <div class="jd-descrdiv">Loads and plays the specified video.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#loadVideos(java.util.List<java.lang.String>, int, int)">loadVideos</a></span>(List&lt;String&gt; videoIds, int startIndex, int timeMillis)</nobr>
+        
+        <div class="jd-descrdiv">Loads and plays a list of videos.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#loadVideos(java.util.List<java.lang.String>)">loadVideos</a></span>(List&lt;String&gt; videoIds)</nobr>
+        
+        <div class="jd-descrdiv">Loads and plays a list of videos.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#next()">next</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Plays the next video in the loaded playlist.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#pause()">pause</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Pauses the currently playing video.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Starts video playback of the currently cued / loaded video.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#previous()">previous</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Plays the previous video in the loaded playlist.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#release()">release</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Stop any loading or video playback and release any system resources used by this
+ <code>YouTubePlayer</code>.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#seekRelativeMillis(int)">seekRelativeMillis</a></span>(int milliSeconds)</nobr>
+        
+        <div class="jd-descrdiv">Seeks forward or backward by the specified number of seconds.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#seekToMillis(int)">seekToMillis</a></span>(int milliSeconds)</nobr>
+        
+        <div class="jd-descrdiv">Seeks to the specified time in the video.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreen(boolean)">setFullscreen</a></span>(boolean fullscreen)</nobr>
+        
+        <div class="jd-descrdiv">Inform the player that it is being laid out fullscreen.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags</a></span>(int controlFlags)</nobr>
+        
+        <div class="jd-descrdiv">Controls the automatic behavior when fullscreen mode is toggled.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setManageAudioFocus(boolean)">setManageAudioFocus</a></span>(boolean manage)</nobr>
+        
+        <div class="jd-descrdiv">Specifies whether or not the player will handle audio focus as part of its playback lifecycle.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setOnFullscreenListener(com.google.android.youtube.player.YouTubePlayer.OnFullscreenListener)">setOnFullscreenListener</a></span>(<a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.OnFullscreenListener.html">YouTubePlayer.OnFullscreenListener</a> listener)</nobr>
+        
+        <div class="jd-descrdiv">Registers a <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.OnFullscreenListener.html">YouTubePlayer.OnFullscreenListener</a></code>.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setPlaybackEventListener(com.google.android.youtube.player.YouTubePlayer.PlaybackEventListener)">setPlaybackEventListener</a></span>(<a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlaybackEventListener.html">YouTubePlayer.PlaybackEventListener</a> listener)</nobr>
+        
+        <div class="jd-descrdiv">Registers a <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlaybackEventListener.html">YouTubePlayer.PlaybackEventListener</a></code>.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setPlayerStateChangeListener(com.google.android.youtube.player.YouTubePlayer.PlayerStateChangeListener)">setPlayerStateChangeListener</a></span>(<a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html">YouTubePlayer.PlayerStateChangeListener</a> listener)</nobr>
+        
+        <div class="jd-descrdiv">Registers a <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html">YouTubePlayer.PlayerStateChangeListener</a></code>.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setPlayerStyle(com.google.android.youtube.player.YouTubePlayer.PlayerStyle)">setPlayerStyle</a></span>(<a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStyle.html">YouTubePlayer.PlayerStyle</a> style)</nobr>
+        
+        <div class="jd-descrdiv">Sets the current style for the player, which impacts the level of control the user has over
+ the player.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setPlaylistEventListener(com.google.android.youtube.player.YouTubePlayer.PlaylistEventListener)">setPlaylistEventListener</a></span>(<a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlaylistEventListener.html">YouTubePlayer.PlaylistEventListener</a> listener)</nobr>
+        
+        <div class="jd-descrdiv">Registers a <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlaylistEventListener.html">YouTubePlayer.PlaylistEventListener</a></code>.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setShowFullscreenButton(boolean)">setShowFullscreenButton</a></span>(boolean show)</nobr>
+        
+        <div class="jd-descrdiv">Shows or hides the fullscreen button on the player controls.</div>
+  
+  </td></tr>
+
+
+
+</table>
+
+
+
+
+
+
+
+</div><!-- jd-descr (summary) -->
+
+<!-- Details -->
+
+
+
+
+
+
+
+
+<!-- XML Attributes -->
+
+
+<!-- Enum Values -->
+
+
+<!-- Constants -->
+
+
+<!-- ========= ENUM CONSTANTS DETAIL ======== -->
+<h2>Constants</h2>
+
+
+
+
+<A NAME="FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        static
+        final
+        int
+      </span>
+        FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE
+    </h4>
+      <div class="api-level">
+        
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Flag for <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags(int)</a></code> which causes the player to automatically
+ enter fullscreen whenever the device enters landscape orientation. Note that this flag should
+ only be set if your activity is locked in portrait (and is specified as such in the manifest).
+ <p>
+ The flag is useful if you don't have a landscape layout for your activity, but would like to
+ enable landscape orientation solely for fullscreen video watching.
+ <p>
+ Note that setting this flag will always cause the screen orientation of your activity to be
+ switched to landscape whenever the user rotates the device to landscape orientation (using
+ <code>Activity.setRequestedOrientation(int)</code>). On exiting fullscreen the requested screen
+ orientation will be reset its original value.
+ <p>
+ This flag requires <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CONTROL_ORIENTATION">FULLSCREEN_FLAG_CONTROL_ORIENTATION</a></code> to also be set.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags(int)</a></code></li>
+      </ul>
+  </div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                4
+                (0x00000004)
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
+
+<A NAME="FULLSCREEN_FLAG_CONTROL_ORIENTATION"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        static
+        final
+        int
+      </span>
+        FULLSCREEN_FLAG_CONTROL_ORIENTATION
+    </h4>
+      <div class="api-level">
+        
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Flag for <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags(int)</a></code> to enable automatic control of the
+ orientation.
+ <p>
+ The behavior is to force landscape orientation when entering fullscreen and switching back
+ to the original orientation setting when leaving fullscreen. The implementation will also exit
+ fullscreen automatically when the device is rotated back to portrait orientation. This should
+ generally be set unless the application is locked in landscape orientation or you require
+ fullscreen in portrait orientation.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags(int)</a></code></li>
+      </ul>
+  </div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                1
+                (0x00000001)
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
+
+<A NAME="FULLSCREEN_FLAG_CONTROL_SYSTEM_UI"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        static
+        final
+        int
+      </span>
+        FULLSCREEN_FLAG_CONTROL_SYSTEM_UI
+    </h4>
+      <div class="api-level">
+        
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Flag for <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags(int)</a></code> to enable automatic control of system UI.
+ <p>
+ When set, system UI will be hidden when user interaction is not expected and re-shown
+ simultaneously with the player controls whenever the user interacts with the device.
+ <p>
+ The system UI includes the status bar if it is visible as well as any other bars that may be
+ present on the device (navigation bar, system bar etc).
+ <p>
+ If the application is showing an <code>ActionBar</code>, it is shown and hidden simultaneously with the
+ player's controls and other system UI on user interaction, provided that the action bar was
+ created as an overlay using <code>Window#FEATURE_ACTION_BAR_OVERLAY</code>. Otherwise, it will be
+ hidden for the duration of the fullscreen session.
+ <p>
+ This should generally be set unless you have a specific need to control system UI manually.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags(int)</a></code></li>
+      </ul>
+  </div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                2
+                (0x00000002)
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
+
+<A NAME="FULLSCREEN_FLAG_CUSTOM_LAYOUT"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        static
+        final
+        int
+      </span>
+        FULLSCREEN_FLAG_CUSTOM_LAYOUT
+    </h4>
+      <div class="api-level">
+        
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Flag for <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags(int)</a></code> that disables the default fullscreen layout
+ handler, enabling you to control the transition to fullscreen layout manually. As well as
+ enabling you to implement a custom fullscreen layout, this option also provides the advantage
+ of avoiding the rebuffering that occurs in the default fullscreen behavior.</p>
+ <p>
+ Use this flag if you have a fullscreen layout that you want to use when fullscreen is toggled,
+ either by the user clicking a fullscreen button or by a call to
+ <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreen(boolean)">setFullscreen(boolean)</a></code>.</p>
+ <p>
+ The default fullscreen behavior will layout the video player in a fullscreen dialog. However,
+ this default behavior requires rebuffering of the video when switching to fullscreen and back.
+ To avoid this, developers are advised to handle the fullscreen event themselves by setting
+ this flag.</p>
+ <p>
+ An application implementing custom fullscreen behavior should ensure two things
+ <ul>
+ <li>That the player's view takes up the whole available space of application's window whenever
+ <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.OnFullscreenListener.html#onFullscreen(boolean)">onFullscreen(boolean)</a></code> is called.</li>
+ <li>That the activity is not recreated when the orientation changes to landscape. To achieve
+ this for an activity that supports portrait, you need to specify that your activity handles
+ some configuration changes on its own in your application's manifest, including
+ <code>orientation</code>, <code>keyboardHidden</code> and <code>screenSize</code>.</li>
+ </ul>
+ <p>
+ This flag does not effect control of orientation and system UI. The <code>YouTubePlayer</code>
+ continues to automatically control both orientation and system UI automatically if
+ <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CONTROL_ORIENTATION">FULLSCREEN_FLAG_CONTROL_ORIENTATION</a></code> and <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CONTROL_SYSTEM_UI">FULLSCREEN_FLAG_CONTROL_SYSTEM_UI</a></code>
+ are set, even if you are controlling layout manually with this flag set.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags(int)</a></code></li>
+      </ul>
+  </div>
+
+    
+        <div class="jd-tagdata">
+        <span class="jd-tagtitle">Constant Value: </span>
+        <span>
+            
+                8
+                (0x00000008)
+            
+        </span>
+        </div>
+    
+    </div>
+</div>
+
+
+
+
+<!-- Fields -->
+
+
+<!-- Public ctors -->
+
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<!-- Protected ctors -->
+
+
+
+<!-- ========= METHOD DETAIL ======== -->
+<!-- Public methdos -->
+
+<h2>Public Methods</h2>
+
+
+
+<A NAME="addFullscreenControlFlag(int)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">addFullscreenControlFlag</span>
+      <span class="normal">(int controlFlag)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Variant of <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags(int)</a></code> that doesn't change the already set flags,
+ but just adds the provided flag to the currently set flags. Equivalent to
+ <code>setFullscreenControlFlags(getFullscreenControlFlags() | controlFlag)</code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>controlFlag</td>
+          <td>The flag to set. One of <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CONTROL_ORIENTATION">FULLSCREEN_FLAG_CONTROL_ORIENTATION</a></code>,
+        <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CONTROL_SYSTEM_UI">FULLSCREEN_FLAG_CONTROL_SYSTEM_UI</a></code>,
+        <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE">FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE</a></code> and
+        <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CUSTOM_LAYOUT">FULLSCREEN_FLAG_CUSTOM_LAYOUT</a></code>.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="cuePlaylist(java.lang.String, int, int)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">cuePlaylist</span>
+      <span class="normal">(String playlistId, int startIndex, int timeMillis)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Cues the specified playlist, but does not download any of the video streams or start playing
+ until <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> or <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#seekToMillis(int)">seekToMillis(int)</a></code> is called.
+ <p>
+ When the user presses play or <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> is called, playback will play the video with the
+ specified index in the playlist, starting at the specified time in the video.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>playlistId</td>
+          <td>The ID for the playlist to be cued, as returned from the
+     <a href=
+     "https://developers.google.com/youtube/v3/docs/playlists#resource">
+     YouTube Data API</a>.</td>
+        </tr>
+        <tr>
+          <th>startIndex</td>
+          <td>The index in the playlist of the first video to be cued.</td>
+        </tr>
+        <tr>
+          <th>timeMillis</td>
+          <td>The time, in milliseconds, where playback should start in the first video
+        cued.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="cuePlaylist(java.lang.String)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">cuePlaylist</span>
+      <span class="normal">(String playlistId)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Cues the specified playlist, but does not download any of the video streams or start playing
+ until <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> or <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#seekToMillis(int)">seekToMillis(int)</a></code> is called.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>playlistId</td>
+          <td>The ID for the playlist to be cued, as returned from the
+     <a href=
+     "https://developers.google.com/youtube/v3/docs/playlists#resource">
+     YouTube Data API</a>.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="cueVideo(java.lang.String)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">cueVideo</span>
+      <span class="normal">(String videoId)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Loads the specified video's thumbnail and prepares the player to play the video, but does not
+ download any of the video stream until <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> is called.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>videoId</td>
+          <td>The ID of the video to be cued, as returned from the
+        <a href
+        ="https://developers.google.com/youtube/v3/docs/videos#resource">
+        YouTube Data API</a>.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="cueVideo(java.lang.String, int)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">cueVideo</span>
+      <span class="normal">(String videoId, int timeMillis)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Loads the specified video's thumbnail and prepares the player to play the video, but does not
+ download any of the video stream until <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> is called.
+ <p>
+ When the user presses play or <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> is called, playback will start at the specified
+ time in the video.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>videoId</td>
+          <td>The ID of the video to be cued, as returned from the
+        <a href
+        ="https://developers.google.com/youtube/v3/docs/videos#resource">
+        YouTube Data API</a>.</td>
+        </tr>
+        <tr>
+          <th>timeMillis</td>
+          <td>The time, in milliseconds, where playback should start in the video.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="cueVideos(java.util.List<java.lang.String>, int, int)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">cueVideos</span>
+      <span class="normal">(List&lt;String&gt; videoIds, int startIndex, int timeMillis)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Cues a list of videos, but does not download any of the video streams or start playing until
+ <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> or <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#seekToMillis(int)">seekToMillis(int)</a></code> is called.
+ <p>
+ When the user presses play or <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> is called, playback will play the video with the
+ specified index and playback will start at the specified time in the video.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>videoIds</td>
+          <td>A list of YouTube video IDs to be cued, as returned from the <a href
+        ="https://developers.google.com/youtube/v3/docs/videos#resource"> YouTube Data API</a>.</td>
+        </tr>
+        <tr>
+          <th>startIndex</td>
+          <td>The index in the list of the first video to be cued.</td>
+        </tr>
+        <tr>
+          <th>timeMillis</td>
+          <td>The time, in milliseconds, where playback should start in the first video
+        cued.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="cueVideos(java.util.List<java.lang.String>)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">cueVideos</span>
+      <span class="normal">(List&lt;String&gt; videoIds)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Cues a list of videos, but does not download any of the video streams or start playing until
+ <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#play()">play()</a></code> or <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#seekToMillis(int)">seekToMillis(int)</a></code> is called.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>videoIds</td>
+          <td>A list of YouTube video IDs to be cued, as returned from the <a href
+        ="https://developers.google.com/youtube/v3/docs/videos#resource"> YouTube Data API</a>.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="getCurrentTimeMillis()"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        int
+      </span>
+      <span class="sympad">getCurrentTimeMillis</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the current elapsed time of the playing video relative to its start.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The current elapsed time (a number of milliseconds) of the playing video relative to
+         its start. The result is only well-defined after the video has finished loading.</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html#onLoaded(java.lang.String)">onLoaded(String)</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="getDurationMillis()"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        int
+      </span>
+      <span class="sympad">getDurationMillis</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the duration of the currently loaded video.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The currently loaded video's duration (in milliseconds). The result is only
+         defined after the video has finished loading, and may change to a more accurate value
+         when the video starts playing.</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html#onLoaded(java.lang.String)">onLoaded(String)</a></code></li><li><code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html#onVideoStarted()">onVideoStarted()</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="getFullscreenControlFlags()"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        int
+      </span>
+      <span class="sympad">getFullscreenControlFlags</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the currently set fullscreen control flags.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The currently set flags. The <code>int</code> is a bitwise-or of
+         <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CONTROL_ORIENTATION">FULLSCREEN_FLAG_CONTROL_ORIENTATION</a></code>,
+         <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CONTROL_SYSTEM_UI">FULLSCREEN_FLAG_CONTROL_SYSTEM_UI</a></code>,
+         <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE">FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE</a></code> and
+         <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CUSTOM_LAYOUT">FULLSCREEN_FLAG_CUSTOM_LAYOUT</a></code>.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="hasNext()"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        boolean
+      </span>
+      <span class="sympad">hasNext</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Determines whether the currently loaded playlist has a next video.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li><code>true</code> if there is a next video in the loaded playlist, <code>false</code> otherwise.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="hasPrevious()"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        boolean
+      </span>
+      <span class="sympad">hasPrevious</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Determines whether the currently loaded playlist has a previous video.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li><code>true</code> if there is a previous video in the loaded playlist, <code>false</code>
+         otherwise.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="isPlaying()"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        boolean
+      </span>
+      <span class="sympad">isPlaying</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Determines whether the player is currently playing.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li><code>true</code> if the player is currently playing, or buffering while still in the
+         playing state, <code>false</code> otherwise.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="loadPlaylist(java.lang.String)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">loadPlaylist</span>
+      <span class="normal">(String playlistId)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Loads and plays the specified playlist.
+ <p>
+ Note: YouTube only counts playbacks that are initiated through the native play button.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>playlistId</td>
+          <td>The ID for the playlist to be played, as returned from the
+     <a href=
+     "https://developers.google.com/youtube/v3/docs/playlists#resource">
+     YouTube Data API</a>.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="loadPlaylist(java.lang.String, int, int)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">loadPlaylist</span>
+      <span class="normal">(String playlistId, int startIndex, int timeMillis)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Loads and plays the specified playlist. Playback will start at the video with the specified
+ index and will start at the specified time in the video
+ <p>
+ Note: YouTube only counts playbacks that are initiated through the native play button.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>playlistId</td>
+          <td>The ID for the playlist to be played, as returned from the
+     <a href=
+     "https://developers.google.com/youtube/v3/docs/playlists#resource">
+     YouTube Data API</a>.</td>
+        </tr>
+        <tr>
+          <th>startIndex</td>
+          <td>The index in the playlist where playback will start.</td>
+        </tr>
+        <tr>
+          <th>timeMillis</td>
+          <td>The time, in milliseconds, where playback should start in the first video
+        played.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="loadVideo(java.lang.String)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">loadVideo</span>
+      <span class="normal">(String videoId)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Loads and plays the specified video.
+ <p>
+ Note: YouTube only counts playbacks that are initiated through the native play button.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>videoId</td>
+          <td>The ID of the video to be played, as returned from the
+        <a href
+        ="https://developers.google.com/youtube/v3/docs/videos#resource">
+        YouTube Data API</a>.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="loadVideo(java.lang.String, int)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">loadVideo</span>
+      <span class="normal">(String videoId, int timeMillis)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Loads and plays the specified video. Playback will start at the specified time in the video.
+ <p>
+ Note: YouTube only counts playbacks that are initiated through the native play button.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>videoId</td>
+          <td>The ID of the video to be played, as returned from the
+        <a href
+        ="https://developers.google.com/youtube/v3/docs/videos#resource">
+        YouTube Data API</a>.</td>
+        </tr>
+        <tr>
+          <th>timeMillis</td>
+          <td>The time, in milliseconds, where playback should start in the video.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="loadVideos(java.util.List<java.lang.String>, int, int)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">loadVideos</span>
+      <span class="normal">(List&lt;String&gt; videoIds, int startIndex, int timeMillis)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Loads and plays a list of videos. Playback will start at the video with the specified index
+ and will start at the specified time in the video
+ <p>
+ Note: YouTube only counts playbacks that are initiated through the native play button.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>videoIds</td>
+          <td>A list of YouTube video IDs to be played, as returned from the <a
+        href="https://developers.google.com/youtube/v3/docs/videos#resource">YouTube
+        Data API</a>.</td>
+        </tr>
+        <tr>
+          <th>startIndex</td>
+          <td>The index in the list of the first video to be played.</td>
+        </tr>
+        <tr>
+          <th>timeMillis</td>
+          <td>The time, in milliseconds, where playback should start in the first video
+        played.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="loadVideos(java.util.List<java.lang.String>)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">loadVideos</span>
+      <span class="normal">(List&lt;String&gt; videoIds)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Loads and plays a list of videos.
+ <p>
+ Note: YouTube only counts playbacks that are initiated through the native play button.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>videoIds</td>
+          <td>A list of YouTube video IDs to be played, as returned from the
+        <a href
+        ="https://developers.google.com/youtube/v3/docs/videos#resource">
+        YouTube Data API</a>.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="next()"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">next</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Plays the next video in the loaded playlist.
+ <p>
+ Note that a second call to <code>next()</code> or <code>previous()</code>, before the first call has
+ finished (as indicated by <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html#onLoaded(java.lang.String)">onLoaded(String)</a></code>) might be ignored.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>NoSuchElementException</td>
+            <td>This exception is thrown if the method
+         is called at the end of the playlist.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="pause()"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">pause</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Pauses the currently playing video.
+</p></div>
+
+    </div>
+</div>
+
+
+<A NAME="play()"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">play</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Starts video playback of the currently cued / loaded video.
+ <p>
+ Note: YouTube only counts playbacks that are initiated through the native play button.
+</p></div>
+
+    </div>
+</div>
+
+
+<A NAME="previous()"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">previous</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Plays the previous video in the loaded playlist.
+ <p>
+ Note that a second call to <code>next()</code> or <code>previous()</code>, before the first call has
+ finished (as indicated by <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html#onLoaded(java.lang.String)">onLoaded(String)</a></code>) might be ignored.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>NoSuchElementException</td>
+            <td>This exception is thrown if the method is called
+         at the start of the playlist.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="release()"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">release</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Stop any loading or video playback and release any system resources used by this
+ <code>YouTubePlayer</code>.
+ <p>
+ Note that after calling this method any further interaction with this <code>YouTubePlayer</code> is
+ forbidden. A new instance must be created to re-enable playback.
+</p></div>
+
+    </div>
+</div>
+
+
+<A NAME="seekRelativeMillis(int)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">seekRelativeMillis</span>
+      <span class="normal">(int milliSeconds)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Seeks forward or backward by the specified number of seconds.
+ <p>
+ If the player is paused or stopped when this function is called, the player will remain remain
+ in the same state, but will start the video at the sought-to position when playback resumes.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>milliSeconds</td>
+          <td>Number of milliseconds to seek forward, if positive, or backward,
+        if negative.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="seekToMillis(int)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">seekToMillis</span>
+      <span class="normal">(int milliSeconds)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Seeks to the specified time in the video.
+ <p>
+ If the player is paused or stopped when this function is called, the player will remain remain
+ in the same state, but will start the video at the sought-to position when playback resumes.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>milliSeconds</td>
+          <td>Time to seek to in milliseconds.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setFullscreen(boolean)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">setFullscreen</span>
+      <span class="normal">(boolean fullscreen)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Inform the player that it is being laid out fullscreen.
+
+ Calling this function may affect the looks of the player's controls, e.g. showing an option to
+ enter or exit fullscreen, changing the layout to better suit the current player size etc.
+
+ <p>Note: Calling this function will cause any registered <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.OnFullscreenListener.html">YouTubePlayer.OnFullscreenListener</a></code> to fire 
+ an <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.OnFullscreenListener.html#onFullscreen(boolean)">onFullscreen(boolean)</a></code> event.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>fullscreen</td>
+          <td><code>true</code> if the player is fullscreen, <code>false</code> otherwise.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setFullscreenControlFlags(int)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">setFullscreenControlFlags</span>
+      <span class="normal">(int controlFlags)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Controls the automatic behavior when fullscreen mode is toggled.
+ <p>
+ This method allows you to enable or disable different parts of fullscreen behavior that can be
+ automated by the library. Examples include control of screen orientation, showing/hiding
+ system UI on fullscreen events and a default fullscreen layout. The default flags set
+ are <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CONTROL_SYSTEM_UI">FULLSCREEN_FLAG_CONTROL_SYSTEM_UI</a></code> and
+ <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CONTROL_ORIENTATION">FULLSCREEN_FLAG_CONTROL_ORIENTATION</a></code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>controlFlags</td>
+          <td>Bitwise-or of <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CONTROL_ORIENTATION">FULLSCREEN_FLAG_CONTROL_ORIENTATION</a></code>,
+        <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CONTROL_SYSTEM_UI">FULLSCREEN_FLAG_CONTROL_SYSTEM_UI</a></code>,
+        <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE">FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE</a></code> and
+        <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#FULLSCREEN_FLAG_CUSTOM_LAYOUT">FULLSCREEN_FLAG_CUSTOM_LAYOUT</a></code>. A value of <code>0</code> will disable any automatic
+        behavior.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setManageAudioFocus(boolean)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">setManageAudioFocus</span>
+      <span class="normal">(boolean manage)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Specifies whether or not the player will handle audio focus as part of its playback lifecycle.
+ <p>
+ When <code>true</code>, the player will request and abandon audio focus appropriately when playback
+ starts and ends, as well as pausing playback when losing audio focus. When ducking, the player
+ lowers its volume.
+ <p>
+ Handling the audio focus also includes pausing the player if necessary when the audio is
+ becoming noisy due to a change in audio outputs
+ (see <code>AudioManager.ACTION_AUDIO_BECOMING_NOISY</code>).
+ <p>
+ The default value is <code>true</code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>manage</td>
+          <td><code>true</code> to enable automatic handling of audio focus, <code>false</code> to
+        disable.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setOnFullscreenListener(com.google.android.youtube.player.YouTubePlayer.OnFullscreenListener)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">setOnFullscreenListener</span>
+      <span class="normal">(<a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.OnFullscreenListener.html">YouTubePlayer.OnFullscreenListener</a> listener)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Registers a <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.OnFullscreenListener.html">YouTubePlayer.OnFullscreenListener</a></code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>listener</td>
+          <td>The listener to be notified of fullscreen toggling.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags(int)</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setPlaybackEventListener(com.google.android.youtube.player.YouTubePlayer.PlaybackEventListener)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">setPlaybackEventListener</span>
+      <span class="normal">(<a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlaybackEventListener.html">YouTubePlayer.PlaybackEventListener</a> listener)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Registers a <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlaybackEventListener.html">YouTubePlayer.PlaybackEventListener</a></code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>listener</td>
+          <td>The listener to register, or <code>null</code> to unregister the previous listener.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setPlayerStateChangeListener(com.google.android.youtube.player.YouTubePlayer.PlayerStateChangeListener)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">setPlayerStateChangeListener</span>
+      <span class="normal">(<a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html">YouTubePlayer.PlayerStateChangeListener</a> listener)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Registers a <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStateChangeListener.html">YouTubePlayer.PlayerStateChangeListener</a></code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>listener</td>
+          <td>The listener to register, or <code>null</code> to unregister the previous listener.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setPlayerStyle(com.google.android.youtube.player.YouTubePlayer.PlayerStyle)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">setPlayerStyle</span>
+      <span class="normal">(<a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStyle.html">YouTubePlayer.PlayerStyle</a> style)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets the current style for the player, which impacts the level of control the user has over
+ the player.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>style</td>
+          <td>The chosen <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStyle.html">YouTubePlayer.PlayerStyle</a></code>. The default style is
+ <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStyle.html#DEFAULT">DEFAULT</a></code>.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setPlaylistEventListener(com.google.android.youtube.player.YouTubePlayer.PlaylistEventListener)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">setPlaylistEventListener</span>
+      <span class="normal">(<a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlaylistEventListener.html">YouTubePlayer.PlaylistEventListener</a> listener)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Registers a <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlaylistEventListener.html">YouTubePlayer.PlaylistEventListener</a></code>.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>listener</td>
+          <td>The listener to register, or <code>null</code> to unregister the previous listener.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setShowFullscreenButton(boolean)"></A>
+
+<div class="jd-details api apilevel-">
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public
+        
+        
+        abstract
+        
+        void
+      </span>
+      <span class="sympad">setShowFullscreenButton</span>
+      <span class="normal">(boolean show)</span>
+    </h4>
+      <div class="api-level">
+        <div></div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Shows or hides the fullscreen button on the player controls. The default is to show a
+ fullscreen button which enables the user to switch between fullscreen and non-fullscreen modes.
+ You can use this method to hide the fullscreen button if required, e.g., if you only show
+ videos in fullscreen.
+ <p>
+ Note: Only the <code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.PlayerStyle.html#DEFAULT">DEFAULT</a></code> player style supports this button, this method will
+ have no effect on other player styles.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>show</td>
+          <td><code>true</code> to show the fullscreen button, <code>false</code> to hide it.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">See Also</h5>
+      <ul class="nolist"><li><code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setPlayerStyle(com.google.android.youtube.player.YouTubePlayer.PlayerStyle)">setPlayerStyle(YouTubePlayer.PlayerStyle)</a></code></li><li><code><a href="../../../../../../reference/com/google/android/youtube/player/YouTubePlayer.html#setFullscreenControlFlags(int)">setFullscreenControlFlags(int)</a></code></li>
+      </ul>
+  </div>
+
+    </div>
+</div>
+
+
+
+
+
+<!-- ========= METHOD DETAIL ======== -->
+
+
+
+<!-- ========= END OF CLASS DATA ========= -->
+<A NAME="navbar_top"></A>
+
+<div id="footer" class="wrap" >
+
+
+  <div id="copyright">
+    
+  Except as noted, this content is licensed under <a
+  href="http://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a>.
+  For details and restrictions, see the <a href="http://developer.android.com/license.html">
+  Content License</a>.
+  </div>
+
+
+  <div id="footerlinks">
+    
+  <p>
+    <a href="http://developer.android.com/about/index.html">About Android</a>&nbsp;&nbsp;|&nbsp;
+    <a href="http://developer.android.com/legal.html">Legal</a>&nbsp;&nbsp;|&nbsp;
+    <a href="http://developer.android.com/support.html">Support</a>
+  </p>
+  </div>
+
+</div> <!-- end footer -->
+
+</div> <!-- jd-content -->
+
+</div><!-- end doc-content -->
+
+</div> <!-- end body-content --> 
+
+
+
+
+<!-- Grid - for dev
+<script type="text/javascript">
+
+window.gOverride = {
+                gColor: '#FF0000',
+                pColor: '#EEEEEE',
+                gOpacity: 0.10,
+                pOpacity: 0.40,
+                pHeight: 16,
+                pOffset: 2,
+                gColumns:16,
+                gEnabled:false,
+                pEnabled:false
+        }
+</script>
+
+<link href="../../../../../../assets/js/grid/960.gridder.css" rel="stylesheet" type="text/css">
+<script src="../../../../../../assets/js/grid/960.gridder.js" type="text/javascript"></script>
+-->
+
+
+
+
+
+
+
+</body>
+</html>

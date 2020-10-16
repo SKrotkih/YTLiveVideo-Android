@@ -9,6 +9,7 @@ Were used
 - [Google Sign-In](https://developers.google.com/identity/sign-in/android/sign-in). 
 - MVVM pattern
 - Coroutines (Multithreading async operations)
+- [YouTube Android Player API](https://developers.google.com/youtube/android/player)
 
 To use this application,
 
