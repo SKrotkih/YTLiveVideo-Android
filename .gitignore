@@ -9,5 +9,5 @@ config.info
 .externalNativeBuild
 .cxx
 /local.properties
+/app/docs
 /app/src/main/java/com/skdev/ytlivevideo/util/Credentials.kt
-
