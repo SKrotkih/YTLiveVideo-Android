@@ -34,5 +34,4 @@ class BroadcastPreviewData(
 
     var thumbUri : String,
     var watchUri : String,
-    var ingestionAddress : String) {
-}
+    var ingestionAddress : String)

@@ -184,7 +184,7 @@ object Utils {
 
             // Use ApplicationContext.
             // example: SharedPreferences etc...
-            val context: Context = LaunchedApp.applicationContext()
+            val context: Context = applicationContext()
         }
     }
 }

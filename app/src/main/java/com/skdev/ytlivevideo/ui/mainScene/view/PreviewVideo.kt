@@ -120,7 +120,7 @@ internal class PreviewVideo(context: Context?, attributes: AttributeSet?) : View
     }
 
     private fun getOptimalPreviewSize(sizes: List<Camera.Size>?, w: Int, h: Int): Camera.Size? {
-        val AspectTolerance = 0.1
+        val aspectTolerance = 0.1
         val targetRatio = w.toDouble() / h
         if (sizes == null) return null
         var optimalSize: Camera.Size? = null
@@ -129,7 +129,7 @@ internal class PreviewVideo(context: Context?, attributes: AttributeSet?) : View
         // Try to find an size match aspect ratio and size
         for (size in sizes) {
             val ratio = size.width.toDouble() / size.height
-            if (abs(ratio - targetRatio) > AspectTolerance) continue
+            if (abs(ratio - targetRatio) > aspectTolerance) continue
             if (abs(size.height - h) < minDiff) {
                 optimalSize = size
                 minDiff = abs(size.height - h).toDouble()

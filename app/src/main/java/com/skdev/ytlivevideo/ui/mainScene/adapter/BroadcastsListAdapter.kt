@@ -1,3 +1,5 @@
+@file:Suppress("unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused")
+
 package com.skdev.ytlivevideo.ui.mainScene.adapter
 
 import android.content.Context
