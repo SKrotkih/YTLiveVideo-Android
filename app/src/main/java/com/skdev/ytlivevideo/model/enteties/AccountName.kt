@@ -8,7 +8,7 @@ import com.skdev.ytlivevideo.util.Config
 
 object AccountName {
     private var mChosenAccountName: String? = null
-    const val ACCOUNT_KEY = "AccountKey"
+    private const val ACCOUNT_KEY = "AccountKey"
 
     fun getName(context: Context, bundle: Bundle? = null): String? {
         if (mChosenAccountName == null) {

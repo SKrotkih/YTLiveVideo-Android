@@ -17,7 +17,6 @@ import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.requests.*
 import com.skdev.ytlivevideo.ui.mainScene.adapter.SectionsPagerAdapter
 import com.skdev.ytlivevideo.ui.mainScene.fragment.BroadcastsListFragment
-import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.util.Config
 import com.skdev.ytlivevideo.util.Event
 import kotlinx.coroutines.CoroutineScope
@@ -74,13 +73,6 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
     }
 
     /**
-     * When the owner activity is finished, the framework calls the ViewModel objects's onCleared() method so that it can clean up resources
-     */
-    override fun onCleared() {
-        super.onCleared()
-    }
-
-    /**
      *  Tab Bar
      */
     fun setupViewPager(viewPager: ViewPager, adapter: SectionsPagerAdapter) {
@@ -110,7 +102,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
      */
     override fun fetchBroadcasts(state: BroadcastState) {
         startProcessing(getProgressBarTitle(state))
-        CoroutineScope(Dispatchers.IO).launch() {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 val list = LiveBroadcasts.getLiveBroadcastsAsync(state)
                 launch(Dispatchers.Main) {

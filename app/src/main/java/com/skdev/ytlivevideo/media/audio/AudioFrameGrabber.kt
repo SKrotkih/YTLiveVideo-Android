@@ -17,7 +17,6 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.util.Log
-import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.util.Config
 
 /**

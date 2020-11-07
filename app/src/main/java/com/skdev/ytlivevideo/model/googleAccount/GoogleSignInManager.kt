@@ -65,7 +65,7 @@ class GoogleSignInManager(val context: Activity) {
         try {
             mAccount = completedTask.getResult(ApiException::class.java)
             if (mAccount != null) {
-                Log.d(TAG,"The User is authenticated '${mAccount!!.getDisplayName()}' ${mAccount!!.grantedScopes} has done!")
+                Log.d(TAG,"The User is authenticated '${mAccount!!.displayName}' ${mAccount!!.grantedScopes} has done!")
                 didUserSignIn.value = Event(true)
                 googleApiReadyToUse.value = Event(true)
             }

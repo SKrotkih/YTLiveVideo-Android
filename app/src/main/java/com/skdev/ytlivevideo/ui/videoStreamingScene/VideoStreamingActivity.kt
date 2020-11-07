@@ -180,7 +180,7 @@ class VideoStreamingActivity : Activity() {
                     ).show()
                 }
             }
-            if (!permissions.isEmpty()) {
+            if (permissions.isNotEmpty()) {
                 val params = permissions.toTypedArray()
                 ActivityCompat.requestPermissions(this, params, REQUEST_CAMERA_MICROPHONE)
             } else {

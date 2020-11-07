@@ -31,14 +31,14 @@ enum class BroadcastState : Parcelable {
 //            testing – The broadcast is only visible to the partner.
 @Parcelize
 enum class BroadcastLifeCycleStatus: Parcelable {
-    abandoned,
-    complete,
-    created,
-    live,
-    liveStarting,
-    ready,
-    reclaimed,
-    revoked,
-    testStarting,
-    testing;
+    Abandoned,
+    Complete,
+    Created,
+    Live,
+    LiveStarting,
+    Ready,
+    Reclaimed,
+    Revoked,
+    TestStarting,
+    Testing;
 }

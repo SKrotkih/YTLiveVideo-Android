@@ -12,16 +12,14 @@ import android.webkit.URLUtil
 
 fun String.parseStringToDate(): Date {
     val zonedDate = ZonedDateTime.parse(this)
-    val date = Date.from(zonedDate.toInstant())
-    return date
+    return Date.from(zonedDate.toInstant())
 }
 
 fun String.parseStringToLocalDate(): LocalDate? {
     // 2019-01-14T06:22:23.365Z
-    val serverDateFormat: String = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+    val serverDateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
     val dateFormatter = DateTimeFormatter.ofPattern(serverDateFormat)
-    val date = LocalDate.parse(this, dateFormatter)
-    return date
+    return LocalDate.parse(this, dateFormatter)
 }
 
 fun String.toDate(format: String): Date? {

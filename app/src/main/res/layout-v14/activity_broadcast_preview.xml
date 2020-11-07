@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:focusable="true"
+    android:clickable="true"
+    android:background="@android:color/white">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="25dp"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:paddingBottom="25dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/broadcast_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center_horizontal"
+                            android:text="Upcoming Broadcast"
+                            android:textColor="#151515"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:paddingBottom="15dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.00"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/broadcast_name_label"
+                            android:layout_weight="0.35"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="start"
+                            android:text="Name"
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textColor="#736C6D"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/broadcast_name"
+                            android:layout_weight="0.65"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="left"
+                            android:text="Broadcast"
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:paddingBottom="15dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.00"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/broadcast_description_label"
+                            android:layout_weight="0.35"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="start"
+                            android:text="Description"
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textColor="#736C6D"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/broadcast_description"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:layout_weight="0.65"
+                            android:text="Broadcast"
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:paddingBottom="15dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.00"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/broadcast_created_label"
+                            android:layout_weight="0.35"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="start"
+                            android:text="Created at"
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textColor="#736C6D"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/broadcast_created"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:layout_weight="0.65"
+                            android:gravity="start"
+                            android:text="Broadcast"
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:paddingBottom="15dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.00"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/broadcast_scheduled_label"
+                            android:layout_weight="0.35"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="start"
+                            android:text="Scheduled at"
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textColor="#736C6D"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/broadcast_scheduled"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:layout_weight="0.65"
+                            android:gravity="left"
+                            android:text=""
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:paddingBottom="15dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.00"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/broadcast_lifeCycleStatus_label"
+                            android:layout_weight="0.35"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="start"
+                            android:text="Broadcast Status"
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textColor="#736C6D"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/broadcast_lifeCycleStatus"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:layout_weight="0.65"
+                            android:gravity="left"
+                            android:text=""
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:paddingBottom="25dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.00"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/broadcast_streamStatus_label"
+                            android:layout_weight="0.35"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="start"
+                            android:text="Stream Status"
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textColor="#736C6D"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/broadcast_streamStatus"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:layout_weight="0.65"
+                            android:gravity="left"
+                            android:text=""
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="125dp"
+                    android:paddingBottom="25dp">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.00"
+                        android:orientation="horizontal">
+
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <com.android.volley.toolbox.NetworkImageView
+                            android:id="@+id/thumbnail"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="#1000"
+                            android:scaleType="centerCrop" />
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+                    </LinearLayout>
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.00"
+                        android:orientation="horizontal">
+
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <Button
+                            android:id="@+id/start_streaming"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:onClick="onButtonPress"
+                            android:text="Start Streaming"
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textSize="14sp"
+                            android:visibility="gone" />
+
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+                    </LinearLayout>
+
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

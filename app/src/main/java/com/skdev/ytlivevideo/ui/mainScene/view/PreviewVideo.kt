@@ -24,6 +24,7 @@ import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
 import com.skdev.ytlivevideo.util.Config
 import com.skdev.ytlivevideo.util.Utils
 import java.io.IOException
+import kotlin.math.abs
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
@@ -34,7 +35,7 @@ import java.io.IOException
 internal class PreviewVideo(context: Context?, attributes: AttributeSet?) : ViewGroup(context, attributes),
     SurfaceHolder.Callback {
 
-    var surfaceView: SurfaceView = SurfaceView(context)
+    private var surfaceView: SurfaceView = SurfaceView(context)
 
     var surfaceHolder: SurfaceHolder
     var previewSize: Camera.Size? = null
@@ -119,7 +120,7 @@ internal class PreviewVideo(context: Context?, attributes: AttributeSet?) : View
     }
 
     private fun getOptimalPreviewSize(sizes: List<Camera.Size>?, w: Int, h: Int): Camera.Size? {
-        val ASPECT_TOLERANCE = 0.1
+        val AspectTolerance = 0.1
         val targetRatio = w.toDouble() / h
         if (sizes == null) return null
         var optimalSize: Camera.Size? = null
@@ -128,10 +129,10 @@ internal class PreviewVideo(context: Context?, attributes: AttributeSet?) : View
         // Try to find an size match aspect ratio and size
         for (size in sizes) {
             val ratio = size.width.toDouble() / size.height
-            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue
-            if (Math.abs(size.height - h) < minDiff) {
+            if (abs(ratio - targetRatio) > AspectTolerance) continue
+            if (abs(size.height - h) < minDiff) {
                 optimalSize = size
-                minDiff = Math.abs(size.height - h).toDouble()
+                minDiff = abs(size.height - h).toDouble()
             }
         }
 
@@ -139,9 +140,9 @@ internal class PreviewVideo(context: Context?, attributes: AttributeSet?) : View
         if (optimalSize == null) {
             minDiff = Double.MAX_VALUE
             for (size in sizes) {
-                if (Math.abs(size.height - h) < minDiff) {
+                if (abs(size.height - h) < minDiff) {
                     optimalSize = size
-                    minDiff = Math.abs(size.height - h).toDouble()
+                    minDiff = abs(size.height - h).toDouble()
                 }
             }
         }

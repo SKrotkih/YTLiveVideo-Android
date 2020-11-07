@@ -19,7 +19,7 @@ import android.util.LruCache
 import com.android.volley.toolbox.ImageLoader.ImageCache
 
 class LruBitmapCache(maxSize: Int) : LruCache<String?, Bitmap?>(maxSize), ImageCache {
-    constructor(ctx: Context) : this(getCacheSize(ctx)) {}
+    constructor(ctx: Context) : this(getCacheSize(ctx))
 
     fun sizeOf(key: String?, value: Bitmap): Int {
         return value.rowBytes * value.height

@@ -98,7 +98,7 @@ object Utils {
     /**
      * Shows an error alert dialog with the given message.
      *
-     * @param activity activity
+     * @param context activity
      * @param message  message to show or `null` for none
      */
     fun showError(context: Context, message: String?) {

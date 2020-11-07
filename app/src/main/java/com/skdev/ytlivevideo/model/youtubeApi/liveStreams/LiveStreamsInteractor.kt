@@ -72,8 +72,7 @@ object LiveStreamsInteractor {
             val liveStreamsResponse = livestreamRequest.execute()
             val liveStreams = liveStreamsResponse.items
             if (liveStreams.size == 1) {
-                val stream = liveStreams[0]
-                return stream
+                return liveStreams[0]
             }
         } catch (e: IOException) {
             Log.e(Config.APP_NAME, "Failed getting live streams list (see 'Caused by'):", e)

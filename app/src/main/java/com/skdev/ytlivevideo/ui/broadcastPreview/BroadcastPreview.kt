@@ -167,7 +167,7 @@ class BroadcastPreview: AppCompatActivity() {
 
     private fun startBroadcastStreaming() {
         val broadcastId = data!!.broadcastId
-        val ingestionAddress = data!!.ingestionAddress!!
+        val ingestionAddress = data!!.ingestionAddress
         val intent = Intent(
             applicationContext,
             VideoStreamingActivity::class.java

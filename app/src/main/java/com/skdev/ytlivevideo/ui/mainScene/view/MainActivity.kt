@@ -34,7 +34,6 @@ import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
 import com.skdev.ytlivevideo.model.googleAccount.GoogleSignInManager
 import com.skdev.ytlivevideo.model.network.DownLoadImageTask
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
-import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastState
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.ui.mainScene.adapter.SectionsPagerAdapter
 import com.skdev.ytlivevideo.ui.mainScene.fragment.FragmentDelegate
@@ -56,7 +55,7 @@ import kotlinx.coroutines.launch
  */
 class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner {
 
-    lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: MainViewModel
 
     private var progressDialog: Dialog? = null
 
@@ -165,7 +164,7 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
     /**
      * Show Error Dialog
      */
-    fun showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode: Int) {
+    private fun showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode: Int) {
         CoroutineScope(Dispatchers.Main).launch {
             val googleAPI = GoogleApiAvailability.getInstance()
             val dialog: Dialog = googleAPI.getErrorDialog(

@@ -25,7 +25,6 @@ import com.google.api.services.youtube.model.*
 import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
 import com.skdev.ytlivevideo.model.youtubeApi.liveStreams.LiveStreamsInteractor
 import com.skdev.ytlivevideo.util.Config
-import com.skdev.ytlivevideo.util.Utils
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*

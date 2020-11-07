@@ -30,7 +30,6 @@ import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastState
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.ui.router.Router
-import com.skdev.ytlivevideo.util.Utils
 import com.skdev.ytlivevideo.util.Utils.setSafeOnClickListener
 import com.skdev.ytlivevideo.util.timeAgo
 import kotlinx.android.synthetic.main.live_events_list_item.view.*
@@ -160,8 +159,8 @@ class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
 
         private fun renderGridItem(view: View, broadcastItem: LiveBroadcastItem) {
             view.title.text = broadcastItem.title
-            view.createdAt.text = "Created: ${broadcastItem.publishedAt.timeAgo() ?: ""}"
-            view.scheduledAt.text = "Scheduled: ${broadcastItem.publishedAt.timeAgo() ?: ""}"
+            view.createdAt.text = "Created: ${broadcastItem.publishedAt.timeAgo()}"
+            view.scheduledAt.text = "Scheduled: ${broadcastItem.publishedAt.timeAgo()}"
             view.thumbnail.setImageUrl(broadcastItem.thumbUri, mImageLoader)
             val viewModel: MainViewModel by activityViewModels()
             if (viewModel.isConnected()) {

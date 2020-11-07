@@ -21,7 +21,6 @@ import com.skdev.ytlivevideo.media.Ffmpeg.encodeAudioFrame
 import com.skdev.ytlivevideo.media.Ffmpeg.encodeVideoFrame
 import com.skdev.ytlivevideo.media.Ffmpeg.init
 import com.skdev.ytlivevideo.media.Ffmpeg.shutdown
-import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.media.video.VideoFrameGrabber
 import com.skdev.ytlivevideo.util.Config
 

@@ -12,7 +12,7 @@ import java.io.IOException
 object LiveBroadcasts  {
 
     fun createNewBroadcastAsync(name: String, description: String) : Deferred<Unit> =
-        CoroutineScope(Dispatchers.IO).async() {
+        CoroutineScope(Dispatchers.IO).async {
             try {
                 val broadcastId = LiveBroadcastsInteractor.createNewBroadcast(description, name)
 
@@ -28,7 +28,7 @@ object LiveBroadcasts  {
         }
 
     suspend fun getBroadcastPreviewData(broadcastId: String) : BroadcastPreviewData? =
-        CoroutineScope(Dispatchers.IO).async() {
+        CoroutineScope(Dispatchers.IO).async {
             val list = getLiveBroadcastsAsync(null, broadcastId)
             if (list.count() > 0) {
                 val broadcast = list[0]
@@ -47,7 +47,7 @@ object LiveBroadcasts  {
                         broadcast.lifeCycleStatus,
                         stream?.status?.streamStatus ?: "-",
                         broadcast.thumbUri,
-                        broadcast.watchUri ?: "",
+                        broadcast.watchUri,
                         broadcast.ingestionAddress ?: ""
                     )
                 }
@@ -71,7 +71,7 @@ object LiveBroadcasts  {
         }
 
     fun deleteBroadcasts(broadcastIDs: List<String>): Deferred<Unit> =
-        CoroutineScope(Dispatchers.IO).async() {
+        CoroutineScope(Dispatchers.IO).async {
             try {
                 broadcastIDs.forEach {
                     LiveBroadcastsInteractor.deleteBroadcast(it)
@@ -92,7 +92,7 @@ object LiveBroadcasts  {
      * Transit to Live status
      */
     fun transitionLiveBroadcastsToLiveAsync(broadcastId: String?) : Deferred<Boolean> =
-        CoroutineScope(Dispatchers.IO).async() {
+        CoroutineScope(Dispatchers.IO).async {
             try {
                 if (broadcastId.isNullOrBlank()) {
                     throw IllegalArgumentException("The Stream ID is not presented")
@@ -111,7 +111,7 @@ object LiveBroadcasts  {
      * Transit to Completed status
      */
     fun transitionLiveBroadcastsToCompletedAsync(broadcastId: String?) : Deferred<Unit> =
-        CoroutineScope(Dispatchers.IO).async() {
+        CoroutineScope(Dispatchers.IO).async {
             try {
                 if (broadcastId.isNullOrBlank()) {
                     throw IllegalArgumentException("The Broadcast ID is not presented")
