@@ -29,7 +29,6 @@ import com.google.android.youtube.player.YouTubePlayer.OnFullscreenListener
 import com.google.android.youtube.player.YouTubePlayerView
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.util.Credentials
-import com.skdev.ytlivevideo.youtubeapidemo.YouTubeFailureRecoveryActivity
 
 /**
  * Sample activity showing how to properly enable custom fullscreen behavior.

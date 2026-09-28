@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.skdev.ytlivevideo.youtubeapidemo;
+package com.skdev.ytlivevideo.ui.youtubePlayer;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.skdev.ytlivevideo.R;
+import com.skdev.ytlivevideo.util.Credentials;
 
 /**
  * An abstract activity which deals with recovering from errors which may occur during API
@@ -49,7 +50,7 @@ public abstract class YouTubeFailureRecoveryActivity extends YouTubeBaseActivity
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == RECOVERY_DIALOG_REQUEST) {
       // Retry initialization if user performed a recovery action
-      getYouTubePlayerProvider().initialize(DeveloperKey.DEVELOPER_KEY, this);
+      getYouTubePlayerProvider().initialize(Credentials.API_KEY, this);
     }
   }
 
