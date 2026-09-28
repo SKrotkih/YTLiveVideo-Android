@@ -1,7 +1,7 @@
 package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 enum class BroadcastState : Parcelable {

@@ -6,15 +6,17 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.skdev.ytlivevideo.R
+import com.skdev.ytlivevideo.databinding.ActivityCreateBroadcastBinding
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.requests.LiveBroadcasts
 import com.skdev.ytlivevideo.ui.liveStream.YouTubeStreamLauncher
 import com.skdev.ytlivevideo.util.ProgressDialog
 import com.skdev.ytlivevideo.util.Utils
-import kotlinx.android.synthetic.main.activity_create_broadcast.*
 import kotlinx.coroutines.*
 import java.io.IOException
 
 class CreateNewBroadcast: AppCompatActivity() {
+
+    private lateinit var binding: ActivityCreateBroadcastBinding
 
     private var job: Job? = null
 
@@ -22,9 +24,10 @@ class CreateNewBroadcast: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_broadcast)
+        binding = ActivityCreateBroadcastBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        create_broadcast.text = "Start Live Streaming"
+        binding.createBroadcast.text = "Start Live Streaming"
     }
 
     fun onCreateBroadcast(view: View) {
@@ -35,7 +38,7 @@ class CreateNewBroadcast: AppCompatActivity() {
      * Create Live Stream with using YouTube App
      */
     private fun startYouTubeLive() {
-        val description = broadcast_description.text.toString().trim()
+        val description = binding.broadcastDescription.text.toString().trim()
         if (description.isEmpty()) {
             Utils.showError(this, "Please enter new broadcast' description")
             return
@@ -47,8 +50,8 @@ class CreateNewBroadcast: AppCompatActivity() {
      * Create Broadcast with using YouTube API
      */
     private fun createBroadcastOnMyAccount() {
-        val name = broadcast_name.text.toString().trim()
-        val description = broadcast_description.text.toString().trim()
+        val name = binding.broadcastName.text.toString().trim()
+        val description = binding.broadcastDescription.text.toString().trim()
         if (name.isEmpty() || description.isEmpty()) {
             Utils.showError(this, "Please enter new broadcast' name and description")
             return

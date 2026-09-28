@@ -25,7 +25,9 @@
         android:theme="@style/Theme.AppCompat.Light"
         android:name = ".util.Utils$LaunchedApp">
 
-        <activity android:name=".ui.splashScreen.SplashActivity">
+        <activity
+            android:name=".ui.splashScreen.SplashActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

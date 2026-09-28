@@ -27,12 +27,12 @@ import com.google.android.gms.plus.PlusOneButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.R
+import com.skdev.ytlivevideo.databinding.LiveEventsListItemBinding
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastState
 import com.skdev.ytlivevideo.ui.mainScene.view.viewModel.MainViewModel
 import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.util.Utils.setSafeOnClickListener
 import com.skdev.ytlivevideo.util.timeAgo
-import kotlinx.android.synthetic.main.live_events_list_item.view.*
 
 /**
  * Left side fragment showing user's uploaded YouTube videos.
@@ -158,15 +158,16 @@ class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
         }
 
         private fun renderGridItem(view: View, broadcastItem: LiveBroadcastItem) {
-            view.title.text = broadcastItem.title
-            view.createdAt.text = "Created: ${broadcastItem.publishedAt.timeAgo()}"
-            view.scheduledAt.text = "Scheduled: ${broadcastItem.publishedAt.timeAgo()}"
-            view.thumbnail.setImageUrl(broadcastItem.thumbUri, mImageLoader)
+            val binding = LiveEventsListItemBinding.bind(view)
+            binding.title.text = broadcastItem.title
+            binding.createdAt.text = "Created: ${broadcastItem.publishedAt.timeAgo()}"
+            binding.scheduledAt.text = "Scheduled: ${broadcastItem.publishedAt.timeAgo()}"
+            binding.thumbnail.setImageUrl(broadcastItem.thumbUri, mImageLoader)
             val viewModel: MainViewModel by activityViewModels()
             if (viewModel.isConnected()) {
-                (view.plus_button as PlusOneButton).initialize(broadcastItem.watchUri, null)
+                (binding.plusButton as PlusOneButton).initialize(broadcastItem.watchUri, null)
             }
-            view.main_target.setOnClickListener {
+            binding.mainTarget.setOnClickListener {
                 (activity as FragmentDelegate).didUserSelectBroadcastItem(broadcastItem)
             }
         }

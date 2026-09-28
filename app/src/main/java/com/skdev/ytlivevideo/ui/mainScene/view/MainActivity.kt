@@ -28,6 +28,7 @@ import com.android.volley.toolbox.ImageLoader
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.tabs.TabLayout
 import com.skdev.ytlivevideo.R
+import com.skdev.ytlivevideo.databinding.ActivityMainBinding
 import com.skdev.ytlivevideo.model.enteties.AccountName
 import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
 import com.skdev.ytlivevideo.model.googleAccount.GoogleSignInManager
@@ -41,7 +42,6 @@ import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.util.Config
 import com.skdev.ytlivevideo.util.ProgressDialog
 import com.skdev.ytlivevideo.util.Utils
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -54,6 +54,8 @@ import kotlinx.coroutines.launch
  */
 class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner {
 
+    private lateinit var binding: ActivityMainBinding
+
     private lateinit var viewModel: MainViewModel
 
     private var progressDialog: Dialog? = null
@@ -65,7 +67,8 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         configureViewModel()
         configureTabBar()
         logInIfNeeded(savedInstanceState)
@@ -127,12 +130,12 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
     }
 
     override fun renderView() {
-        display_name.text = viewModel.getAccountName()
+        binding.displayName.text = viewModel.getAccountName()
         val photoUri = viewModel.getPhotoUrl()
         if (photoUri == null) {
-            avatar.setImageDrawable(null)
+            binding.avatar.setImageDrawable(null)
         } else {
-            DownLoadImageTask(avatar).execute(photoUri.toString())
+            DownLoadImageTask(binding.avatar).execute(photoUri.toString())
         }
     }
 
@@ -166,12 +169,12 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
     private fun showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode: Int) {
         CoroutineScope(Dispatchers.Main).launch {
             val googleAPI = GoogleApiAvailability.getInstance()
-            val dialog: Dialog = googleAPI.getErrorDialog(
+            val dialog: Dialog? = googleAPI.getErrorDialog(
                 this@MainActivity,
                 connectionStatusCode,
                 Config.REQUEST_GOOGLE_PLAY_SERVICES
             )
-            dialog.show()
+            dialog?.show()
         }
     }
 

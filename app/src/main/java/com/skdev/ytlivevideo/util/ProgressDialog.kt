@@ -5,8 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
-import com.skdev.ytlivevideo.R
-import kotlinx.android.synthetic.main.activity_progress_dialog.*
+import com.skdev.ytlivevideo.databinding.ActivityProgressDialogBinding
 
 class ProgressDialog {
     companion object {
@@ -16,10 +15,10 @@ class ProgressDialog {
 
         fun create(context: Context, title: String): Dialog {
             val dialog = Dialog(context)
-            val inflate = LayoutInflater.from(context).inflate(R.layout.activity_progress_dialog, null)
-            dialog.setContentView(inflate)
+            val binding = ActivityProgressDialogBinding.inflate(LayoutInflater.from(context))
+            dialog.setContentView(binding.root)
             dialog.setCancelable(false)
-            dialog.title.text = title
+            binding.title.text = title
             dialog.window!!.setBackgroundDrawable(
                 ColorDrawable(Color.TRANSPARENT)
             )

@@ -13,6 +13,7 @@ import androidx.core.view.isVisible
 import com.android.volley.toolbox.ImageLoader
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.skdev.ytlivevideo.R
+import com.skdev.ytlivevideo.databinding.ActivityBroadcastPreviewBinding
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastPreviewData
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastsInteractor
@@ -20,13 +21,13 @@ import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.requests.*
 import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.ui.videoStreamingScene.VideoStreamingActivity
 import com.skdev.ytlivevideo.util.*
-import kotlinx.android.synthetic.main.activity_broadcast_preview.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
 
 class BroadcastPreview: AppCompatActivity() {
+    private lateinit var binding: ActivityBroadcastPreviewBinding
     private var data: BroadcastPreviewData? = null
     private var state: String? = null
     private var broadcastId: String? = null
@@ -36,7 +37,8 @@ class BroadcastPreview: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_broadcast_preview)
+        binding = ActivityBroadcastPreviewBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         extractParams()
         renderView()
         downloadEventData()
@@ -48,26 +50,26 @@ class BroadcastPreview: AppCompatActivity() {
     }
 
     private fun renderView() {
-        broadcast_title.text = "$state broadcast"
-        broadcast_name.text = data?.name ?: ""
-        broadcast_description.text = data?.description ?: ""
-        broadcast_created.text = data?.created?.timeAgo() ?: ""
-        broadcast_scheduled.text = data?.scheduled?.timeAgo() ?: ""
-        broadcast_lifeCycleStatus.text = data?.lifeCycleStatus ?: "-"
-        broadcast_streamStatus.text = data?.streamStatus ?: "-"
-        thumbnail.setImageUrl(data?.thumbUri, mImageLoader)
-        start_streaming.isVisible = true
+        binding.broadcastTitle.text = "$state broadcast"
+        binding.broadcastName.text = data?.name ?: ""
+        binding.broadcastDescription.text = data?.description ?: ""
+        binding.broadcastCreated.text = data?.created?.timeAgo() ?: ""
+        binding.broadcastScheduled.text = data?.scheduled?.timeAgo() ?: ""
+        binding.broadcastLifeCycleStatus.text = data?.lifeCycleStatus ?: "-"
+        binding.broadcastStreamStatus.text = data?.streamStatus ?: "-"
+        binding.thumbnail.setImageUrl(data?.thumbUri, mImageLoader)
+        binding.startStreaming.isVisible = true
         when {
             canWatchVideo -> {
-                broadcast_streamStatus.setTextColor(Color.BLACK)
-                start_streaming.text = "Watch video"
+                binding.broadcastStreamStatus.setTextColor(Color.BLACK)
+                binding.startStreaming.text = "Watch video"
             }
             data?.streamStatus == "active" -> {
-                broadcast_streamStatus.setTextColor(Color.GREEN)
-                start_streaming.text = "Start Streaming"
+                binding.broadcastStreamStatus.setTextColor(Color.GREEN)
+                binding.startStreaming.text = "Start Streaming"
             }
             else -> {
-                start_streaming.isVisible = false
+                binding.startStreaming.isVisible = false
             }
         }
     }
@@ -133,7 +135,7 @@ class BroadcastPreview: AppCompatActivity() {
      * Play Video (id=broadcast ID, active stream or completed video) on the YouTube Android Player
      */
     private fun playYouTubeVideo() {
-        val broadcastId = data?.broadcastId
+        val broadcastId = data!!.broadcastId
         if (broadcastId != null) {
             Router.StartActivity.YT_FULLSCREEN_PLAYER.run(broadcastId)
         }
