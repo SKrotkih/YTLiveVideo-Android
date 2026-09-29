@@ -1,6 +1,7 @@
 package com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.requests
 
 import android.util.Log
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastPreviewData
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.BroadcastState
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
@@ -20,6 +21,9 @@ object LiveBroadcasts  {
                 val data: BroadcastPreviewData? = getBroadcastPreviewData(broadcastId!!)
                 Log.d(TAG, "The new stream has '${data?.streamStatus ?: "-"}' status")
 
+            } catch (e: UserRecoverableAuthIOException) {
+                // Keep the consent intent so the UI can ask the user for access
+                throw e
             } catch (e: IOException) {
                 Log.e(TAG, "Error while creating a new event request:", e)
                 val message = e.cause?.message ?: "Error while creating a new event request"
@@ -63,6 +67,9 @@ object LiveBroadcasts  {
                 list.forEach{it.state = state}
                 Log.d(TAG, list.toString())
                 return@withContext list
+            } catch (e: UserRecoverableAuthIOException) {
+                // Keep the consent intent so the UI can ask the user for access
+                throw e
             } catch (e: IOException) {
                 Log.e(TAG, "Failed fetch all live events:", e)
                 val message = e.cause?.message ?: "Error while fetching live events with '${state.toString()}' state"
@@ -77,6 +84,9 @@ object LiveBroadcasts  {
                     LiveBroadcastsInteractor.deleteBroadcast(it)
                 }
                 return@async
+            } catch (e: UserRecoverableAuthIOException) {
+                // Keep the consent intent so the UI can ask the user for access
+                throw e
             } catch (e: IOException) {
                 Log.e(TAG, "Error while deleting broadcasts:", e)
                 val message = e.cause?.message ?: "Error while deleting broadcasts"
@@ -100,6 +110,9 @@ object LiveBroadcasts  {
                 // delay(10000)
                 LiveBroadcastsInteractor.transitionLiveBroadcastsToLive(broadcastId)
                 return@async true
+            } catch (e: UserRecoverableAuthIOException) {
+                // Keep the consent intent so the UI can ask the user for access
+                throw e
             } catch (e: IOException) {
                 Log.e(TAG, "Failed start broadcasting:", e)
                 val message = e.localizedMessage
@@ -118,6 +131,9 @@ object LiveBroadcasts  {
                 } else {
                     LiveBroadcastsInteractor.transitionLiveBroadcastsToCompleted(broadcastId)
                 }
+            } catch (e: UserRecoverableAuthIOException) {
+                // Keep the consent intent so the UI can ask the user for access
+                throw e
             } catch (e: IOException) {
                 Log.e(TAG, "Error while finishing broadcast request:", e)
                 val message = e.cause?.message ?: "Error while finishing broadcast request"

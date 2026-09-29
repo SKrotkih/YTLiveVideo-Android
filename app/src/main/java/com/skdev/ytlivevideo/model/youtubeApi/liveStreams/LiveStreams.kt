@@ -1,6 +1,7 @@
 package com.skdev.ytlivevideo.model.youtubeApi.liveStreams
 
 import android.util.Log
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.google.api.services.youtube.model.LiveStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -17,6 +18,9 @@ object LiveStreams {
                 val list = LiveStreamsInteractor.getLiveStreamsListItem(streamId)
                 Log.d(TAG, list.toString())
                 return@withContext list
+            } catch (e: UserRecoverableAuthIOException) {
+                // Keep the consent intent so the UI can ask the user for access
+                throw e
             } catch (e: IOException) {
                 Log.e(TAG, "Failed fetch live stream:", e)
                 val message = e.cause?.message ?: "Error while fetching live stream $streamId"

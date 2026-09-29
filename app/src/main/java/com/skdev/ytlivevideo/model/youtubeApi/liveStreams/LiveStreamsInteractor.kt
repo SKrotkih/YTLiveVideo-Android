@@ -33,7 +33,8 @@ object LiveStreamsInteractor {
         // Create content distribution network with format and ingestion
         // type.
         val cdn = CdnSettings()
-        cdn.format = "240p"
+        cdn.resolution = "variable"
+        cdn.frameRate = "variable"
         cdn.ingestionType = "rtmp"
         val stream = LiveStream()
         stream.kind = "youtube#liveStream"
@@ -43,7 +44,7 @@ object LiveStreamsInteractor {
         // Create the insert request
         val liveStreamInsert = youtube
             .liveStreams()
-            .insert("snippet,cdn", stream)
+            .insert(listOf("snippet", "cdn"), stream)
 
         // Request is executed and inserted stream is returned
         return liveStreamInsert.execute()
@@ -52,8 +53,8 @@ object LiveStreamsInteractor {
     fun getLiveStreamingIngestionAddress(streamId: String?): String {
         val liveStreamRequest = youtube
             .liveStreams()
-            .list("cdn")
-        liveStreamRequest.id = streamId
+            .list(listOf("cdn"))
+        liveStreamRequest.id = listOf(streamId)
         val returnedStream = liveStreamRequest.execute()
         val streamList = returnedStream.items
         if (streamList.isEmpty()) {
@@ -66,8 +67,8 @@ object LiveStreamsInteractor {
 
     fun getLiveStreamsListItem(streamId: String): LiveStream? {
         Log.d(Config.APP_NAME, "Requesting stream $streamId...")
-        val livestreamRequest = youtube.liveStreams().list("status")
-        livestreamRequest.id = streamId
+        val livestreamRequest = youtube.liveStreams().list(listOf("status"))
+        livestreamRequest.id = listOf(streamId)
         try {
             val liveStreamsResponse = livestreamRequest.execute()
             val liveStreams = liveStreamsResponse.items

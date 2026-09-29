@@ -9,7 +9,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.Scope
 import com.google.android.gms.tasks.Task
+import com.google.api.services.youtube.YouTubeScopes
 import com.skdev.ytlivevideo.util.Event
 
 class GoogleSignInManager(val context: Activity) {
@@ -26,6 +28,7 @@ class GoogleSignInManager(val context: Activity) {
     fun googleSignIn() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
+            .requestScopes(Scope(YouTubeScopes.YOUTUBE))
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(context, gso)
         context.startActivityForResult(mGoogleSignInClient?.signInIntent, RC_SIGN_IN)

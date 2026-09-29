@@ -50,7 +50,8 @@ android {
                 'META-INF/NOTICE.txt',
                 'META-INF/notice.txt',
                 'META-INF/ASL2.0',
-                'META-INF/*.kotlin_module'
+                'META-INF/*.kotlin_module',
+                'META-INF/INDEX.LIST'
             ]
         }
     }
@@ -64,14 +65,13 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
     implementation 'androidx.fragment:fragment-ktx:1.6.2'
-    implementation 'com.google.apis:google-api-services-youtube:v3-rev120-1.19.0'
+    implementation 'com.google.apis:google-api-services-youtube:v3-rev20260902-2.0.0'
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'com.google.http-client:google-http-client-android:1.43.3'
     implementation 'com.google.api-client:google-api-client-android:2.2.0'
     implementation 'com.google.api-client:google-api-client-gson:2.2.0'
     implementation 'com.mcxiaoke.volley:library:1.0.18'
     implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'com.google.android.gms:play-services-plus:17.0.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.preference:preference-ktx:1.2.1'
 

@@ -23,7 +23,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.toolbox.ImageLoader
-import com.google.android.gms.plus.PlusOneButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.R
@@ -163,10 +162,6 @@ class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
             binding.createdAt.text = "Created: ${broadcastItem.publishedAt.timeAgo()}"
             binding.scheduledAt.text = "Scheduled: ${broadcastItem.publishedAt.timeAgo()}"
             binding.thumbnail.setImageUrl(broadcastItem.thumbUri, mImageLoader)
-            val viewModel: MainViewModel by activityViewModels()
-            if (viewModel.isConnected()) {
-                (binding.plusButton as PlusOneButton).initialize(broadcastItem.watchUri, null)
-            }
             binding.mainTarget.setOnClickListener {
                 (activity as FragmentDelegate).didUserSelectBroadcastItem(broadcastItem)
             }

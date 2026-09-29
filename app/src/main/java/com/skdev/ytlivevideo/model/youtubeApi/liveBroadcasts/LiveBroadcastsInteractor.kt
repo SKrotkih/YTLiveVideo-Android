@@ -51,7 +51,7 @@ object LiveBroadcastsInteractor {
             // Create the bind request
             val liveBroadcastBind = youtube
                 .liveBroadcasts()
-                .bind(liveBroadcast.id,"id,contentDetails")
+                .bind(liveBroadcast.id, listOf("id", "contentDetails"))
             // Set stream id to bind
             liveBroadcastBind.streamId = liveStream.id
             // Request is executed and bound broadcast is returned
@@ -112,7 +112,7 @@ object LiveBroadcastsInteractor {
         val liveBroadcastInsert = youtube
             .liveBroadcasts()
             .insert(
-                "id,snippet,contentDetails,status",
+                listOf("id", "snippet", "contentDetails", "status"),
                 broadcast
             )
 
@@ -122,10 +122,10 @@ object LiveBroadcastsInteractor {
 
     fun getLiveBroadcastsList(state: BroadcastState?, broadcastId: String?): List<LiveBroadcastItem> {
         Log.d(Config.APP_NAME, "Requesting live events.")
-        val liveBroadcastRequest = youtube.liveBroadcasts().list("id,snippet,contentDetails,status")
+        val liveBroadcastRequest = youtube.liveBroadcasts().list(listOf("id", "snippet", "contentDetails", "status"))
         //liveBroadcastRequest.setMine(true);
         if (state != null) liveBroadcastRequest.broadcastStatus = state.value()
-        if (broadcastId != null) liveBroadcastRequest.id = broadcastId
+        if (broadcastId != null) liveBroadcastRequest.id = listOf(broadcastId)
         try {
             // List request is executed and list of broadcasts are returned
             val returnedListResponse = liveBroadcastRequest.execute()
@@ -151,7 +151,7 @@ object LiveBroadcastsInteractor {
     }
 
     fun deleteBroadcast(broadcastId: String?) {
-        youtube.liveBroadcasts().delete(broadcastId)
+        youtube.liveBroadcasts().delete(broadcastId).execute()
     }
 
     /**
@@ -176,7 +176,7 @@ object LiveBroadcastsInteractor {
 
     private fun transitionToStatus(status: String, broadcastId: String?) {
         Log.d(TAG, "Transition broadcast $broadcastId to the $status status")
-        youtube.liveBroadcasts().transition(status, broadcastId, "status").execute()
+        youtube.liveBroadcasts().transition(status, broadcastId, listOf("status")).execute()
     }
 
 }
