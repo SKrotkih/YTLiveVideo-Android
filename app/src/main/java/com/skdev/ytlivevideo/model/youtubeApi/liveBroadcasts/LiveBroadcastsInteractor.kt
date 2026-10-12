@@ -79,9 +79,7 @@ object LiveBroadcastsInteractor {
         // We need a date that's in the proper ISO format and is in the future,
         // since the API won't
         // create events that start in the past.
-        val dateFormat = SimpleDateFormat(
-            "yyyy-MM-dd'T'HH:mm:ss'Z'"
-        )
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
         dateFormat.timeZone = TimeZone.getTimeZone("UTC")
         val futureDateMillis = (System.currentTimeMillis()
                 + FUTURE_DATE_OFFSET_MILLIS)
@@ -123,7 +121,6 @@ object LiveBroadcastsInteractor {
     fun getLiveBroadcastsList(state: BroadcastState?, broadcastId: String?): List<LiveBroadcastItem> {
         Log.d(Config.APP_NAME, "Requesting live events.")
         val liveBroadcastRequest = youtube.liveBroadcasts().list(listOf("id", "snippet", "contentDetails", "status"))
-        //liveBroadcastRequest.setMine(true);
         if (state != null) liveBroadcastRequest.broadcastStatus = state.value()
         if (broadcastId != null) liveBroadcastRequest.id = listOf(broadcastId)
         try {
@@ -148,10 +145,6 @@ object LiveBroadcastsInteractor {
             Log.e(Config.APP_NAME, "Failed getting broadcasts list (see 'Caused by'):", e)
             throw e
         }
-    }
-
-    fun deleteBroadcast(broadcastId: String?) {
-        youtube.liveBroadcasts().delete(broadcastId).execute()
     }
 
     /**

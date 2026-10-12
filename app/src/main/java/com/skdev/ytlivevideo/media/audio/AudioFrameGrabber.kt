@@ -94,7 +94,7 @@ class AudioFrameGrabber {
     }
 
     interface FrameCallback {
-        fun handleFrame(audio_data: ShortArray?, length: Int)
+        fun handleFrame(audioData: ShortArray?, length: Int)
     }
 
     companion object {

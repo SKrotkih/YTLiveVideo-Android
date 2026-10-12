@@ -8,7 +8,6 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.viewpager.widget.ViewPager
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
 import com.skdev.ytlivevideo.model.googleAccount.GoogleSignInManager
@@ -36,7 +35,7 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
     var needToCheckGooglePlayServicesAvailable: MutableLiveData<Event<Boolean>> = MutableLiveData()
     var needSendRequestAuthorization: MutableLiveData<Event<Boolean>> = MutableLiveData()
     var errorAuthorization: MutableLiveData<Event<UserRecoverableAuthIOException>> = MutableLiveData()
-    var errorMessage: MutableLiveData<Event<String>> = MutableLiveData()
+    var errorMessage: MutableLiveData<Event<String?>> = MutableLiveData()
     var invalidateView: MutableLiveData<Event<Boolean>> = MutableLiveData()
     var startProcessing: MutableLiveData<Event<String>> = MutableLiveData()
     var stopProcessing: MutableLiveData<Event<Boolean>> = MutableLiveData()
@@ -46,8 +45,6 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
 
     override fun handleActivitiesResults(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            Config.REQUEST_GMS_ERROR_DIALOG -> {
-            }
             Config.REQUEST_GOOGLE_PLAY_SERVICES -> if (resultCode == Activity.RESULT_OK) {
                 didCheckGooglePlayServices()
             } else {
@@ -173,14 +170,6 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
         val selectedAccountName = intent.extras!!.getString(AccountManager.KEY_ACCOUNT_NAME)
         GoogleAccountManager.credential!!.selectedAccountName = selectedAccountName
         accountName.value = Event(selectedAccountName!!)
-    }
-
-    fun getLastSignedInAccount(): GoogleSignInAccount? {
-        return signInManager.lastSignedInAccount
-    }
-
-    fun isConnected() : Boolean {
-        return signInManager.isConnected
     }
 
     fun getAccountName() : String {

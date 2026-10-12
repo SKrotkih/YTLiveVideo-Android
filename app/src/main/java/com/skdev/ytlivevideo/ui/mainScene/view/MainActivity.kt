@@ -24,7 +24,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewpager.widget.ViewPager
 import com.android.volley.toolbox.ImageLoader
 import com.google.android.gms.common.GoogleApiAvailability
@@ -53,7 +52,7 @@ import kotlinx.coroutines.launch
  *
  * Main activity class which handles authorization and intents.
  */
-class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner {
+class MainActivity : AppCompatActivity(), FragmentDelegate {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -98,7 +97,7 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
         })
         configureViewModel()
         configureTabBar()
-        logInIfNeeded(savedInstanceState)
+        logInIfNeeded()
     }
 
     override fun onResume() {
@@ -234,8 +233,8 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
         }})
     }
 
-    private fun logInIfNeeded(savedInstanceState: Bundle?) {
-        if (GoogleAccountManager.signIn(this, savedInstanceState)) {
+    private fun logInIfNeeded() {
+        if (GoogleAccountManager.signIn(this)) {
             viewModel.signInManager = GoogleSignInManager(this)
             viewModel.signInManager.didUserSignIn.observe(this, { event ->
                 event?.getContentIfNotHandledOrReturnNull()?.let {

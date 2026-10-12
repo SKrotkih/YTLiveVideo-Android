@@ -77,23 +77,6 @@ object LiveBroadcasts  {
             }
         }
 
-    fun deleteBroadcasts(broadcastIDs: List<String>): Deferred<Unit> =
-        CoroutineScope(Dispatchers.IO).async {
-            try {
-                broadcastIDs.forEach {
-                    LiveBroadcastsInteractor.deleteBroadcast(it)
-                }
-                return@async
-            } catch (e: UserRecoverableAuthIOException) {
-                // Keep the consent intent so the UI can ask the user for access
-                throw e
-            } catch (e: IOException) {
-                Log.e(TAG, "Error while deleting broadcasts:", e)
-                val message = e.cause?.message ?: "Error while deleting broadcasts"
-                throw IOException(message)
-            }
-        }
-
     /**
      * Transitions
      */
@@ -107,7 +90,6 @@ object LiveBroadcasts  {
                 if (broadcastId.isNullOrBlank()) {
                     throw IllegalArgumentException("The Stream ID is not presented")
                 }
-                // delay(10000)
                 LiveBroadcastsInteractor.transitionLiveBroadcastsToLive(broadcastId)
                 return@async true
             } catch (e: UserRecoverableAuthIOException) {
@@ -143,61 +125,3 @@ object LiveBroadcasts  {
 
     private val TAG: String = LiveBroadcasts::class.java.name
 }
-
-/**
- * https://developers.google.com/youtube/v3/live/docs/liveBroadcasts/insert
- */
-
-/**
- *  API Request LiveBroadcasts: transition
- *  https://developers.google.com/youtube/v3/live/docs/liveBroadcasts/transition
- *
-403 Forbidden
-POST https://www.googleapis.com/youtube/v3/liveBroadcasts/transition?broadcastStatus=live&id=8bqMrWvCgqg&part=status
-{
-"code": 403,
-"errors": [
-{
-"domain": "youtube.liveBroadcast",
-"message": "Stream is inactive",
-"reason": "errorStreamInactive",
-"extendedHelp": "https://developers.google.com/youtube/v3/live/docs/liveBroadcasts/transition"
-}
-],
-"message": "Stream is inactive"
-}
-
-https://www.googleapis.com/youtube/v3/liveBroadcasts?part=status&broadcastStatus=all&broadcastType=all&key=[YOUR_API_KEY]
-
-"items": [
-{
-"kind": "youtube#liveBroadcast",
-"etag": "R6Hc0SWbiE-XWRNqFTw1O5VB6XY",
-"id": "Am_kib7rYzc",
-"status": {
-"lifeCycleStatus": "live",     // "ready", "complete"
-"privacyStatus": "unlisted",
-"recordingStatus": "recording",
-"madeForKids": false,
-"selfDeclaredMadeForKids": false
-}
-},
-
-
-POST https://www.googleapis.com/youtube/v3/liveBroadcasts/transition?broadcastStatus=live&id=AKkkPpmWwpY&part=status
-{
-"code": 403,
-"errors": [
-{
-"domain": "youtube.liveBroadcast",
-"message": "Invalid transition",
-"reason": "invalidTransition",
-"extendedHelp": "https://developers.google.com/youtube/v3/live/docs/liveBroadcasts/transition#params"
-}
-],
-"message": "Invalid transition"
-}
-
- */
-
-

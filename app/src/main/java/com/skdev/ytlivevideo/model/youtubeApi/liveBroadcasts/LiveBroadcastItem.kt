@@ -53,19 +53,11 @@ class LiveBroadcastItem {
             return event!!.snippet.publishedAt.toString()
         }
 
-    val scheduledStartTime: String
-        get() {
-            return event!!.snippet.scheduledStartTime.toString()
-        }
-
     val watchUri: String
         get() = "http://www.youtube.com/watch?v=$id"
 
     val lifeCycleStatus: String
         get() = event!!.status.lifeCycleStatus
-
-//    val streamStatus: String
-//        get() = event!!.status.streamStatus
 
     var state: BroadcastState? = null
 

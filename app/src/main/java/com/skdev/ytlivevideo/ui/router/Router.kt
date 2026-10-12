@@ -10,7 +10,6 @@ import com.skdev.ytlivevideo.ui.youtubePlayer.YouTubePlayerActivity
 
 @SuppressLint("StaticFieldLeak")
 object Router {
-    var startActivityType: StartActivity? = null
     var currentContext: Context? = null
 
     enum class StartActivity {
@@ -37,17 +36,6 @@ object Router {
 
         abstract fun run()
         abstract fun run(params: Any)
-    }
-
-    init {
-        println("init completed")
-    }
-
-    fun startActivityIfNeeded() {
-        if (startActivityType != null) {
-            startActivityType!!.run()
-            startActivityType = null
-        }
     }
 
     // Actions

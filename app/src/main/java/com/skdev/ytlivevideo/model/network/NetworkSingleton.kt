@@ -17,8 +17,6 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.widget.ImageView
 import android.widget.Toast
-import com.android.volley.Request
-import com.android.volley.RequestQueue
 import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.Volley
 import com.skdev.ytlivevideo.util.LruBitmapCache
@@ -26,28 +24,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.URL
 
-class NetworkSingleton private constructor(private var mCtx: Context) {
-    private var mRequestQueue: RequestQueue?
-    private val mImageLoader: ImageLoader
-
+class NetworkSingleton private constructor(context: Context) {
     // getApplicationContext() is key, it keeps you from leaking the
     // Activity or BroadcastReceiver if someone passes one in.
-    private val requestQueue: RequestQueue?
-        get() {
-            if (mRequestQueue == null) {
-                // getApplicationContext() is key, it keeps you from leaking the
-                // Activity or BroadcastReceiver if someone passes one in.
-                mRequestQueue = Volley.newRequestQueue(mCtx.applicationContext)
-            }
-            return mRequestQueue
-        }
-
-    fun <T> addToRequestQueue(req: Request<T>?) {
-        requestQueue?.add(req)
-    }
-
-    val imageLoader: ImageLoader
-        get() = mImageLoader
+    val imageLoader = ImageLoader(
+        Volley.newRequestQueue(context.applicationContext),
+        LruBitmapCache(context)
+    )
 
     companion object {
         private var mInstance: NetworkSingleton? = null
@@ -58,14 +41,6 @@ class NetworkSingleton private constructor(private var mCtx: Context) {
             }
             return mInstance
         }
-    }
-
-    init {
-        mRequestQueue = requestQueue
-        mImageLoader = ImageLoader(
-            mRequestQueue,
-            LruBitmapCache(mCtx)
-        )
     }
 }
 

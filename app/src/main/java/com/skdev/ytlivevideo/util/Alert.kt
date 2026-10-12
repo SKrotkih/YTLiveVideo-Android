@@ -1,28 +1,20 @@
 package com.skdev.ytlivevideo.util
 
 import android.app.AlertDialog
+import android.content.Context
 
 object Alert {
 
-    fun showOK(title: String, message: String) {
-        val context = Utils.LaunchedApp.applicationContext()
+    /**
+     * Shows a dialog with an OK button. [context] must be an Activity context.
+     */
+    fun showOK(context: Context, title: String, message: String) {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(title)
         builder.setMessage(message)
-        builder.setPositiveButton("OK") { dialog, which ->
+        builder.setPositiveButton("OK") { dialog, _ ->
             dialog.dismiss()
         }
-
-//        // Display a negative button on alert dialog
-//        builder.setNegativeButton("No") { dialog, which ->
-//            dialog.dismiss()
-//        }
-//
-//        // Display a neutral button on alert dialog
-//        builder.setNeutralButton("Cancel") { _, _ ->
-//            //Toast.makeText(context,"You cancelled the dialog.", Toast.LENGTH_SHORT).show()
-//        }
-
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }

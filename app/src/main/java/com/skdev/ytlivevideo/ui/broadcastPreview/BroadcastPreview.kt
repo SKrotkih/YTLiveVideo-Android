@@ -129,27 +129,15 @@ class BroadcastPreview: AppCompatActivity() {
     }
 
     /**
-     * Play Video (URL=watchUri) on the external (System default) Player
-     */
-    private fun playStream() {
-        val watchUri = data?.watchUri?.asUri
-        if (watchUri != null) startActivity(Intent(Intent.ACTION_VIEW, watchUri))
-    }
-
-    /**
      * Play Video (id=broadcast ID, active stream or completed video) on the YouTube Android Player
      */
     private fun playYouTubeVideo() {
-        val broadcastId = data!!.broadcastId
-        if (broadcastId != null) {
-            Router.StartActivity.YT_FULLSCREEN_PLAYER.run(broadcastId)
-        }
+        Router.StartActivity.YT_FULLSCREEN_PLAYER.run(data!!.broadcastId)
     }
 
     private fun startStreaming() {
         Log.d(TAG, "startStreaming")
         val broadcastId = data!!.broadcastId
-        val streamId = data!!.streamId
         val progressDialog = ProgressDialog.create(this, R.string.startStreaming)
         progressDialog.show()
         CoroutineScope(Dispatchers.IO).launch {

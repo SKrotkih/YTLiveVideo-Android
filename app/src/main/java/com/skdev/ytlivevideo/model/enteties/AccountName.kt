@@ -3,6 +3,7 @@ package com.skdev.ytlivevideo.model.enteties
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.skdev.ytlivevideo.util.Config
 
@@ -30,7 +31,7 @@ object AccountName {
         }
         if (bundle == null) {
             val sp = PreferenceManager.getDefaultSharedPreferences(context)
-            sp.edit().putString(ACCOUNT_KEY, accountName).apply()
+            sp.edit { putString(ACCOUNT_KEY, accountName) }
         } else {
             bundle.putString(ACCOUNT_KEY, accountName)
         }

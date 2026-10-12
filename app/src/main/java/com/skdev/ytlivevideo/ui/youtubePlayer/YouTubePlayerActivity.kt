@@ -17,7 +17,6 @@ package com.skdev.ytlivevideo.ui.youtubePlayer
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -101,7 +100,7 @@ internal class YouTubePlayerActivity : YouTubeFailureRecoveryActivity(), View.On
             // orientation to portrait. Typically you would do this in your AndroidManifest.xml, we do it
             // programmatically here since this activity demos fullscreen behavior both with and without
             // this flag).
-            requestedOrientation = PORTRAIT_ORIENTATION
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
             controlFlags = controlFlags or YouTubePlayer.FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE
         } else {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
@@ -156,10 +155,5 @@ internal class YouTubePlayerActivity : YouTubeFailureRecoveryActivity(), View.On
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         doLayout()
-    }
-
-    companion object {
-        private val PORTRAIT_ORIENTATION =
-            if (Build.VERSION.SDK_INT < 9) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT else ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
     }
 }

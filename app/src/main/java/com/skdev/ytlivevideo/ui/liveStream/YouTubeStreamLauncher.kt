@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.text.TextUtils
 import com.skdev.ytlivevideo.util.Alert
-import com.skdev.ytlivevideo.util.Utils
 
 /**
  * https://developers.google.com/youtube/android/live
@@ -36,17 +35,15 @@ class YouTubeStreamLauncher {
       If the device supports the Intent, then the device could launch the live stream flow.
       If the device does not support the Intent, then the device could prompt the user to install or upgrade the YouTube app.
    */
-  fun start(description: String) {
-    val context = Utils.LaunchedApp.applicationContext()
+  fun start(context: Context, description: String) {
     if (canResolveMobileLiveIntent(context)) {
       /**
        * Step 2: Launch the live stream activity
        */
       val intent = createMobileLiveIntent(context, description)
-      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
       context.startActivity(intent)
     } else {
-      Alert.showOK("Warning", "To use this ability you should install YouTube app on your device")
+      Alert.showOK(context, "Warning", "To use this ability you should install YouTube app on your device")
     }
   }
 

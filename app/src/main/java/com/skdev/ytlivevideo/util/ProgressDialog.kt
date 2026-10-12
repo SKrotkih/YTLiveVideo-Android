@@ -3,8 +3,8 @@ package com.skdev.ytlivevideo.util
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
+import androidx.core.graphics.drawable.toDrawable
 import com.skdev.ytlivevideo.databinding.ActivityProgressDialogBinding
 
 class ProgressDialog {
@@ -19,9 +19,7 @@ class ProgressDialog {
             dialog.setContentView(binding.root)
             dialog.setCancelable(false)
             binding.title.text = title
-            dialog.window!!.setBackgroundDrawable(
-                ColorDrawable(Color.TRANSPARENT)
-            )
+            dialog.window!!.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
             return dialog
         }
     }

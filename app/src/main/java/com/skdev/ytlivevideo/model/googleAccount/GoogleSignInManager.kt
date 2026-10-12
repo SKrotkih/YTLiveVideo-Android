@@ -44,20 +44,6 @@ class GoogleSignInManager(val context: Activity) {
         mGoogleSignInClient?.signOut()
     }
 
-    fun revokeAccess() {
-        mGoogleSignInClient?.revokeAccess()
-    }
-
-    val isConnected: Boolean
-        get() {
-            return mAccount != null
-        }
-
-    val lastSignedInAccount: GoogleSignInAccount?
-        get() {
-            return GoogleSignIn.getLastSignedInAccount(context)
-        }
-
     val accountName: String
         get() {
             return mAccount?.displayName ?: "Not signed in"

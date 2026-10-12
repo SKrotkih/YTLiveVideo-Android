@@ -13,7 +13,6 @@
  */
 package com.skdev.ytlivevideo.ui.mainScene.fragment
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -176,9 +175,5 @@ class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
         mGridView = context.findViewById<View>(R.id.grid_view) as GridView
         val emptyView = context.findViewById<View>(R.id.empty) as TextView
         mGridView!!.emptyView = emptyView
-    }
-
-    companion object {
-        private val TAG = BroadcastsListFragment::class.java.name
     }
 }

@@ -19,8 +19,6 @@ class CreateNewBroadcast: AppCompatActivity() {
 
     private lateinit var binding: ActivityCreateBroadcastBinding
 
-    private var job: Job? = null
-
     private val streamLauncher = YouTubeStreamLauncher()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,12 +43,14 @@ class CreateNewBroadcast: AppCompatActivity() {
             Utils.showError(this, "Please enter new broadcast' description")
             return
         }
-        streamLauncher.start(description)
+        streamLauncher.start(this, description)
     }
 
     /**
-     * Create Broadcast with using YouTube API
+     * Create Broadcast with using YouTube API.
+     * Not connected to the UI now (the button uses the YouTube app); kept as an API usage example.
      */
+    @Suppress("unused")
     private fun createBroadcastOnMyAccount() {
         val name = binding.broadcastName.text.toString().trim()
         val description = binding.broadcastDescription.text.toString().trim()
@@ -67,11 +67,6 @@ class CreateNewBroadcast: AppCompatActivity() {
                 finish()
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        job?.cancel()
     }
 
     /**

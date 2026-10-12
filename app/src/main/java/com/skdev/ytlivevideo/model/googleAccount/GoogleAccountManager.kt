@@ -1,7 +1,6 @@
 package com.skdev.ytlivevideo.model.googleAccount
 
 import android.content.Context
-import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.Scopes
@@ -22,7 +21,7 @@ object GoogleAccountManager {
         mCredential!!.selectedAccount = googleAccount.account
     }
 
-    fun signIn(context: Context, savedInstanceState: Bundle?): Boolean {
+    fun signIn(context: Context): Boolean {
         Log.d(TAG, "signIn")
         val scopes = listOf(Scopes.PROFILE, YouTubeScopes.YOUTUBE)
         mCredential = GoogleAccountCredential.usingOAuth2(context, scopes)
@@ -31,14 +30,7 @@ object GoogleAccountManager {
         } else {
             Log.d(TAG, "$mCredential")
             mCredential!!.backOff = ExponentialBackOff()
-            // credential!!.selectedAccountName = AccountName.getName(view, savedInstanceState)
             true
-        }
-    }
-
-    fun setUpSignInAccount(signInAccount: GoogleSignInAccount) {
-        if (mCredential != null) {
-            mCredential!!.selectedAccount = signInAccount.account
         }
     }
 

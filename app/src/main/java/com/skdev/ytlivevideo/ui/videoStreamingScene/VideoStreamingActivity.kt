@@ -22,12 +22,11 @@ import android.content.pm.PackageManager
 import android.hardware.Camera
 import android.os.Bundle
 import android.os.IBinder
-import android.os.PowerManager
-import android.os.PowerManager.WakeLock
 import com.google.android.material.snackbar.Snackbar
 import androidx.core.app.ActivityCompat
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.ToggleButton
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.model.services.videoStreaming.VideoStreamingService
@@ -48,7 +47,6 @@ import com.skdev.ytlivevideo.util.fitContentToSystemBars
 class VideoStreamingActivity : Activity() {
     // Member variables
     private var videoStreamingService: VideoStreamingService? = null
-    private var wakeLock: WakeLock? = null
     private var previewVideo: PreviewVideo? = null
     private var rtmpUrl: String? = null
 
@@ -133,9 +131,7 @@ class VideoStreamingActivity : Activity() {
 
     private fun startStreaming() {
         Log.d(Config.APP_NAME, "startStreaming")
-        val pm = getSystemService(POWER_SERVICE) as PowerManager
-        wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, this.javaClass.name)
-        wakeLock!!.acquire()
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         if (!videoStreamingService!!.isStreaming) {
             val cameraPermission = Manifest.permission.CAMERA
             val microphonePermission = Manifest.permission.RECORD_AUDIO
@@ -224,10 +220,7 @@ class VideoStreamingActivity : Activity() {
 
     private fun stopStreaming() {
         Log.d(Config.APP_NAME, "stopStreaming")
-        if (wakeLock != null) {
-            wakeLock!!.release()
-            wakeLock = null
-        }
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         if (videoStreamingService!!.isStreaming) {
             videoStreamingService!!.stopStreaming()
         }
@@ -236,11 +229,7 @@ class VideoStreamingActivity : Activity() {
     fun endEvent(view: View?) {
         val data = Intent()
         data.putExtra(LiveBroadcastsInteractor.BROADCAST_ID_KEY, broadcastId)
-        if (parent == null) {
-            setResult(RESULT_OK, data)
-        } else {
-            parent.setResult(RESULT_OK, data)
-        }
+        setResult(RESULT_OK, data)
         finish()
     }
 
