@@ -14,9 +14,7 @@
 package com.skdev.ytlivevideo.model.network
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.os.AsyncTask
 import android.widget.ImageView
 import android.widget.Toast
 import com.android.volley.Request
@@ -24,6 +22,8 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.Volley
 import com.skdev.ytlivevideo.util.LruBitmapCache
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.net.URL
 
 class NetworkSingleton private constructor(private var mCtx: Context) {
@@ -69,24 +69,21 @@ class NetworkSingleton private constructor(private var mCtx: Context) {
     }
 }
 
-// Class to download an image from url and display it into an image view
-class DownLoadImageTask(private val imageView: ImageView) : AsyncTask<String, Void, Bitmap?>() {
-    override fun doInBackground(vararg urls: String): Bitmap? {
-        val urlOfImage = urls[0]
-        return try {
-            val inputStream = URL(urlOfImage).openStream()
-            BitmapFactory.decodeStream(inputStream)
+/**
+ * Downloads an image from [url] and displays it in this image view.
+ */
+suspend fun ImageView.loadImageFromUrl(url: String) {
+    val bitmap = withContext(Dispatchers.IO) {
+        try {
+            URL(url).openStream().use { BitmapFactory.decodeStream(it) }
         } catch (e: Exception) { // Catch the download exception
             e.printStackTrace()
             null
         }
     }
-    override fun onPostExecute(result: Bitmap?) {
-        if(result!=null){
-            // Display the downloaded image into image view
-            imageView.setImageBitmap(result)
-        }else{
-            Toast.makeText(imageView.context,"Error downloading",Toast.LENGTH_SHORT).show()
-        }
+    if (bitmap != null) {
+        setImageBitmap(bitmap)
+    } else {
+        Toast.makeText(context, "Error downloading", Toast.LENGTH_SHORT).show()
     }
 }

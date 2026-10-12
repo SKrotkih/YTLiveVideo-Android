@@ -29,6 +29,7 @@ import com.google.android.youtube.player.YouTubePlayer.OnFullscreenListener
 import com.google.android.youtube.player.YouTubePlayerView
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.util.Credentials
+import com.skdev.ytlivevideo.util.fitContentToSystemBars
 
 /**
  * Sample activity showing how to properly enable custom fullscreen behavior.
@@ -51,6 +52,7 @@ internal class YouTubePlayerActivity : YouTubeFailureRecoveryActivity(), View.On
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_youtube_fullscreen_player)
+        fitContentToSystemBars(lightSystemBars = false)
         extractParams()
         baseLayout = findViewById<View>(R.id.layout) as LinearLayout
         playerView = findViewById<View>(R.id.player) as YouTubePlayerView

@@ -60,7 +60,6 @@ class MainViewModel : ViewModel(), MainViewModelInterface {
                 didSelectAccount(data)
             }
         }
-        signInManager.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun startSelectAccountActivity() {

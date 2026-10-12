@@ -14,7 +14,6 @@
 package com.skdev.ytlivevideo.model.services.videoStreaming
 
 import android.app.Notification
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
@@ -23,6 +22,9 @@ import android.hardware.Camera.CameraInfo
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
+import androidx.core.app.NotificationChannelCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.skdev.ytlivevideo.ui.mainScene.view.MainActivity
 import com.skdev.ytlivevideo.R
 import com.skdev.ytlivevideo.util.Config
@@ -73,7 +75,7 @@ class VideoStreamingService : Service() {
         Log.d(Config.APP_NAME, "stopStreaming")
         connection?.close()
         connection = null
-        stopForeground(true)
+        NotificationManagerCompat.from(this).cancel(STREAMER_NOTIFICATION_ID)
     }
 
     val isStreaming: Boolean
@@ -91,7 +93,12 @@ class VideoStreamingService : Service() {
     }
 
     private fun showForegroundNotification() {
-        val notifyManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val notifyManager = NotificationManagerCompat.from(this)
+        notifyManager.createNotificationChannel(
+            NotificationChannelCompat.Builder(CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_LOW)
+                .setName(getText(R.string.activeStreamingLabel))
+                .build()
+        )
 
         // Intent to call our activity from background.
         val notificationIntent = Intent(this, MainActivity::class.java)
@@ -101,16 +108,23 @@ class VideoStreamingService : Service() {
         // The PendingIntent to launch our activity if the user selects this notification.
         val contentIntent = PendingIntent.getActivity(
             this, 0,
-            notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT
+            notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        val notification: Notification = Notification.Builder(applicationContext)
+        val notification: Notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setContentTitle(getText(R.string.activeStreamingLabel))
             .setContentText(getText(R.string.activeStreamingStatus))
             .setContentIntent(contentIntent)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setWhen(System.currentTimeMillis())
             .build()
-        notifyManager.notify(STREAMER_NOTIFICATION_ID, notification)
+        // Without the POST_NOTIFICATIONS permission (Android 13+) the notification is not shown.
+        if (notifyManager.areNotificationsEnabled()) {
+            try {
+                notifyManager.notify(STREAMER_NOTIFICATION_ID, notification)
+            } catch (e: SecurityException) {
+                Log.w(Config.APP_NAME, "Notification is not permitted", e)
+            }
+        }
     }
 
     inner class LocalBinder : Binder() {
@@ -120,5 +134,6 @@ class VideoStreamingService : Service() {
 
     companion object {
         private const val STREAMER_NOTIFICATION_ID = 1001
+        private const val CHANNEL_ID = "streaming"
     }
 }

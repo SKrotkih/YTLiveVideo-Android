@@ -37,6 +37,7 @@ import java.util.*
 import com.skdev.ytlivevideo.model.services.videoStreaming.VideoStreamingService.LocalBinder
 import com.skdev.ytlivevideo.ui.mainScene.view.PreviewVideo
 import com.skdev.ytlivevideo.util.Config
+import com.skdev.ytlivevideo.util.fitContentToSystemBars
 
 /**
  * @author Ibrahim Ulukaya <ulukaya></ulukaya>@google.com>
@@ -78,6 +79,7 @@ class VideoStreamingActivity : Activity() {
         }
         Log.d(Config.APP_NAME, String.format("Got RTMP URL '%s' from calling activity.", rtmpUrl))
         setContentView(R.layout.activity_video_streaming)
+        fitContentToSystemBars()
         previewVideo = findViewById<View>(R.id.surfaceViewPreview) as PreviewVideo
         if (!bindService(
                 Intent(this, VideoStreamingService::class.java), streamerConnection!!,

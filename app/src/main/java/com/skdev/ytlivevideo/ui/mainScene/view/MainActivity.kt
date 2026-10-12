@@ -19,8 +19,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.Window
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewpager.widget.ViewPager
@@ -32,7 +34,7 @@ import com.skdev.ytlivevideo.databinding.ActivityMainBinding
 import com.skdev.ytlivevideo.model.enteties.AccountName
 import com.skdev.ytlivevideo.model.googleAccount.GoogleAccountManager
 import com.skdev.ytlivevideo.model.googleAccount.GoogleSignInManager
-import com.skdev.ytlivevideo.model.network.DownLoadImageTask
+import com.skdev.ytlivevideo.model.network.loadImageFromUrl
 import com.skdev.ytlivevideo.model.network.NetworkSingleton
 import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.LiveBroadcastItem
 import com.skdev.ytlivevideo.ui.mainScene.adapter.SectionsPagerAdapter
@@ -42,8 +44,7 @@ import com.skdev.ytlivevideo.ui.router.Router
 import com.skdev.ytlivevideo.util.Config
 import com.skdev.ytlivevideo.util.ProgressDialog
 import com.skdev.ytlivevideo.util.Utils
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.skdev.ytlivevideo.util.fitContentToSystemBars
 import kotlinx.coroutines.launch
 
 /**
@@ -64,11 +65,37 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
         NetworkSingleton.getInstance(this)?.imageLoader
     }
 
+    private val signInLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            viewModel.signInManager.onSignInResult(result.data)
+        }
+
+    private val authorizationLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            viewModel.handleActivitiesResults(Config.REQUEST_AUTHORIZATION, result.resultCode, result.data)
+        }
+
+    private val accountPickerLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            viewModel.handleActivitiesResults(Config.REQUEST_ACCOUNT_PICKER, result.resultCode, result.data)
+        }
+
+    private val googlePlayServicesLauncher =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            viewModel.handleActivitiesResults(Config.REQUEST_GOOGLE_PLAY_SERVICES, result.resultCode, result.data)
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        window.requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        fitContentToSystemBars()
+        // The main screen is the root of the app: the Back gesture is ignored here.
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                Log.d(Config.APP_NAME, "onBackPressed")
+            }
+        })
         configureViewModel()
         configureTabBar()
         logInIfNeeded(savedInstanceState)
@@ -116,14 +143,6 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
         tabs.setupWithViewPager(viewPager)
     }
 
-    /**
-        Parse Activity Results
-     */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        viewModel.handleActivitiesResults(requestCode, resultCode, data)
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         AccountName.saveName(this, AccountName.getName(this), outState)
@@ -135,12 +154,8 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
         if (photoUri == null) {
             binding.avatar.setImageDrawable(null)
         } else {
-            DownLoadImageTask(binding.avatar).execute(photoUri.toString())
+            lifecycleScope.launch { binding.avatar.loadImageFromUrl(photoUri.toString()) }
         }
-    }
-
-    override fun onBackPressed() {
-        Log.d(Config.APP_NAME, "onBackPressed")
     }
 
     override fun onGetImageLoader(): ImageLoader? {
@@ -148,34 +163,31 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
         return mImageLoader
     }
 
-    override fun didUserSelectBroadcastItem(liveBroadcast: LiveBroadcastItem?) {
+    override fun didUserSelectBroadcastItem(liveBroadcastItem: LiveBroadcastItem?) {
         Log.d(Config.APP_NAME, "didUserSelectBroadcastItem")
-        if (liveBroadcast != null) {
-            Router.StartActivity.EVENT_PREVIEW.run(liveBroadcast)
+        if (liveBroadcastItem != null) {
+            Router.StartActivity.EVENT_PREVIEW.run(liveBroadcastItem)
         }
     }
 
     fun startAuthorization(intent: Intent) {
-        startActivityForResult(intent, Config.REQUEST_AUTHORIZATION)
+        authorizationLauncher.launch(intent)
     }
 
     fun startAccountPicker(intent: Intent) {
-        startActivityForResult(intent, Config.REQUEST_ACCOUNT_PICKER)
+        accountPickerLauncher.launch(intent)
     }
 
     /**
      * Show Error Dialog
      */
     private fun showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode: Int) {
-        CoroutineScope(Dispatchers.Main).launch {
-            val googleAPI = GoogleApiAvailability.getInstance()
-            val dialog: Dialog? = googleAPI.getErrorDialog(
-                this@MainActivity,
-                connectionStatusCode,
-                Config.REQUEST_GOOGLE_PLAY_SERVICES
-            )
-            dialog?.show()
-        }
+        GoogleApiAvailability.getInstance().showErrorDialogFragment(
+            this,
+            connectionStatusCode,
+            googlePlayServicesLauncher,
+            null
+        )
     }
 
     private fun configureViewModel() {
@@ -233,7 +245,7 @@ class MainActivity : AppCompatActivity(), FragmentDelegate, ViewModelStoreOwner 
                     renderView()
                 }
             }})
-            viewModel.signInManager.googleSignIn()
+            viewModel.signInManager.googleSignIn(signInLauncher)
         } else {
             Utils.showError(this, "OAUTH2 credentials are not presented")
         }

@@ -13,6 +13,7 @@
  */
 package com.skdev.ytlivevideo.media.audio
 
+import android.annotation.SuppressLint
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
@@ -49,10 +50,12 @@ class AudioFrameGrabber {
     /**
      * Records audio and pushes to buffer.
      */
+    // RECORD_AUDIO is requested by VideoStreamingActivity before streaming starts.
+    @SuppressLint("MissingPermission")
     private fun recordThread() {
         Log.d(Config.APP_NAME, "recordThread")
         val audioEncoding = AudioFormat.ENCODING_PCM_16BIT
-        val channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_STEREO
+        val channelConfiguration = AudioFormat.CHANNEL_IN_STEREO
         var bufferSize = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding)
         Log.d(Config.APP_NAME, "AudioRecord buffer size: $bufferSize")
 

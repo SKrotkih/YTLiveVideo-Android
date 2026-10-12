@@ -11,6 +11,7 @@ import com.skdev.ytlivevideo.model.youtubeApi.liveBroadcasts.requests.LiveBroadc
 import com.skdev.ytlivevideo.ui.liveStream.YouTubeStreamLauncher
 import com.skdev.ytlivevideo.util.ProgressDialog
 import com.skdev.ytlivevideo.util.Utils
+import com.skdev.ytlivevideo.util.fitContentToSystemBars
 import kotlinx.coroutines.*
 import java.io.IOException
 
@@ -26,6 +27,7 @@ class CreateNewBroadcast: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateBroadcastBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        fitContentToSystemBars()
 
         binding.createBroadcast.text = "Start Live Streaming"
     }

@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.android.volley.toolbox.ImageLoader
@@ -35,10 +36,19 @@ class BroadcastPreview: AppCompatActivity() {
         NetworkSingleton.getInstance(this)?.imageLoader
     }
 
+    private val streamerLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            handleActivitiesResults(Config.REQUEST_STREAMER, result.resultCode, result.data)
+        }
+
+    private val authorizationLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBroadcastPreviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        fitContentToSystemBars()
         extractParams()
         renderView()
         downloadEventData()
@@ -92,11 +102,6 @@ class BroadcastPreview: AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Router.currentContext = this
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        handleActivitiesResults(requestCode, resultCode, data)
     }
 
     private fun handleActivitiesResults(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -178,7 +183,7 @@ class BroadcastPreview: AppCompatActivity() {
         )
         intent.putExtra(LiveBroadcastsInteractor.RTMP_URL_KEY, ingestionAddress)
         intent.putExtra(LiveBroadcastsInteractor.BROADCAST_ID_KEY, broadcastId)
-        startActivityForResult(intent, Config.REQUEST_STREAMER)
+        streamerLauncher.launch(intent)
     }
 
     /**
@@ -211,7 +216,7 @@ class BroadcastPreview: AppCompatActivity() {
     }
 
     private fun startAuthorization(intent: Intent) {
-        startActivityForResult(intent, Config.REQUEST_AUTHORIZATION)
+        authorizationLauncher.launch(intent)
     }
 
     companion object {

@@ -14,6 +14,7 @@
 package com.skdev.ytlivevideo.ui.mainScene.fragment
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -60,12 +61,12 @@ class BroadcastsListFragment(val state: BroadcastState) : Fragment() {
         })
     }
 
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-        if (activity !is FragmentDelegate) {
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context !is FragmentDelegate) {
             throw ClassCastException("Activity must implement callbacks.")
         }
-        mImageLoader = (activity as FragmentDelegate).onGetImageLoader()
+        mImageLoader = context.onGetImageLoader()
         subscribeOnChangeData()
     }
 

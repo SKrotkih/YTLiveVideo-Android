@@ -59,7 +59,7 @@ val Any.deviceName: String
         val manufacturer = Build.MANUFACTURER
         val model = Build.MODEL
         return if (model.startsWith(manufacturer))
-            model.capitalize(Locale.getDefault())
+            model.replaceFirstChar { it.titlecase(Locale.getDefault()) }
         else
-            manufacturer.capitalize(Locale.getDefault()) + " " + model
+            manufacturer.replaceFirstChar { it.titlecase(Locale.getDefault()) } + " " + model
     }

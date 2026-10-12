@@ -2,7 +2,7 @@
 
 An example of using the [YouTube Live Streaming API v3](https://developers.google.com/youtube/v3/live/docs) on Android (Kotlin).
 
-> **Maintenance status:** the project was brought back to a buildable and runnable state in September 2026 (see [What's new](#whats-new-september-2026)). It is provided as a sample and is no longer actively developed.
+> **Maintenance status:** the project was brought back to a buildable and runnable state in September 2026 and moved to the current Android toolchain in October 2026 (see [What's new](#whats-new-october-2026)). It is provided as a sample and is no longer actively developed.
 
 ## Technologies & Libraries Used
 
@@ -16,14 +16,14 @@ An example of using the [YouTube Live Streaming API v3](https://developers.googl
 
 | | Version |
 |---|---|
-| Android Studio | a recent release |
-| JDK for Gradle | **17** (Java 23+ is not supported by Gradle 8.13) |
-| Gradle | 8.13 |
-| Android Gradle Plugin | 8.13.2 |
-| Kotlin | 1.9.24 |
-| minSdk / targetSdk | 26 / 34 |
+| Android Studio | 2026.1 or newer |
+| JDK for Gradle | 17 or newer (the JetBrains Runtime bundled with Android Studio works) |
+| Gradle | 9.8.1 |
+| Android Gradle Plugin | 9.4.1 (built-in Kotlin support) |
+| Kotlin | 2.4.20 |
+| compileSdk / minSdk / targetSdk | 37 / 26 / 36 |
 
-If Android Studio reports *Incompatible Gradle JVM version*, open **Settings → Build, Execution, Deployment → Build Tools → Gradle** and set **Gradle JDK** to a JDK 17 (use **Download JDK…** if none is installed).
+Dependency versions are kept in the version catalog [`gradle/libs.versions.toml`](gradle/libs.versions.toml).
 
 ## Getting Started
 
@@ -51,6 +51,25 @@ If Android Studio reports *Incompatible Gradle JVM version*, open **Settings →
    `Credentials.kt` is listed in `.gitignore`, so your key is not committed.
 4. Build and run. On the first sign-in Google asks for permission to manage your YouTube account. If the app is not verified by Google, choose **Advanced → Go to … (unsafe)** to continue.
 
+## What's new (October 2026)
+
+**Build**
+- Gradle **9.8.1**, Android Gradle Plugin **9.4.1**, Kotlin **2.4.20**. The project now syncs with the JDK bundled with current Android Studio (Gradle 8.13 could not run on it).
+- Build scripts converted to the Kotlin DSL (`*.gradle.kts`) with a version catalog; repositories are declared in `settings.gradle.kts`.
+- AGP's built-in Kotlin replaces the `kotlin-android` plugin; `kapt`, Jetifier, MultiDex (not needed with minSdk 26) and the unused RxJava, Gson and `lifecycle-compiler` dependencies were removed.
+- All AndroidX, Material, Coroutines and Google API client libraries updated; the abandoned `com.mcxiaoke.volley` fork replaced with the official `com.android.volley`.
+- `play-services-auth` stays on 21.x: version 22 removed the Google Sign-In API this app uses.
+- Gradle build cache and configuration cache are enabled.
+
+**Android 15/16 (targetSdk 36)**
+- Edge-to-edge: activity content is padded with the system bar insets, status bar icons are dark on light screens.
+- The Back gesture on the main screen is handled with `OnBackPressedDispatcher` (`onBackPressed()` is no longer called with predictive back).
+- The streaming notification uses a notification channel and an immutable `PendingIntent` (a mutable one crashes on Android 12+); `POST_NOTIFICATIONS` is declared.
+
+**Code**
+- `startActivityForResult`/`onActivityResult` replaced with the Activity Result API (sign-in, account picker, authorization, Google Play services dialog, streaming screen).
+- `AsyncTask` replaced with a coroutine; `Handler()` in the splash screen replaced with `lifecycleScope`; other deprecated calls (`onAttach(Activity)`, `capitalize`, `FLAG_FULLSCREEN`, `overridePendingTransition`) updated.
+
 ## What's new (September 2026)
 
 The 2020 version no longer built with current tools and crashed at runtime. The following was changed:
@@ -76,8 +95,8 @@ The 2020 version no longer built with current tools and crashed at runtime. The 
 ## Known Limitations
 
 - **FFmpeg streaming from the device camera does not work.** The native library in `app/src/main/jni` is not built by Gradle, and its JNI function names belong to the original Google sample (`com.google.android.apps.watchme`). Creating and managing broadcasts works; to actually stream, use an external encoder (for example OBS) with the stream URL and key from YouTube Studio, or replace the native code with a maintained RTMP library.
-- **Deprecated Google SDKs.** The [YouTube Android Player API](https://developers.google.com/youtube/android/player) is no longer supported by Google, and the Google Sign-In API used here is deprecated in favor of Credential Manager.
-- **targetSdk 34.** Publishing to Google Play requires a higher targetSdk, which in turn requires handling edge-to-edge layout on Android 15+.
+- **Deprecated Google SDKs.** The [YouTube Android Player API](https://developers.google.com/youtube/android/player) is no longer supported by Google, and the Google Sign-In API used here is deprecated in favor of Credential Manager and `AuthorizationClient` (it was removed in `play-services-auth` 22, so the library is kept on 21.x).
+- The main screen still uses `ViewPager` with the deprecated `FragmentPagerAdapter`; the camera code uses the deprecated `android.hardware.Camera` API.
 - The *Scheduled* label in the broadcast list shows the publish date, not the scheduled start time.
 
 ## Demo Video
